@@ -1,0 +1,19 @@
+package dk.dtu.SoftEngExamProjectG18.tests;
+
+import dk.dtu.SoftEngExamProjectG18.Core.Project;
+
+public class TestHolder {
+
+    private static TestHolder instance;
+
+    public Project project;
+
+    public static TestHolder getInstance() {
+        if (instance == null) {
+            instance = new TestHolder();
+        }
+
+        return instance;
+    }
+
+}

@@ -8,7 +8,7 @@ Feature: Assign project manager
         And the project does not have a project manager
         And there is an employee with initials "BS"
         And the employee with initials "ABCD" is the actor
-        When the actor assigns employee with initials "BS" as the project manager of the project
+        When the actor assigns the employee with initials "BS" as the project manager of the project
         Then the project has a project manager with initials "BS"
 
     Scenario: Employee assigns project manager to a project to which a project manager is already assigned
@@ -19,17 +19,16 @@ Feature: Assign project manager
             | MTW |
         And the employee with initials "BS" is the project manager of the project
         And the employee with initials "TED" is the actor
-        When the actor assigns the employee with initials "MTW" as project manager of the project
+        When the actor assigns the employee with initials "MTW" as the project manager of the project
         Then the error message "Project manager role required" is given
 
-    Scenario: Employee who is a project manager assigns project manager to
-    their project
+    Scenario: Employee who is a project manager assigns project manager to their project
         Given that there is a project with name "Test Project"
-        And these employees are given
+        And the following employees are given
             | BS |
             | TED |
             | MTW |
         And the employee with initials "BS" is the project manager of the project
         And the employee with initials "BS" is the actor
-        When The actor assigns employee with initials "TED" as project manager
+        When the actor assigns the employee with initials "TED" as the project manager of the project
         Then the project has a project manager with initials "TED"

@@ -1,6 +1,7 @@
 Feature: Request assistance when working on a project activity
+
     Scenario: An employee requests assistance
-        Given there is a project with name "Test Project"
+        Given that there is a project with name "Test Project"
         And the following employees are given
             | HLPR |
             | BS |
@@ -10,7 +11,7 @@ Feature: Request assistance when working on a project activity
         Then the employee with initials "HLPR" is assigned to the activity with ID "1"
 
     Scenario: An employee requests assistance when not associated with the requested activity
-        Given there is a project with name "Test Project"
+        Given that there is a project with name "Test Project"
         And the following employees are given
             | HLPR |
             | BS |

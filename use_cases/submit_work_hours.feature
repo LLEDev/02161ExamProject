@@ -13,7 +13,7 @@ Feature: Submit daily work hours
             | 2020-000001 |
             | 2020-000002 |
             | 2020-000003 |
-        When the employee submits the work minutes (project ID, activity ID, duration)
+        When the employee submits the work minutes
             | 2020-000001 | 1 | 90 |
             | 2020-000002 | 1 | 90 |
             | 2020-000003 | 1 | 60 |
@@ -23,8 +23,8 @@ Feature: Submit daily work hours
             | 2020-000003 | 1 | 60 |
 
     Scenario: An employee submits work hours to a project he/she is not attached to
-        Given there is a project with name "Test Project"
+        Given that there is a project with name "Test Project"
         And there is an employee
-        When the employee submits the work minutes (project ID, activity ID, duration)
+        When the employee submits the work minutes
             | 2020-000001 | 1 | 90 |
         Then the error message "You are not associated with one or more of these projects" is given
