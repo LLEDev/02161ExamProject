@@ -59,7 +59,7 @@ public class EmployeeSteps {
     }
 
     @And("the employee is attached to all activities in the projects")
-    public void theEmployeeIsAttachedToAllActivitiesInTheProjects() {
+    public void theEmployeeIsAttachedToAllActivitiesInTheProjects(List<String> projects) {
         
     }
 
