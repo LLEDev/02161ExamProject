@@ -129,6 +129,7 @@ public class Main {
 
         if(args.length != 2) {
             System.out.println("Usage: java -jar 02161ExamProject [Employee Initials] [Context=(Emp, PM)]");
+            return;
         }
 
         if(!loadData() || !signIn(args[0], args[1])) {
