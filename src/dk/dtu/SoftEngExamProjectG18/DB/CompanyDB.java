@@ -10,6 +10,7 @@ public class CompanyDB {
         if (instance == null) {
             instance = new CompanyDB();
         }
+
         return instance;
     }
 
