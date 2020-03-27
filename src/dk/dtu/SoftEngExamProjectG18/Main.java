@@ -1,6 +1,8 @@
 package dk.dtu.SoftEngExamProjectG18;
 
 import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
+import dk.dtu.SoftEngExamProjectG18.Core.Activity;
+import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Util.CSVReader;
@@ -41,9 +43,7 @@ public class Main {
 
     protected static boolean loadData() {
         ClassLoader cl = Main.class.getClassLoader();
-
-
-
+        
         InputStream activities = cl.getResourceAsStream("data/activities.csv");
         InputStream employees = cl.getResourceAsStream("data/employees.csv");
         InputStream projects = cl.getResourceAsStream("data/projects.csv");

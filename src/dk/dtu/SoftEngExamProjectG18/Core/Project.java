@@ -3,13 +3,16 @@ package dk.dtu.SoftEngExamProjectG18.Core;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 
 import java.util.Date;
+import java.util.HashMap;
 
 public class Project {
 
+    protected HashMap<Integer, Activity> activities = new HashMap<>();
     protected Date createdAt;
     protected int ID;
     protected boolean isBillable = true;
     protected String name;
+    protected int nextActivityID = 1;
     protected Employee PM = null;
 
     protected void setupID() {
@@ -44,6 +47,19 @@ public class Project {
         this.PM = PM;
 
         this.setupID();
+    }
+
+    public int incrementNextActivityID() {
+        this.nextActivityID++;
+        return this.nextActivityID - 1;
+    }
+
+    public Activity getActivity(int ID) {
+        return this.activities.get(ID);
+    }
+
+    public HashMap<Integer, Activity> getActivities() {
+        return this.activities;
     }
 
     public String getID() {

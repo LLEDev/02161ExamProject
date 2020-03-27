@@ -1,8 +1,10 @@
 package dk.dtu.SoftEngExamProjectG18.Util;
 
+import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,6 +44,7 @@ public class CSVReader {
     public static void readEmployees(Reader fileReader) {
         CompanyDB db = CompanyDB.getInstance();
         ArrayList<HashMap<String, String>> employees = readFile(fileReader);
+
         for(HashMap<String, String> employee : employees) {
             String ID = employee.get("ID");
 
@@ -59,6 +62,7 @@ public class CSVReader {
     public static void readProjects(Reader fileReader) {
         CompanyDB db = CompanyDB.getInstance();
         ArrayList<HashMap<String, String>> projects = readFile(fileReader);
+
         for(HashMap<String, String> project : projects) {
             String name = project.get("Name");
             if(name == null) {
@@ -81,11 +85,86 @@ public class CSVReader {
     }
 
     public static void readActivities(Reader fileReader) {
+        CompanyDB db = CompanyDB.getInstance();
+        ArrayList<HashMap<String, String>> activities = readFile(fileReader);
 
+        for(HashMap<String, String> activity : activities) {
+            String projectID = activity.get("Project ID");
+            String name = activity.get("Name");
+
+            if(projectID == null || name == null) {
+                continue;
+            }
+
+            Project project = db.getProject(projectID);
+            if(project == null) {
+                continue;
+            }
+
+            Activity activityInstance = new Activity(name, project);
+
+            String[] startWeekString = activity.get("StartWeek").split("-");
+            String[] endWeekString = activity.get("EndWeek").split("-");
+            if(startWeekString.length == 2 && endWeekString.length == 2) {
+                try {
+                    int startYear = Integer.parseInt(startWeekString[0]);
+                    int startWeek = Integer.parseInt(startWeekString[1]);
+
+                    int endYear = Integer.parseInt(endWeekString[0]);
+                    int endWeek = Integer.parseInt(endWeekString[1]);
+
+                    Calendar startCalendar = new GregorianCalendar();
+                    startCalendar.set(Calendar.YEAR, startYear);
+                    startCalendar.set(Calendar.WEEK_OF_YEAR, startWeek);
+                    Date start = startCalendar.getTime();
+
+                    Calendar endCalendar = new GregorianCalendar();
+                    endCalendar.set(Calendar.YEAR, endYear);
+                    endCalendar.set(Calendar.WEEK_OF_YEAR, endWeek);
+                    Date end = endCalendar.getTime();
+
+                    activityInstance.setStartWeek(start);
+                    activityInstance.setEndWeek(end);
+                } catch(NumberFormatException ignored) {}
+            }
+
+            activityInstance.setDone(Boolean.parseBoolean(activity.get("IsDone")));
+        }
     }
 
     public static void readWorkHours(Reader fileReader) {
+        CompanyDB db = CompanyDB.getInstance();
+        ArrayList<HashMap<String, String>> workHours = readFile(fileReader);
 
+        for(HashMap<String, String> entry : workHours) {
+            try {
+                // Employee ID, Project ID, Activity ID, Date, Minutes
+                String employeeID = entry.get("Employee ID");
+                String projectID = entry.get("Project ID");
+                int activityID = Integer.parseInt(entry.getOrDefault("Activity ID", "0"));
+
+                Employee employee = db.getEmployee(employeeID);
+                Project project = db.getProject(projectID);
+
+                if(employee == null || project == null) {
+                    continue;
+                }
+
+                Activity activity = project.getActivity(activityID);
+
+                String[] dateString = entry.getOrDefault("Date", "").split("-");
+                if(activity == null || dateString.length != 3) {
+                    continue;
+                }
+
+                Date date = new Date(Integer.parseInt(dateString[0]), Integer.parseInt(dateString[1]), Integer.parseInt(dateString[2]));
+
+                int minutes = Integer.parseInt(entry.getOrDefault("Minutes", "0"));
+
+                EmployeeActivityIntermediate eai = new EmployeeActivityIntermediate(employee, activity);
+                eai.setMinutes(date, minutes);
+            } catch (NumberFormatException ignored) {}
+        }
     }
 
 

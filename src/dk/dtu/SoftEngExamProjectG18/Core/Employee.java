@@ -1,10 +1,16 @@
 package dk.dtu.SoftEngExamProjectG18.Core;
 
+import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
+
+import java.util.HashMap;
+
 public class Employee {
 
     protected String ID;
     protected String name;
     protected int weeklyActivityCap = 10;
+
+    protected HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> activities = new HashMap<>();
 
     public Employee(String ID, String name) {
         this.ID = ID;
@@ -15,6 +21,10 @@ public class Employee {
         this.ID = ID;
         this.name = name;
         this.weeklyActivityCap = weeklyActivityCap;
+    }
+
+    public HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> getActivities() {
+        return this.activities;
     }
 
     public String getID() {

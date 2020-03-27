@@ -25,30 +25,34 @@ public class CompanyDB {
     private CompanyDB() {}
 
     public Employee getEmployee(String ID) {
-        return this.employees.getOrDefault(ID, null);
+        return this.employees.get(ID);
     }
 
     public HashMap<String, Employee> getEmployees() {
-        return employees;
+        return this.employees;
     }
 
     public int incrementNextProjectID(int year) {
-        if(!nextProjectID.containsKey(year)) {
-            nextProjectID.put(year, 1);
+        if(!this.nextProjectID.containsKey(year)) {
+            this.nextProjectID.put(year, 1);
         }
 
-        int nextID = nextProjectID.get(year);
-        nextProjectID.put(year, nextID + 1);
+        int nextID = this.nextProjectID.get(year);
+        this.nextProjectID.put(year, nextID + 1);
 
         return nextID;
     }
 
+    public Project getProject(String ID) {
+        return this.projects.get(ID);
+    }
+
     public HashMap<String, Project> getProjects() {
-        return projects;
+        return this.projects;
     }
 
     public Employee getSignedInEmployee() {
-        return signedInEmployee;
+        return this.signedInEmployee;
     }
 
     public boolean setSignedInEmployee(String ID) {
