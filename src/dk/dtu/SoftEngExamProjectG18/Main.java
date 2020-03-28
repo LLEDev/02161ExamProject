@@ -1,6 +1,8 @@
 package dk.dtu.SoftEngExamProjectG18;
 
 import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
+import dk.dtu.SoftEngExamProjectG18.Core.Activity;
+import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Util.CSVReader;
@@ -144,7 +146,7 @@ public class Main {
      */
 
     public static void main(String[] args) throws Exception {
-        CompanyDB db = CompanyDB.getInstance();
+        CompanyDB db = CompanyDB.initNewInstance();
 
         if(args.length < 2) {
             outSource.println("Usage: java -jar 02161ExamProject {Employee Initials} {Context=Emp/PM)} [Data folder/N]");

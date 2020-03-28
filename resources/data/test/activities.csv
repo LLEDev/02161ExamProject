@@ -1,0 +1,8 @@
+Project ID, Name, StartWeek, EndWeek, EstimatedWeeks, IsDone
+2020-1, First Activity, 2020-10, 2020-15, 5, false
+2020-1, Second Activity, 2020-14, 2020-18, 4, false
+2020-2, First Activity, 2020-10, 2020-15, 5, false
+2020-3, First Activity, 2020-10, 2020-15, 5, false
+2020-3, Second Activity, 2020, 2020-12, 5, false
+2020-3, Third Activity, 2020-NaN, 2020-12, 5, false
+2020-100, First Activity, 2020, 2020-12, 5, false

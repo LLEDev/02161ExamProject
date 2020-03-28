@@ -1,8 +1,11 @@
 package dk.dtu.SoftEngExamProjectG18.Core;
 
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import io.cucumber.java.ca.Cal;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 public class Project {
@@ -63,7 +66,9 @@ public class Project {
     }
 
     public String getID() {
-        return this.createdAt.getYear() + "-" + this.ID;
+        Calendar c = new GregorianCalendar();
+        c.setTime(this.createdAt);
+        return c.get(Calendar.YEAR) + "-" + this.ID;
     }
 
 

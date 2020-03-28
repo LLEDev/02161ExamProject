@@ -19,7 +19,6 @@ Feature: Run Main application
         And "Available commands:" is a part of the output
         Then the output will be reset
 
-
     Scenario: A user signs in
         When a user boots the application with the following arguments
             | HH |

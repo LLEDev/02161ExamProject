@@ -44,6 +44,7 @@ public class CSVReader {
 
     protected static Date getDateFromYearWeek(HashMap<String, String> entry, String property) {
         String[] weekString = entry.getOrDefault(property, "").split("-");
+
         if(weekString.length != 2) {
             return null;
         }
@@ -97,7 +98,7 @@ public class CSVReader {
         for(HashMap<String, String> employee : employees) {
             String ID = employee.get("ID");
 
-            if(ID == null) {
+            if(ID == null || ID.length() == 0) {
                 continue;
             }
 
@@ -114,11 +115,12 @@ public class CSVReader {
 
         for(HashMap<String, String> project : projects) {
             String name = project.get("Name");
-            if(name == null) {
+            Date createdAt = getDate(project, "CreatedAt");
+
+            if(name == null || createdAt == null) {
                 continue;
             }
 
-            Date createdAt = getDate(project, "CreatedAt");
             boolean isBillable = getBoolean(project, "IsBillable", true);
             Employee PM = db.getEmployee(project.getOrDefault("PM", null));
 
@@ -134,10 +136,6 @@ public class CSVReader {
         for(HashMap<String, String> activity : activities) {
             String projectID = activity.get("Project ID");
             String name = activity.get("Name");
-
-            if(projectID == null || name == null) {
-                continue;
-            }
 
             Project project = db.getProject(projectID);
             if(project == null) {
@@ -168,18 +166,16 @@ public class CSVReader {
             Employee employee = db.getEmployee(employeeID);
             Project project = db.getProject(projectID);
 
-            if (employee == null || project == null) {
-                continue;
-            }
+            if (employee != null && project != null) {
+                Activity activity = project.getActivity(activityID);
 
-            Activity activity = project.getActivity(activityID);
+                Date date = getDate(entry, "Date");
+                int minutes = getInt(entry, "Minutes", 0);
 
-            Date date = getDate(entry, "Date");
-            int minutes = getInt(entry, "Minutes", 0);
-
-            if (date != null && minutes >= 0) {
-                EmployeeActivityIntermediate eai = new EmployeeActivityIntermediate(employee, activity);
-                eai.setMinutes(date, minutes);
+                if (date != null && minutes >= 0) {
+                    EmployeeActivityIntermediate eai = new EmployeeActivityIntermediate(employee, activity);
+                    eai.setMinutes(date, minutes);
+                }
             }
         }
     }

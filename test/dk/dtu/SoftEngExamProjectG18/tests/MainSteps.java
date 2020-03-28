@@ -35,7 +35,6 @@ public class MainSteps {
         Main.setInSource(inSource);
         Main.setOutSource(outSource);
         Main.main(args.toArray(String[]::new));
-        System.out.println(outputTo);
     }
 
     @When("a user boots the application with valid external data files and the following arguments")
@@ -46,6 +45,17 @@ public class MainSteps {
         ClassLoader cl = Main.class.getClassLoader();
         String path = Paths.get(Objects.requireNonNull(cl.getResource("data"))
                 .toURI()).toString();
+
+        Main.main(new String[] {args.get(0), args.get(1), path});
+    }
+
+    @When("a user boots the application with test data files and the following arguments")
+    public void aUserBootsTheApplicationWithTestDataFilesAndTheFollowingArguments(List<String> args) throws Exception {
+        Main.setInSource(inSource);
+        Main.setOutSource(outSource);
+
+        ClassLoader cl = Main.class.getClassLoader();
+        String path = Paths.get(Objects.requireNonNull(cl.getResource("data/test")).toURI()).toString();
 
         Main.main(new String[] {args.get(0), args.get(1), path});
     }

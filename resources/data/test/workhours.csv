@@ -1,0 +1,5 @@
+Employee ID, Project ID, Activity ID, Date, Minutes
+HH, 2020-1, 2, 2020-03-01, 120
+JJ, 2020-1, 2, 2020-03-02, 120
+JJ, 2020-2, 1, 2020-01-01, NaN
+ABCD, 2020-2, 1, 2020-01-01, 1
