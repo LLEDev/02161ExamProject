@@ -15,7 +15,7 @@ public class Main {
     protected static Scanner inputSource;
 
     protected static void callMethod(String method, String usage, ArrayList<String> args) {
-        InputContext inputContext = getContext();
+        InputContext inputContext = CompanyDB.getContext();
 
         try {
             Method m = inputContext.getClass().getMethod(method, String[].class);
@@ -38,10 +38,6 @@ public class Main {
         } catch (InvocationTargetException e) {
             System.out.println("Internal error: InvocationTargetException");
         }
-    }
-
-    protected static InputContext getContext() {
-        return CompanyDB.getInstance().getInputContext();
     }
 
     protected static boolean loadData(String dir) {
@@ -114,7 +110,7 @@ public class Main {
             inputVariants.add(inputVariants.get(inputVariants.size() - 1) + " " + input[i]);
         }
 
-        InputContext inputContext = getContext();
+        InputContext inputContext = CompanyDB.getContext();
 
         for(int i = 0; i < inputVariants.size(); i++) {
             String variant = inputVariants.get(i).toLowerCase();
@@ -176,7 +172,7 @@ public class Main {
 
     protected static void help() {
         ArrayList<String> usages = new ArrayList<>();
-        for(String[] cmd : getContext().getTriggers().values()) {
+        for(String[] cmd : CompanyDB.getContext().getTriggers().values()) {
             usages.add(cmd[0]);
         }
 
@@ -217,7 +213,7 @@ public class Main {
         }
 
         System.out.println("Welcome, " + db.getSignedInEmployee().getName() + ".");
-        System.out.println("You are now signed in as (and acting as) " + getContext().getSingularContextName() + ".");
+        System.out.println("You are now signed in as (and acting as) " + CompanyDB.getContext().getSingularContextName() + ".");
 
         inputSource = new Scanner(System.in);
         try {

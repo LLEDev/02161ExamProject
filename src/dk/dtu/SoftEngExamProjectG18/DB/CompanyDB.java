@@ -10,6 +10,10 @@ public class CompanyDB {
 
     protected static CompanyDB instance;
 
+    public static InputContext getContext() {
+        return CompanyDB.getInstance().getInputContext();
+    }
+
     public static CompanyDB getInstance() {
         if (instance == null) {
             instance = new CompanyDB();
