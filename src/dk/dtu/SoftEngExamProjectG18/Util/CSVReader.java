@@ -13,6 +13,55 @@ import java.util.*;
 
 public class CSVReader {
 
+    protected static boolean getBoolean(HashMap<String, String> entry, String property, boolean def) {
+        String val = entry.get(property);
+        return val != null ? Boolean.parseBoolean(val) : def;
+    }
+
+    protected static Date getDate(HashMap<String, String> entry, String property) {
+        String[] date = entry.getOrDefault(property, "").split("-");
+
+        if(date.length == 3) {
+            try {
+                Calendar c = new GregorianCalendar();
+                c.set(Calendar.YEAR, Integer.parseInt(date[0]));
+                c.set(Calendar.MONTH, Integer.parseInt(date[1]) - 1);
+                c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date[2]));
+
+                return c.getTime();
+            } catch(Exception ignored) {}
+        }
+
+        return null;
+    }
+
+    protected static int getInt(HashMap<String, String> entry, String property, int def) {
+        try {
+            return Integer.parseInt(entry.get(property));
+        } catch (NumberFormatException ignored) {}
+        return def;
+    }
+
+    protected static Date getDateFromYearWeek(HashMap<String, String> entry, String property) {
+        String[] weekString = entry.getOrDefault(property, "").split("-");
+        if(weekString.length != 2) {
+            return null;
+        }
+
+        try {
+            int year = Integer.parseInt(weekString[0]);
+            int week = Integer.parseInt(weekString[1]);
+
+            Calendar c = new GregorianCalendar();
+            c.set(Calendar.YEAR, year);
+            c.set(Calendar.WEEK_OF_YEAR, week);
+
+            return c.getTime();
+        } catch (NumberFormatException ignored) {}
+
+        return null;
+    }
+
     protected static String[] processLine(String str) {
         return Arrays.stream(str.split(",")).map(String::trim).toArray(String[]::new);
     }
@@ -53,7 +102,7 @@ public class CSVReader {
             }
 
             String name = employee.getOrDefault("Name", "");
-            int cap = Integer.parseInt(employee.getOrDefault("WeeklyActivityCap", "10"));
+            int cap = getInt(employee, "WeeklyActivityCap", 10);
 
             db.getEmployees().put(ID, new Employee(ID, name, cap));
         }
@@ -69,14 +118,8 @@ public class CSVReader {
                 continue;
             }
 
-            String[] date = project.get("CreatedAt").split("-");
-            if(date.length != 3) {
-                continue;
-            }
-
-            Date createdAt = new Date(Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2]));
-
-            boolean isBillable = Boolean.parseBoolean(project.getOrDefault("IsBillable", "true"));
+            Date createdAt = getDate(project, "CreatedAt");
+            boolean isBillable = getBoolean(project, "IsBillable", true);
             Employee PM = db.getEmployee(project.getOrDefault("PM", null));
 
             Project p = new Project(name, createdAt, isBillable, PM);
@@ -103,32 +146,14 @@ public class CSVReader {
 
             Activity activityInstance = new Activity(name, project);
 
-            String[] startWeekString = activity.get("StartWeek").split("-");
-            String[] endWeekString = activity.get("EndWeek").split("-");
-            if(startWeekString.length == 2 && endWeekString.length == 2) {
-                try {
-                    int startYear = Integer.parseInt(startWeekString[0]);
-                    int startWeek = Integer.parseInt(startWeekString[1]);
-
-                    int endYear = Integer.parseInt(endWeekString[0]);
-                    int endWeek = Integer.parseInt(endWeekString[1]);
-
-                    Calendar startCalendar = new GregorianCalendar();
-                    startCalendar.set(Calendar.YEAR, startYear);
-                    startCalendar.set(Calendar.WEEK_OF_YEAR, startWeek);
-                    Date start = startCalendar.getTime();
-
-                    Calendar endCalendar = new GregorianCalendar();
-                    endCalendar.set(Calendar.YEAR, endYear);
-                    endCalendar.set(Calendar.WEEK_OF_YEAR, endWeek);
-                    Date end = endCalendar.getTime();
-
-                    activityInstance.setStartWeek(start);
-                    activityInstance.setEndWeek(end);
-                } catch(NumberFormatException ignored) {}
+            Date start = getDateFromYearWeek(activity, "StartWeek");
+            Date end = getDateFromYearWeek(activity, "EndWeek");
+            if(start != null && end != null) {
+                activityInstance.setStartWeek(start);
+                activityInstance.setEndWeek(end);
             }
 
-            activityInstance.setDone(Boolean.parseBoolean(activity.get("IsDone")));
+            activityInstance.setDone(getBoolean(activity, "IsDone", false));
         }
     }
 
@@ -136,34 +161,26 @@ public class CSVReader {
         CompanyDB db = CompanyDB.getInstance();
         ArrayList<HashMap<String, String>> workHours = readFile(fileReader);
 
-        for(HashMap<String, String> entry : workHours) {
-            try {
-                // Employee ID, Project ID, Activity ID, Date, Minutes
-                String employeeID = entry.get("Employee ID");
-                String projectID = entry.get("Project ID");
-                int activityID = Integer.parseInt(entry.getOrDefault("Activity ID", "0"));
+        for (HashMap<String, String> entry : workHours) {
+            String employeeID = entry.get("Employee ID"), projectID = entry.get("Project ID");
+            int activityID = getInt(entry, "Activity ID", 0);
 
-                Employee employee = db.getEmployee(employeeID);
-                Project project = db.getProject(projectID);
+            Employee employee = db.getEmployee(employeeID);
+            Project project = db.getProject(projectID);
 
-                if(employee == null || project == null) {
-                    continue;
-                }
+            if (employee == null || project == null) {
+                continue;
+            }
 
-                Activity activity = project.getActivity(activityID);
+            Activity activity = project.getActivity(activityID);
 
-                String[] dateString = entry.getOrDefault("Date", "").split("-");
-                if(activity == null || dateString.length != 3) {
-                    continue;
-                }
+            Date date = getDate(entry, "Date");
+            int minutes = getInt(entry, "Minutes", 0);
 
-                Date date = new Date(Integer.parseInt(dateString[0]), Integer.parseInt(dateString[1]), Integer.parseInt(dateString[2]));
-
-                int minutes = Integer.parseInt(entry.getOrDefault("Minutes", "0"));
-
+            if (date != null && minutes >= 0) {
                 EmployeeActivityIntermediate eai = new EmployeeActivityIntermediate(employee, activity);
                 eai.setMinutes(date, minutes);
-            } catch (NumberFormatException ignored) {}
+            }
         }
     }
 

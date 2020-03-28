@@ -10,6 +10,14 @@ public class EmployeeInputContext extends InputContext {
      */
 
     public final Map<String, String[]> triggers = new HashMap<String, String[]>() {{
+        put("hours set", new String[] {"hours set {projectID} {activityID} {date} {hours}", "cmdSetHours"});
+        put("hours submit", new String[] {"hours submit {projectID} {activityID} {date} {hours}", "cmdSubmitHours"});
+        put("project activity markDone", new String[] {"project activity markDone {projectID} {activityID}", "cmdMarkActivityAsDone"});
+        put("project assign PM", new String[] {"project assign PM {projectID} {PMID}", "cmdAssignPM"});
+        put("project create", new String[] {"project create {name} {billable}", "cmdCreateProject"});
+        put("request assistance", new String[] {"request assistance {projectID} {activityID} {employeeID}", "cmdRequestAssistance"});
+        put("request ooo", new String[] {"request ooo {type} {start} {end}", "cmdRequestOutOfOffice"});
+        put("request overview daily", new String[] {"request overview daily", "cmdRequestDailyOverview"});
     }};
 
     public String getSingularContextName() {

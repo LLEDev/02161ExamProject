@@ -12,7 +12,24 @@ public class ProjectManagerInputContext extends InputContext {
     // List of commands:
     // Structure: command -> [usage, method]
     public final Map<String, String[]> triggers = new HashMap<String, String[]>() {{
-        put("request overview", new String[] {"request overview [input]", "cmdRequestOverview"});
+        put("project activity assign", new String[] {
+                "project activity assign {employeeID} {projectID} {activityID}",
+                "cmdAssignEmployeeToActivity"
+        });
+        put("project activity create", new String[] {
+                "project activity create {projectID}, {activityName}",
+                "cmdAssignEmployeeToActivity"
+        });
+        put("project activity estimate", new String[] {
+                "project activity estimate {projectID} {activityID} {minutes}",
+                "cmdSetActivityEstimatedDuration"
+        });
+        put("project activity setDates", new String[] {
+                "project activity setDates {projectID} {activityID} {start} {end}",
+                "cmdSetActivityInterval"
+        });
+        put("request overview", new String[] {"request overview", "cmdRequestOverview"});
+        put("request report", new String[] {"request report", "cmdRequestOverview"});
     }};
 
     public String getSingularContextName() {

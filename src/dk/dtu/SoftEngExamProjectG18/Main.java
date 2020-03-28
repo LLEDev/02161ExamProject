@@ -1,14 +1,11 @@
 package dk.dtu.SoftEngExamProjectG18;
 
 import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
-import dk.dtu.SoftEngExamProjectG18.Core.Activity;
-import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Util.CSVReader;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -16,6 +13,7 @@ import java.util.*;
 public class Main {
 
     protected static InputContext inputContext;
+    protected static Scanner inputSource;
 
     protected static void callMethod(String method, String usage, ArrayList<String> args) {
         try {
@@ -41,9 +39,32 @@ public class Main {
         }
     }
 
-    protected static boolean loadData() {
+    protected static boolean loadData(String dir) {
+        if(dir.equals("")) {
+            return loadDataInternal();
+        }
+
+        try {
+            FileReader activities = new FileReader(dir + File.separator + "activities.csv");
+            FileReader employees = new FileReader(dir + File.separator + "employees.csv");
+            FileReader projects = new FileReader(dir + File.separator + "projects.csv");
+            FileReader workHours = new FileReader(dir + File.separator + "workhours.csv");
+
+            CSVReader.readEmployees(employees);
+            CSVReader.readProjects(projects);
+            CSVReader.readActivities(activities);
+            CSVReader.readWorkHours(workHours);
+
+            return true;
+        } catch (FileNotFoundException ignored) {}
+
+        System.out.println("One or more data files are missing.");
+        return false;
+    }
+
+    protected static boolean loadDataInternal() {
         ClassLoader cl = Main.class.getClassLoader();
-        
+
         InputStream activities = cl.getResourceAsStream("data/activities.csv");
         InputStream employees = cl.getResourceAsStream("data/employees.csv");
         InputStream projects = cl.getResourceAsStream("data/projects.csv");
@@ -62,7 +83,25 @@ public class Main {
         return true;
     }
 
+    protected static boolean redirectBasicInput(String[] input) {
+        if(input[0].equals("help")) {
+            help();
+            return true;
+        }
+
+        if(input[0].equals("quit")) {
+            quit();
+            return true;
+        }
+
+        return false;
+    }
+
     protected static void redirectInput(String[] input) {
+        if(input.length == 0 || redirectBasicInput(input)) {
+            return;
+        }
+
         ArrayList<String> inputVariants = new ArrayList<>();
         inputVariants.add(input[0]);
 
@@ -124,25 +163,61 @@ public class Main {
         return false;
     }
 
-    public static void main(String[] args) {
-        CompanyDB db = CompanyDB.getInstance();
+    /*
+        Basic commands
+     */
 
-        if(args.length != 2) {
-            System.out.println("Usage: java -jar 02161ExamProject [Employee Initials] [Context=(Emp, PM)]");
+    protected static void help() {
+        ArrayList<String> usages = new ArrayList<>();
+        for(String[] cmd : inputContext.getTriggers().values()) {
+            usages.add(cmd[0]);
+        }
+
+        Collections.sort(usages);
+
+        System.out.println("Available commands:");
+        for(String usage : usages) {
+            System.out.println(" - " + usage);
+        }
+    }
+
+    protected static void quit() {
+        System.out.println("Bye!");
+
+        if(inputSource == null) {
             return;
         }
 
-        if(!loadData() || !signIn(args[0], args[1])) {
+        inputSource.close();
+    }
+
+    /*
+        Main
+     */
+
+    public static void main(String[] args) {
+        CompanyDB db = CompanyDB.getInstance();
+
+        if(args.length < 2) {
+            System.out.println("Usage: java -jar 02161ExamProject {Employee Initials} {Context=Emp/PM)} [Data folder/N]");
+            return;
+        }
+
+        boolean dataLoad = args.length >= 3 ? loadData(args[2]) : loadData("");
+
+        if(!dataLoad || !signIn(args[0], args[1])) {
             return;
         }
 
         System.out.println("Welcome, " + db.getSignedInEmployee().getName() + ".");
         System.out.println("You are now signed in as (and acting as) " + inputContext.getSingularContextName() + ".");
 
-        Scanner s = new Scanner(System.in);
-        while(s.hasNextLine()) {
-            redirectInput(s.nextLine().trim().split(" "));
-        }
+        inputSource = new Scanner(System.in);
+        try {
+            while (inputSource.hasNextLine()) {
+                redirectInput(inputSource.nextLine().trim().split(" "));
+            }
+        } catch(IllegalStateException ignored) {} // Thrown when quitting
     }
 
 }
