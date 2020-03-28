@@ -44,6 +44,11 @@ public class ProjectManagerInputContext extends InputContext {
         Commands
      */
 
+    /*
+        TODO: !! Important !!
+        TODO: Remember to use this.writeOutput instead of System.out.print!
+     */
+
     // String employeeID, String projectID, int activityID
     public boolean cmdAssignEmployeeToActivity(String[] args) {
         return true;

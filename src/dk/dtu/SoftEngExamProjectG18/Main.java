@@ -12,7 +12,10 @@ import java.util.*;
 
 public class Main {
 
-    protected static Scanner inputSource;
+    protected static InputStream inputSource = System.in;
+    protected static PrintStream outSource = System.out;
+
+    protected static Scanner inputScanner;
 
     protected static void callMethod(String method, String usage, ArrayList<String> args) {
         InputContext inputContext = CompanyDB.getContext();
@@ -24,19 +27,19 @@ public class Main {
             if(result) {
                 inputContext.printOutput();
             } else {
-                System.out.println(usage);
+                outSource.println(usage);
             }
 
             inputContext.resetOutput();
 
         } catch (SecurityException e) {
-            System.out.println("Internal error: SecurityException");
+            outSource.println("Internal error: SecurityException");
         } catch (NoSuchMethodException e) {
-            System.out.println("Internal error: NoSuchMethodException");
+            outSource.println("Internal error: NoSuchMethodException");
         } catch (IllegalAccessException e) {
-            System.out.println("Internal error: IllegalAccessException");
+            outSource.println("Internal error: IllegalAccessException");
         } catch (InvocationTargetException e) {
-            System.out.println("Internal error: InvocationTargetException");
+            outSource.println("Internal error: InvocationTargetException");
         }
     }
 
@@ -59,7 +62,7 @@ public class Main {
             return true;
         } catch (FileNotFoundException ignored) {}
 
-        System.out.println("One or more data files are missing.");
+        outSource.println("One or more data files are missing.");
         return false;
     }
 
@@ -72,7 +75,7 @@ public class Main {
         InputStream workHours = cl.getResourceAsStream("data/workhours.csv");
 
         if(activities == null || employees == null || projects == null || workHours == null) {
-            System.out.println("One or more data files are missing.");
+            outSource.println("One or more data files are missing.");
             return false;
         }
 
@@ -134,14 +137,14 @@ public class Main {
             return;
         }
 
-        System.out.println("Command not found.");
+        outSource.println("Command not found.");
     }
 
     protected static boolean setupContext(InputContextType ict) {
         InputContext ic = InputContext.getContext(ict);
 
         if(ict == null) {
-            System.out.println("An error occurred.");
+            outSource.println("An error occurred.");
             return false;
         }
 
@@ -153,7 +156,7 @@ public class Main {
         CompanyDB db = CompanyDB.getInstance();
 
         if(!db.setSignedInEmployee(ID)) {
-            System.out.println("This employee is not registered in the system.");
+            outSource.println("This employee is not registered in the system.");
             return false;
         }
 
@@ -178,20 +181,20 @@ public class Main {
 
         Collections.sort(usages);
 
-        System.out.println("Available commands:");
+        outSource.println("Available commands:");
         for(String usage : usages) {
-            System.out.println(" - " + usage);
+            outSource.println(" - " + usage);
         }
     }
 
     protected static void quit() {
-        System.out.println("Bye!");
+        outSource.println("Bye!");
 
-        if(inputSource == null) {
+        if(inputScanner == null) {
             return;
         }
 
-        inputSource.close();
+        inputScanner.close();
     }
 
     /*
@@ -202,7 +205,7 @@ public class Main {
         CompanyDB db = CompanyDB.getInstance();
 
         if(args.length < 2) {
-            System.out.println("Usage: java -jar 02161ExamProject {Employee Initials} {Context=Emp/PM)} [Data folder/N]");
+            outSource.println("Usage: java -jar 02161ExamProject {Employee Initials} {Context=Emp/PM)} [Data folder/N]");
             return;
         }
 
@@ -212,15 +215,23 @@ public class Main {
             return;
         }
 
-        System.out.println("Welcome, " + db.getSignedInEmployee().getName() + ".");
-        System.out.println("You are now signed in as (and acting as) " + CompanyDB.getContext().getSingularContextName() + ".");
+        outSource.println("Welcome, " + db.getSignedInEmployee().getName() + ".");
+        outSource.println("You are now signed in as (and acting as) " + CompanyDB.getContext().getSingularContextName() + ".");
 
-        inputSource = new Scanner(System.in);
+        inputScanner = new Scanner(inputSource);
         try {
-            while (inputSource.hasNextLine()) {
-                redirectInput(inputSource.nextLine().trim().split(" "));
+            while (inputScanner.hasNextLine()) {
+                redirectInput(inputScanner.nextLine().trim().split(" "));
             }
         } catch(IllegalStateException ignored) {} // Thrown when quitting
+    }
+
+    public static void setInSource(InputStream is) {
+        inputSource = is;
+    }
+
+    public static void setOutSource(PrintStream ps) {
+        outSource = ps;
     }
 
 }

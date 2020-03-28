@@ -32,6 +32,11 @@ public class EmployeeInputContext extends InputContext {
         Commands
      */
 
+    /*
+        TODO: !! Important !!
+        TODO: Remember to use this.writeOutput instead of System.out.print!
+     */
+
     // String projectID, String PMID
     public boolean cmdAssignPM(String[] args) {
         return true;
