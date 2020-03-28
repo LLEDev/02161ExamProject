@@ -12,10 +12,11 @@ import java.util.*;
 
 public class Main {
 
-    protected static InputContext inputContext;
     protected static Scanner inputSource;
 
     protected static void callMethod(String method, String usage, ArrayList<String> args) {
+        InputContext inputContext = getContext();
+
         try {
             Method m = inputContext.getClass().getMethod(method, String[].class);
             boolean result = (boolean) m.invoke(inputContext, (Object) args.toArray(new String[0]));
@@ -37,6 +38,10 @@ public class Main {
         } catch (InvocationTargetException e) {
             System.out.println("Internal error: InvocationTargetException");
         }
+    }
+
+    protected static InputContext getContext() {
+        return CompanyDB.getInstance().getInputContext();
     }
 
     protected static boolean loadData(String dir) {
@@ -109,6 +114,8 @@ public class Main {
             inputVariants.add(inputVariants.get(inputVariants.size() - 1) + " " + input[i]);
         }
 
+        InputContext inputContext = getContext();
+
         for(int i = 0; i < inputVariants.size(); i++) {
             String variant = inputVariants.get(i).toLowerCase();
 
@@ -142,7 +149,7 @@ public class Main {
             return false;
         }
 
-        inputContext = ic;
+        CompanyDB.getInstance().setInputContext(ic);
         return true;
     }
 
@@ -169,7 +176,7 @@ public class Main {
 
     protected static void help() {
         ArrayList<String> usages = new ArrayList<>();
-        for(String[] cmd : inputContext.getTriggers().values()) {
+        for(String[] cmd : getContext().getTriggers().values()) {
             usages.add(cmd[0]);
         }
 
@@ -210,7 +217,7 @@ public class Main {
         }
 
         System.out.println("Welcome, " + db.getSignedInEmployee().getName() + ".");
-        System.out.println("You are now signed in as (and acting as) " + inputContext.getSingularContextName() + ".");
+        System.out.println("You are now signed in as (and acting as) " + getContext().getSingularContextName() + ".");
 
         inputSource = new Scanner(System.in);
         try {

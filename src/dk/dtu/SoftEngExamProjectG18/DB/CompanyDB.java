@@ -1,5 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.DB;
 
+import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 
@@ -7,7 +8,7 @@ import java.util.HashMap;
 
 public class CompanyDB {
 
-    private static CompanyDB instance;
+    protected static CompanyDB instance;
 
     public static CompanyDB getInstance() {
         if (instance == null) {
@@ -17,12 +18,13 @@ public class CompanyDB {
         return instance;
     }
 
-    private HashMap<String, Employee> employees = new HashMap<>();
-    private HashMap<Integer, Integer> nextProjectID = new HashMap<>();
-    private HashMap<String, Project> projects = new HashMap<>();
-    private Employee signedInEmployee;
+    protected HashMap<String, Employee> employees = new HashMap<>();
+    protected InputContext inputContext;
+    protected HashMap<Integer, Integer> nextProjectID = new HashMap<>();
+    protected HashMap<String, Project> projects = new HashMap<>();
+    protected Employee signedInEmployee;
 
-    private CompanyDB() {}
+    protected CompanyDB() {}
 
     public Employee getEmployee(String ID) {
         return this.employees.get(ID);
@@ -30,6 +32,10 @@ public class CompanyDB {
 
     public HashMap<String, Employee> getEmployees() {
         return this.employees;
+    }
+
+    public InputContext getInputContext() {
+        return inputContext;
     }
 
     public int incrementNextProjectID(int year) {
@@ -53,6 +59,10 @@ public class CompanyDB {
 
     public Employee getSignedInEmployee() {
         return this.signedInEmployee;
+    }
+
+    public void setInputContext(InputContext inputContext) {
+        this.inputContext = inputContext;
     }
 
     public boolean setSignedInEmployee(String ID) {

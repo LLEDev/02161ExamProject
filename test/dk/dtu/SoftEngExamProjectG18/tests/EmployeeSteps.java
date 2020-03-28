@@ -1,5 +1,8 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
+import dk.dtu.SoftEngExamProjectG18.Context.EmployeeInputContext;
+import dk.dtu.SoftEngExamProjectG18.Core.Employee;
+import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -15,9 +18,10 @@ public class EmployeeSteps {
 
     @Given("there is an employee")
     public void thereIsAnEmployee() {
-        // TODO: Create employee
-        // TODO: Sign employee in
-        // TODO: Set correct inputContext
+        CompanyDB db = CompanyDB.getInstance();
+        db.getEmployees().put("HH", new Employee("HH", "Hans Hansen"));
+        db.setSignedInEmployee("HH");
+        db.setInputContext(new EmployeeInputContext());
     }
 
     @And("there is an employee with initials {string}")
