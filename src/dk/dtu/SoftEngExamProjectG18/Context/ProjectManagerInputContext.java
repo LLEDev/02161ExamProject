@@ -60,6 +60,10 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     public boolean cmdRequestOverview(String[] args) {
+        if(args.length > 0) {
+            return false;
+        }
+
         return true;
     }
 

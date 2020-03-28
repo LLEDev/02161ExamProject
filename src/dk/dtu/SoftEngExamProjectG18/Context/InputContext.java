@@ -13,15 +13,11 @@ abstract public class InputContext {
     public final Map<String, String[]> triggers = new HashMap<String, String[]>();
 
     public static InputContext getContext(InputContextType ict) {
-        if(ict == InputContextType.Emp) {
-            return new EmployeeInputContext();
-        }
-
         if(ict == InputContextType.PM) {
             return new ProjectManagerInputContext();
         }
 
-        return null;
+        return new EmployeeInputContext();
     }
 
     protected String output = "";

@@ -6,7 +6,6 @@ import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Util.CSVReader;
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -17,30 +16,19 @@ public class Main {
 
     protected static Scanner inputScanner;
 
-    protected static void callMethod(String method, String usage, ArrayList<String> args) {
+    protected static void callMethod(String method, String usage, ArrayList<String> args) throws Exception {
         InputContext inputContext = CompanyDB.getContext();
 
-        try {
-            Method m = inputContext.getClass().getMethod(method, String[].class);
-            boolean result = (boolean) m.invoke(inputContext, (Object) args.toArray(new String[0]));
+        Method m = inputContext.getClass().getMethod(method, String[].class);
+        boolean result = (boolean) m.invoke(inputContext, (Object) args.toArray(new String[0]));
 
-            if(result) {
-                inputContext.printOutput();
-            } else {
-                outSource.println(usage);
-            }
-
-            inputContext.resetOutput();
-
-        } catch (SecurityException e) {
-            outSource.println("Internal error: SecurityException");
-        } catch (NoSuchMethodException e) {
-            outSource.println("Internal error: NoSuchMethodException");
-        } catch (IllegalAccessException e) {
-            outSource.println("Internal error: IllegalAccessException");
-        } catch (InvocationTargetException e) {
-            outSource.println("Internal error: InvocationTargetException");
+        if (result) {
+            inputContext.printOutput();
+        } else {
+            outSource.println(usage);
         }
+
+        inputContext.resetOutput();
     }
 
     protected static boolean loadData(String dir) {
@@ -74,10 +62,10 @@ public class Main {
         InputStream projects = cl.getResourceAsStream("data/projects.csv");
         InputStream workHours = cl.getResourceAsStream("data/workhours.csv");
 
-        if(activities == null || employees == null || projects == null || workHours == null) {
-            outSource.println("One or more data files are missing.");
-            return false;
-        }
+        assert employees != null;
+        assert projects != null;
+        assert activities != null;
+        assert workHours != null;
 
         CSVReader.readEmployees(new InputStreamReader(employees));
         CSVReader.readProjects(new InputStreamReader(projects));
@@ -101,7 +89,86 @@ public class Main {
         return false;
     }
 
-    protected static void redirectInput(String[] input) {
+    protected static boolean setupContext(InputContextType ict) {
+        InputContext ic = InputContext.getContext(ict);
+        CompanyDB.getInstance().setInputContext(ic);
+        return true;
+    }
+
+    protected static boolean signIn(String ID, String context) {
+        CompanyDB db = CompanyDB.getInstance();
+
+        if(!db.setSignedInEmployee(ID)) {
+            outSource.println("This employee is not registered in the system.");
+            return false;
+        }
+
+        for(InputContextType type : InputContextType.values()) {
+            if(context.equalsIgnoreCase(type.toString())) {
+                return setupContext(type);
+            }
+        }
+
+        outSource.println("This context is not available.");
+        return false;
+    }
+
+    /*
+        Basic commands
+     */
+
+    protected static void help() {
+        ArrayList<String> usages = new ArrayList<>();
+        for(String[] cmd : CompanyDB.getContext().getTriggers().values()) {
+            usages.add(cmd[0]);
+        }
+
+        Collections.sort(usages);
+
+        outSource.println("Available commands:");
+        for(String usage : usages) {
+            outSource.println(" - " + usage);
+        }
+    }
+
+    protected static void quit() {
+        outSource.println("Bye!");
+
+        if(inputScanner != null) {
+            inputScanner.close();
+        }
+    }
+
+    /*
+        Main
+     */
+
+    public static void main(String[] args) throws Exception {
+        CompanyDB db = CompanyDB.getInstance();
+
+        if(args.length < 2) {
+            outSource.println("Usage: java -jar 02161ExamProject {Employee Initials} {Context=Emp/PM)} [Data folder/N]");
+            return;
+        }
+
+        boolean dataLoad = args.length >= 3 ? loadData(args[2]) : loadData("");
+
+        if(!dataLoad || !signIn(args[0], args[1])) {
+            return;
+        }
+
+        outSource.println("Welcome, " + db.getSignedInEmployee().getName() + ".");
+        outSource.println("You are now signed in as (and acting as) " + CompanyDB.getContext().getSingularContextName() + ".");
+
+        inputScanner = new Scanner(inputSource);
+        try {
+            while (inputScanner.hasNextLine()) {
+                redirectInput(inputScanner.nextLine().trim().split(" "));
+            }
+        } catch(IllegalStateException ignored) {} // Thrown when quitting
+    }
+
+    public static void redirectInput(String[] input) throws Exception {
         if(input.length == 0 || redirectBasicInput(input)) {
             return;
         }
@@ -138,92 +205,6 @@ public class Main {
         }
 
         outSource.println("Command not found.");
-    }
-
-    protected static boolean setupContext(InputContextType ict) {
-        InputContext ic = InputContext.getContext(ict);
-
-        if(ict == null) {
-            outSource.println("An error occurred.");
-            return false;
-        }
-
-        CompanyDB.getInstance().setInputContext(ic);
-        return true;
-    }
-
-    protected static boolean signIn(String ID, String context) {
-        CompanyDB db = CompanyDB.getInstance();
-
-        if(!db.setSignedInEmployee(ID)) {
-            outSource.println("This employee is not registered in the system.");
-            return false;
-        }
-
-        for(InputContextType type : InputContextType.values()) {
-            if(context.equalsIgnoreCase(type.toString())) {
-                return setupContext(type);
-            }
-        }
-
-        return false;
-    }
-
-    /*
-        Basic commands
-     */
-
-    protected static void help() {
-        ArrayList<String> usages = new ArrayList<>();
-        for(String[] cmd : CompanyDB.getContext().getTriggers().values()) {
-            usages.add(cmd[0]);
-        }
-
-        Collections.sort(usages);
-
-        outSource.println("Available commands:");
-        for(String usage : usages) {
-            outSource.println(" - " + usage);
-        }
-    }
-
-    protected static void quit() {
-        outSource.println("Bye!");
-
-        if(inputScanner == null) {
-            return;
-        }
-
-        inputScanner.close();
-    }
-
-    /*
-        Main
-     */
-
-    public static void main(String[] args) {
-        CompanyDB db = CompanyDB.getInstance();
-
-        if(args.length < 2) {
-            outSource.println("Usage: java -jar 02161ExamProject {Employee Initials} {Context=Emp/PM)} [Data folder/N]");
-            return;
-        }
-
-        boolean dataLoad = args.length >= 3 ? loadData(args[2]) : loadData("");
-
-        if(!dataLoad || !signIn(args[0], args[1])) {
-            return;
-        }
-
-        outSource.println("Welcome, " + db.getSignedInEmployee().getName() + ".");
-        outSource.println("You are now signed in as (and acting as) " + CompanyDB.getContext().getSingularContextName() + ".");
-
-        inputScanner = new Scanner(inputSource);
-        try {
-            while (inputScanner.hasNextLine()) {
-                redirectInput(inputScanner.nextLine().trim().split(" "));
-            }
-        } catch(IllegalStateException ignored) {} // Thrown when quitting
     }
 
     public static void setInSource(InputStream is) {
