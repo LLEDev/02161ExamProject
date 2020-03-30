@@ -27,7 +27,7 @@ public class Main {
         if (result) {
             inputContext.printOutput();
         } else {
-            outSource.println(usage);
+            outSource.println("Usage: " + usage);
         }
 
         inputContext.resetOutput();
@@ -198,7 +198,7 @@ public class Main {
             int argsFrom = i + 1;
             ArrayList<String> args = new ArrayList<>();
             for(int j = argsFrom; j < inputVariants.size(); j++) {
-                args.add(inputVariants.get(j));
+                args.add(input[j]);
             }
 
             callMethod(method, usage, args);

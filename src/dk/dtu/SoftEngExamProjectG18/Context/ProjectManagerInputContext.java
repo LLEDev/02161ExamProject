@@ -1,5 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.Context;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public class ProjectManagerInputContext extends InputContext {
         });
         put("project activity create", new String[] {
                 "project activity create {projectID}, {activityName}",
-                "cmdAssignEmployeeToActivity"
+                "cmdCreateActivity"
         });
         put("project activity estimate", new String[] {
                 "project activity estimate {projectID} {activityID} {minutes}",
@@ -51,6 +52,20 @@ public class ProjectManagerInputContext extends InputContext {
 
     // String employeeID, String projectID, int activityID
     public boolean cmdAssignEmployeeToActivity(String[] args) {
+        if(args.length != 3) {
+            return false;
+        }
+
+        try {
+            Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+        // TODO: Do something
+
+        this.writeOutput("Test output");
+
         return true;
     }
 
