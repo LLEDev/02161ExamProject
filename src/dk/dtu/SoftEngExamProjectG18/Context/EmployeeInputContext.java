@@ -1,5 +1,8 @@
 package dk.dtu.SoftEngExamProjectG18.Context;
 
+import dk.dtu.SoftEngExamProjectG18.Core.Project;
+import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +46,13 @@ public class EmployeeInputContext extends InputContext {
     }
 
     // String name, boolean isBillable
-    public boolean cmdCreateProject(String[] args) {
+    public boolean cmdCreateProject(String name) {
+        if (name.length() == 0) {
+            return false;
+        }
+        CompanyDB db = CompanyDB.getInstance();
+        Project project = new Project(name);
+        db.getProjects().put(project.getID(), project);
         return true;
     }
 
