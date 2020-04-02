@@ -1,5 +1,9 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
+import dk.dtu.SoftEngExamProjectG18.Context.EmployeeInputContext;
+import dk.dtu.SoftEngExamProjectG18.Core.Employee;
+import dk.dtu.SoftEngExamProjectG18.Core.Project;
+import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -14,18 +18,26 @@ public class ProjectSteps {
      */
 
     @Given("that there is a project with name {string}")
-    public void thatThereIsAProjectWithName(String arg0) {
-
+    public void thatThereIsAProjectWithName(String name) {
+        CompanyDB db = CompanyDB.getInstance();
+        Project project = new Project(name);
+        db.getProjects().put(project.getID(), project);
     }
 
     @Given("there are projects with names")
     public void thereAreProjectsWithNames(List<String> projects) {
-
+        CompanyDB db = CompanyDB.getInstance();
+        for (String name : projects) {
+            Project project = new Project(name);
+            db.getProjects().put(project.getID(), project);
+        }
     }
 
     @When("the employee creates a project with name {string}")
-    public void theEmployeeCreatesAProjectWithName(String arg0) {
-
+    public void theEmployeeCreatesAProjectWithName(String name) {
+        CompanyDB db = CompanyDB.getInstance();
+        EmployeeInputContext input = (EmployeeInputContext) db.getInputContext();
+        input.cmdCreateProject(name);
     }
 
     /*
