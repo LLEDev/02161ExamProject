@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class Project {
 
     protected HashMap<Integer, Activity> activities = new HashMap<>();
-    protected Date createdAt;
+    protected Date createdAt = new Date(); // TODO: should this be dynamic?
     protected int ID;
     protected boolean isBillable = true;
     protected String name;
