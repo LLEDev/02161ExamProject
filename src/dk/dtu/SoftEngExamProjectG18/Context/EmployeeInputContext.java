@@ -47,13 +47,13 @@ public class EmployeeInputContext extends InputContext {
 
     // String name, boolean isBillable
     public boolean cmdCreateProject(String name) {
-        if (name.length() == 0) {
-            return false;
+        if (this.isValidProjectName(name)) {
+            CompanyDB db = CompanyDB.getInstance();
+            Project project = new Project(name);
+            db.getProjects().put(project.getID(), project);
+            return true;
         }
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = new Project(name);
-        db.getProjects().put(project.getID(), project);
-        return true;
+        return false;
     }
 
     // String projectID, int activityID
@@ -83,6 +83,14 @@ public class EmployeeInputContext extends InputContext {
     // String projectID, int activityID, Date date, int addedHours
     public boolean cmdSubmitHours(String[] args) {
         return true;
+    }
+
+    /*
+        Utils
+     */
+
+    private boolean isValidProjectName(String name) {
+        return name.length() != 0;
     }
 
 }
