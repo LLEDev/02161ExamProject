@@ -3,6 +3,7 @@ package dk.dtu.SoftEngExamProjectG18.Context;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,11 +47,24 @@ public class EmployeeInputContext extends InputContext {
     }
 
     // String name, boolean isBillable
-    public boolean cmdCreateProject(String name) {
-        if (this.isValidProjectName(name)) {
-            CompanyDB db = CompanyDB.getInstance();
-            Project project = new Project(name);
-            db.getProjects().put(project.getID(), project);
+    public boolean cmdCreateProject(String[] args) {
+        if (args.length == 0) {
+            return false;
+        }
+
+        if (this.isValidProjectName(args[0])) {
+
+            Project project;
+
+            if (args.length > 1) {
+                boolean isBillable = Boolean.parseBoolean(args[1]);
+                project = new Project(args[0], isBillable);
+            } else {
+                project = new Project(args[0]);
+            }
+
+            this.addProjectToDB(project);
+
             return true;
         }
         return false;
@@ -91,6 +105,11 @@ public class EmployeeInputContext extends InputContext {
 
     private boolean isValidProjectName(String name) {
         return name.length() != 0;
+    }
+
+    private void addProjectToDB(Project project) {
+        CompanyDB db = CompanyDB.getInstance();
+        db.getProjects().put(project.getID(), project);
     }
 
 }
