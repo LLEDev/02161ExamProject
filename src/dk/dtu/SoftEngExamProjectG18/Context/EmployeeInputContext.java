@@ -1,13 +1,21 @@
 package dk.dtu.SoftEngExamProjectG18.Context;
 
+import dk.dtu.SoftEngExamProjectG18.Core.Activity;
+import dk.dtu.SoftEngExamProjectG18.Core.Employee;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EmployeeInputContext extends InputContext {
+
+    SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
 
     /*
         General
@@ -42,7 +50,14 @@ public class EmployeeInputContext extends InputContext {
      */
 
     // String projectID, String PMID
-    public boolean cmdAssignPM(String[] args) {
+    public boolean cmdAssignPM(String[] args) throws Exception {
+        if (args.length != 2) {
+            return false;
+        }
+        CompanyDB db = CompanyDB.getInstance();
+        Project project = db.getProject(args[0]);
+        Employee employee = db.getEmployee(args[1]);
+        project.assignPM(employee);
         return true;
     }
 
@@ -72,12 +87,38 @@ public class EmployeeInputContext extends InputContext {
 
     // String projectID, int activityID
     public boolean cmdMarkActivityAsDone(String[] args) {
-        return true;
+        if (args.length != 2) {
+            return false;
+        }
+
+        Activity activity = this.getActivityFromProject(args[0], args[1]);
+        if (activity!=null) {
+            activity.setDone(true);
+            return true;
+        }
+        return false;
     }
 
     // String projectID, int activityID, String employeeID
     public boolean cmdRequestAssistance(String[] args) {
-        return true;
+        if (args.length != 3) {
+            return false;
+        }
+        Activity activity = this.getActivityFromProject(args[0], args[1]);
+        if (activity!=null) {
+            CompanyDB db = CompanyDB.getInstance();
+            Employee employee = db.getEmployee(args[2]);
+            Employee signedInEmployee = db.getSignedInEmployee();
+            HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> signedInEmployeeActivities
+                    = signedInEmployee.getActivities();
+             if (employee.amountOfOpenActivities()!=0 &&
+                     signedInEmployeeActivities.get(activity.getName()).containsKey(activity.getID())) {
+                 employee.getActivities().put(activity.getName(),signedInEmployeeActivities.get(activity.getName()));
+                 return true;
+             }
+        }
+        return false;
+
     }
 
     public boolean cmdRequestDailyOverview(String[] args) {
@@ -85,23 +126,76 @@ public class EmployeeInputContext extends InputContext {
     }
 
     // OOOActivityType type, Date start, Date end
-    public boolean cmdRequestOutOfOffice(String[] args) {
-        return true;
-    }
+    public boolean cmdRequestOutOfOffice(String[] args) { return true; }
 
     // String projectID, int activityID, Date date, int setHours
     public boolean cmdSetHours(String[] args) {
-        return true;
+        if (args.length != 4) {
+            return false;
+        }
+        Activity activity = this.getActivityFromProject(args[0], args[1]);
+        if (activity!=null) {
+            HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
+            EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(activity.getName());
+            if(isStringParseIntDoable(args[4])) {
+                int minutes = Integer.parseInt(args[4]) * 60;
+                try {
+                    Date date = this.formatter.parse(args[3]);
+                    employeeActivityIntermediate.setMinutes(date, minutes);
+                    return true;
+                } catch (ParseException e) {
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
     // String projectID, int activityID, Date date, int addedHours
     public boolean cmdSubmitHours(String[] args) {
-        return true;
+        if (args.length != 4) {
+            return false;
+        }
+        Activity activity = this.getActivityFromProject(args[0], args[1]);
+        if (activity!=null) {
+            HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
+            EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(activity.getName());
+            if(isStringParseIntDoable(args[4])) {
+                int minutes = Integer.parseInt(args[4]) * 60;
+                try {
+                    Date date = this.formatter.parse(args[3]);
+                    employeeActivityIntermediate.addMinutes(date, minutes);
+                    return true;
+                } catch (ParseException e) {
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
     /*
         Utils
      */
+    private Activity getActivityFromProject(String projectID, String activityID) {
+        CompanyDB db = CompanyDB.getInstance();
+        Project project = db.getProject(projectID);
+        if (isStringParseIntDoable(activityID)) {
+            int intActivityID = Integer.parseInt(activityID);
+            return project.getActivity(intActivityID);
+        }
+        return null;
+    }
+
+    private boolean isStringParseIntDoable (String possibleInt) {
+        try {
+            Integer.parseInt(possibleInt);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
 
     private boolean isValidProjectName(String name) {
         return name.length() != 0;
