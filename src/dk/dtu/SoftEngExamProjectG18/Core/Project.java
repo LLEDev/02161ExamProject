@@ -57,6 +57,20 @@ public class Project {
         return this.nextActivityID - 1;
     }
 
+    public void assignPM(Employee employee) throws Exception {
+        if (this.PM==null) {
+            this.PM = employee;
+            return;
+        }
+        CompanyDB db = CompanyDB.getInstance();
+        Employee signedInEmployee = db.getSignedInEmployee();
+        if (signedInEmployee==this.PM) {
+            this.PM = employee;
+        } else {
+            throw new Exception("Project manager role required"); // TODO: How do we handle exceptions?
+        }
+    }
+
     public Activity getActivity(int ID) {
         return this.activities.get(ID);
     }
