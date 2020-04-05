@@ -27,6 +27,10 @@ public class ProjectManagerInputContext extends InputContext {
                 "project activity create {projectID}, {activityName}",
                 "cmdCreateActivity"
         });
+        put("project activity finish", new String[] {
+                "project activity finish {projectID}, {activityName}",
+                "cmdFinishActivity"
+        });
         put("project activity estimate", new String[] {
                 "project activity estimate {projectID} {activityID} {minutes}",
                 "cmdSetActivityEstimatedDuration"
@@ -94,7 +98,33 @@ public class ProjectManagerInputContext extends InputContext {
 
     // String projectID, String activityName
     public boolean cmdCreateActivity(String[] args) {
-        return true;
+        if (args.length != 2)
+            return false;
+
+        CompanyDB db = CompanyDB.getInstance();
+        Project project = db.getProject(args[0]);
+        if (isSignedInEmployeePM(project)) {
+            new Activity(args[1], project);
+            return true;
+        }
+        return false;
+    }
+
+    // String projectID, String activityID
+    public boolean cmdFinishActivity(String[] args) {
+        if (args.length != 2)
+            return false;
+
+        CompanyDB db = CompanyDB.getInstance();
+        Project project = db.getProject(args[0]);
+        if (isSignedInEmployeePM(project)) {
+            if (isStringParseIntDoable(args[1])) {
+                Activity activity = project.getActivity(Integer.parseInt(args[1]));
+                activity.setDone(true);
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean cmdRequestOverview(String[] args) {
@@ -117,5 +147,15 @@ public class ProjectManagerInputContext extends InputContext {
     // Date start, Date end
     public boolean cmdSetActivityInterval(String[] args) {
         return true;
+    }
+
+
+    /*
+        Utils
+     */
+
+    private boolean isSignedInEmployeePM(Project project) {
+        CompanyDB db = CompanyDB.getInstance();
+        return db.getSignedInEmployee() == project.getPM();
     }
 }
