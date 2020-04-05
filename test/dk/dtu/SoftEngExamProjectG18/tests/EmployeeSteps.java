@@ -12,26 +12,33 @@ import java.util.List;
 
 public class EmployeeSteps {
 
+    private CompanyDB db;
+
+    public EmployeeSteps () {
+       this.db = CompanyDB.getInstance();
+    }
+
     /*
         Create methods
      */
 
     @Given("there is an employee")
     public void thereIsAnEmployee() {
-        CompanyDB db = CompanyDB.getInstance();
-        db.getEmployees().put("HH", new Employee("HH", "Hans Hansen"));
-        db.setSignedInEmployee("HH");
-        db.setInputContext(new EmployeeInputContext());
+        thereIsAnEmployeeWithInitials("HH");
     }
 
     @And("there is an employee with initials {string}")
-    public void thereIsAnEmployeeWithInitials(String arg0) {
-
+    public void thereIsAnEmployeeWithInitials(String name) {
+        this.db.getEmployees().put(name, new Employee(name, "UNKNOWN"));
+        this.db.setSignedInEmployee(name);
+        this.db.setInputContext(new EmployeeInputContext());
     }
 
     @And("the following employees are given")
     public void theFollowingEmployeesAreGiven(List<String> employees) {
-
+        for (String name: employees) {
+            thereIsAnEmployeeWithInitials(name);
+        }
     }
 
     /*
