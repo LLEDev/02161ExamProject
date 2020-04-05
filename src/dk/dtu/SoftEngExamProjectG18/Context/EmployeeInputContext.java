@@ -4,6 +4,7 @@ import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
 import java.text.ParseException;
@@ -177,25 +178,6 @@ public class EmployeeInputContext extends InputContext {
     /*
         Utils
      */
-    private Activity getActivityFromProject(String projectID, String activityID) {
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = db.getProject(projectID);
-        if (isStringParseIntDoable(activityID)) {
-            int intActivityID = Integer.parseInt(activityID);
-            return project.getActivity(intActivityID);
-        }
-        return null;
-    }
-
-    private boolean isStringParseIntDoable (String possibleInt) {
-        try {
-            Integer.parseInt(possibleInt);
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        return true;
-    }
-
 
     private boolean isValidProjectName(String name) {
         return name.length() != 0;

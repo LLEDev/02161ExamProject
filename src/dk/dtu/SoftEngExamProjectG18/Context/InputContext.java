@@ -1,5 +1,8 @@
 package dk.dtu.SoftEngExamProjectG18.Context;
 
+import dk.dtu.SoftEngExamProjectG18.Core.Activity;
+import dk.dtu.SoftEngExamProjectG18.Core.Project;
+import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
 
 import java.util.HashMap;
@@ -18,6 +21,25 @@ abstract public class InputContext {
         }
 
         return new EmployeeInputContext();
+    }
+
+    protected boolean isStringParseIntDoable (String possibleInt) {
+        try {
+            Integer.parseInt(possibleInt);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    protected Activity getActivityFromProject(String projectID, String activityID) {
+        CompanyDB db = CompanyDB.getInstance();
+        Project project = db.getProject(projectID);
+        if (isStringParseIntDoable(activityID)) {
+            int intActivityID = Integer.parseInt(activityID);
+            return project.getActivity(intActivityID);
+        }
+        return null;
     }
 
     protected String output = "";

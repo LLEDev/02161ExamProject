@@ -85,5 +85,9 @@ public class Project {
         return c.get(Calendar.YEAR) + "-" + this.ID;
     }
 
+    public Employee getPM(){
+        return this.PM;
+    }
+
 
 }

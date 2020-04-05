@@ -28,8 +28,7 @@ public class Employee {
     }
 
     public int amountOfOpenActivities() {
-        int amountOfActivities = this.activities.size();
-        return weeklyActivityCap - amountOfActivities;
+        return weeklyActivityCap - this.activities.size();
     }
 
     public String getID() {
