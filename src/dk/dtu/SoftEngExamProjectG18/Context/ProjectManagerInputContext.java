@@ -1,5 +1,11 @@
 package dk.dtu.SoftEngExamProjectG18.Context;
 
+import dk.dtu.SoftEngExamProjectG18.Core.Activity;
+import dk.dtu.SoftEngExamProjectG18.Core.Employee;
+import dk.dtu.SoftEngExamProjectG18.Core.Project;
+import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,17 +62,34 @@ public class ProjectManagerInputContext extends InputContext {
             return false;
         }
 
-        try {
-            Integer.parseInt(args[0]);
-        } catch (NumberFormatException e) {
+        if(!(isStringParseIntDoable(args[0]) && isStringParseIntDoable(args[2]))){
             return false;
         }
 
+        Activity activity = this.getActivityFromProject(args[1], args[2]);
+        if (activity!=null) {
+            CompanyDB db = CompanyDB.getInstance();
+            Project project = db.getProject(args[1]);
+            Employee PM = db.getSignedInEmployee();
+            if (!(PM.equals(project.getPM()))) {
+                return false;
+            }
+            Employee employee = db.getEmployee(args[0]);
+            if (employee.amountOfOpenActivities()!=0) {
+                HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
+                EmployeeActivityIntermediate EAI = trackedTime.get(activity.getName());
+                HashMap<Integer, EmployeeActivityIntermediate> tmp = new HashMap<>();
+                tmp.put(activity.getID(),EAI);
+                employee.getActivities().put(activity.getName(),tmp);
+                return true;
+            }
+
+        }
         // TODO: Do something
 
         this.writeOutput("Test output");
 
-        return true;
+        return false;
     }
 
     // String projectID, String activityName
