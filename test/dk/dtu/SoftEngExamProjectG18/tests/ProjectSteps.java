@@ -37,7 +37,8 @@ public class ProjectSteps {
     public void theEmployeeCreatesAProjectWithName(String name) {
         CompanyDB db = CompanyDB.getInstance();
         EmployeeInputContext input = (EmployeeInputContext) db.getInputContext();
-        input.cmdCreateProject(name);
+        String projectArguments[] = new String[] {name};
+        input.cmdCreateProject(projectArguments);
     }
 
     /*
