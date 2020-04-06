@@ -5,7 +5,7 @@ Feature: Add project
     Scenario: Employee creates a project
         Given there is an employee
         When the employee creates a project with name "Test Project"
-        Then there is a project with ID "2020-000001" and name "Test Project"
+        Then there is a project with ID "2020-1" and name "Test Project"
 
     Scenario: Employee creates a project with empty name
         Given there is an employee
