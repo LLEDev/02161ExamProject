@@ -14,7 +14,7 @@ import io.cucumber.java.en.When;
 
 import java.util.List;
 
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.*;
 
 public class ProjectSteps {
 
@@ -111,8 +111,9 @@ public class ProjectSteps {
     }
 
     @Then("there is a project with ID {string} and name {string}")
-    public void thereIsAProjectWithIDAndName(String arg0, String arg1) {
-
+    public void thereIsAProjectWithIDAndName(String id, String name) {
+        Project project = this.db.getProject(id);
+        assertEquals(project.getName(), name);
     }
 
     @Then("the project contains an activity with ID {string}")
