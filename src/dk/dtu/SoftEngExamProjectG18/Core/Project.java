@@ -89,5 +89,7 @@ public class Project {
         return this.PM;
     }
 
-
+    public String getName() {
+        return this.name;
+    }
 }
