@@ -52,13 +52,22 @@ public class EmployeeInputContext extends InputContext {
 
     // String projectID, String PMID
     public boolean cmdAssignPM(String[] args) throws Exception {
-        if (args.length != 2) {
+        if (checkArgumentlength(args.length,2)) {
             return false;
         }
         CompanyDB db = CompanyDB.getInstance();
         Project project = db.getProject(args[0]);
+        if (checkIfNull(project)) {
+            this.writeOutput("Project does not exist");
+            return false;
+        }
         Employee employee = db.getEmployee(args[1]);
+        if (checkIfNull(employee)) {
+            this.writeOutput("Employee does not exist");
+            return false;
+        }
         project.assignPM(employee);
+        this.writeOutput("Employee assigned as PM");
         return true;
     }
 
@@ -88,13 +97,14 @@ public class EmployeeInputContext extends InputContext {
 
     // String projectID, int activityID
     public boolean cmdMarkActivityAsDone(String[] args) {
-        if (args.length != 2) {
+        if (checkArgumentlength(args.length,2)) {
             return false;
         }
 
         Activity activity = this.getActivityFromProject(args[0], args[1]);
         if (activity!=null) {
             activity.setDone(true);
+            this.writeOutput("Activity marked as done");
             return true;
         }
         return false;
@@ -102,19 +112,24 @@ public class EmployeeInputContext extends InputContext {
 
     // String projectID, int activityID, String employeeID
     public boolean cmdRequestAssistance(String[] args) {
-        if (args.length != 3) {
+        if (checkArgumentlength(args.length,3)) {
             return false;
         }
         Activity activity = this.getActivityFromProject(args[0], args[1]);
         if (activity!=null) {
             CompanyDB db = CompanyDB.getInstance();
+            Project project = db.getProject(args[0]);
             Employee employee = db.getEmployee(args[2]);
+            if (checkIfNull(employee)) {
+                this.writeOutput("Employee does not exist");
+                return false;
+            }
             Employee signedInEmployee = db.getSignedInEmployee();
             HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> signedInEmployeeActivities
                     = signedInEmployee.getActivities();
              if (employee.amountOfOpenActivities()!=0 &&
-                     signedInEmployeeActivities.get(activity.getName()).containsKey(activity.getID())) {
-                 employee.getActivities().put(activity.getName(),signedInEmployeeActivities.get(activity.getName()));
+                     signedInEmployeeActivities.get(project.getID()).containsKey(activity.getID())) {
+                 employee.getActivities().put(project.getID(),signedInEmployeeActivities.get(project.getID()));
                  return true;
              }
         }
@@ -131,20 +146,24 @@ public class EmployeeInputContext extends InputContext {
 
     // String projectID, int activityID, Date date, int setHours
     public boolean cmdSetHours(String[] args) {
-        if (args.length != 4) {
+        if (checkArgumentlength(args.length,4)) {
             return false;
         }
         Activity activity = this.getActivityFromProject(args[0], args[1]);
         if (activity!=null) {
+            CompanyDB db = CompanyDB.getInstance();
+            Employee employee = db.getSignedInEmployee();
             HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
-            EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(activity.getName());
+            EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(employee.getID());
             if(isStringParseIntDoable(args[4])) {
                 int minutes = Integer.parseInt(args[4]) * 60;
                 try {
                     Date date = this.formatter.parse(args[3]);
                     employeeActivityIntermediate.setMinutes(date, minutes);
+                    this.writeOutput("Hours set");
                     return true;
                 } catch (ParseException e) {
+                    this.writeOutput("Date must be in format " + this.formatter.toPattern());
                     return false;
                 }
             }
@@ -154,20 +173,24 @@ public class EmployeeInputContext extends InputContext {
 
     // String projectID, int activityID, Date date, int addedHours
     public boolean cmdSubmitHours(String[] args) {
-        if (args.length != 4) {
+        if (checkArgumentlength(args.length,4)) {
             return false;
         }
         Activity activity = this.getActivityFromProject(args[0], args[1]);
         if (activity!=null) {
+            CompanyDB db = CompanyDB.getInstance();
+            Employee employee = db.getSignedInEmployee();
             HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
-            EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(activity.getName());
+            EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(employee.getID());
             if(isStringParseIntDoable(args[4])) {
                 int minutes = Integer.parseInt(args[4]) * 60;
                 try {
                     Date date = this.formatter.parse(args[3]);
                     employeeActivityIntermediate.addMinutes(date, minutes);
+                    this.writeOutput("Hours added");
                     return true;
                 } catch (ParseException e) {
+                    this.writeOutput("Date must be in format " + this.formatter.toPattern());
                     return false;
                 }
             }

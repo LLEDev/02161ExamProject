@@ -62,7 +62,7 @@ public class ProjectManagerInputContext extends InputContext {
 
     // String employeeID, String projectID, int activityID
     public boolean cmdAssignEmployeeToActivity(String[] args) {
-        if(args.length != 3) {
+        if (checkArgumentlength(args.length,3)) {
             return false;
         }
 
@@ -76,23 +76,17 @@ public class ProjectManagerInputContext extends InputContext {
             Project project = db.getProject(args[1]);
             Employee PM = db.getSignedInEmployee();
             if (!(PM.equals(project.getPM()))) {
+                this.writeOutput("Project Manager status required");
                 return false;
             }
             Employee employee = db.getEmployee(args[0]);
             if (employee.amountOfOpenActivities()!=0) {
-                HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
-                EmployeeActivityIntermediate EAI = trackedTime.get(activity.getName());
-                HashMap<Integer, EmployeeActivityIntermediate> tmp = new HashMap<>();
-                tmp.put(activity.getID(),EAI);
-                employee.getActivities().put(activity.getName(),tmp);
+                EmployeeActivityIntermediate EAI = new EmployeeActivityIntermediate(employee,activity);
+                this.writeOutput("Employee added to activity");
                 return true;
             }
 
         }
-        // TODO: Do something
-
-        this.writeOutput("Test output");
-
         return false;
     }
 

@@ -10,6 +10,7 @@ public class Employee {
     protected String name;
     protected int weeklyActivityCap = 10;
 
+    // ProjectID --> ActivityID --> EmployeeActivityIntermediate
     protected HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> activities = new HashMap<>();
 
     public Employee(String ID, String name) {

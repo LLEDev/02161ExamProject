@@ -23,25 +23,6 @@ abstract public class InputContext {
         return new EmployeeInputContext();
     }
 
-    protected boolean isStringParseIntDoable (String possibleInt) {
-        try {
-            Integer.parseInt(possibleInt);
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        return true;
-    }
-
-    protected Activity getActivityFromProject(String projectID, String activityID) {
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = db.getProject(projectID);
-        if (isStringParseIntDoable(activityID)) {
-            int intActivityID = Integer.parseInt(activityID);
-            return project.getActivity(intActivityID);
-        }
-        return null;
-    }
-
     protected String output = "";
 
     public String getOutput() {
@@ -58,6 +39,47 @@ abstract public class InputContext {
 
     public void writeOutput(String s) {
         this.output += s;
+    }
+
+    /*
+        Utils
+     */
+    protected boolean isStringParseIntDoable (String possibleInt) {
+        try {
+            Integer.parseInt(possibleInt);
+        } catch (NumberFormatException nfe) {
+            this.writeOutput("Any number must be given as an integer");
+            return false;
+        }
+        return true;
+    }
+
+    protected Activity getActivityFromProject(String projectID, String activityID) {
+        CompanyDB db = CompanyDB.getInstance();
+        Project project = db.getProject(projectID);
+
+        if (checkIfNull(project)) {
+            this.writeOutput("Project does not exist");
+            return null;
+        }
+
+        if (isStringParseIntDoable(activityID)) {
+            int intActivityID = Integer.parseInt(activityID);
+            if (!checkIfNull(project.getActivity(intActivityID))){
+                return project.getActivity(intActivityID);
+            }
+        }
+        this.writeOutput("Activity does not exist");
+        return null;
+    }
+
+    protected boolean checkIfNull(Object obj) {
+        return (obj==null);
+    }
+
+    protected boolean checkArgumentlength(int argsLength, int reguiredLength) {
+        this.writeOutput("Wrong usage.");
+        return argsLength == reguiredLength;
     }
 
 }

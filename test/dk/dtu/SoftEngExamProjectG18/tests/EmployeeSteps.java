@@ -28,16 +28,16 @@ public class EmployeeSteps {
     }
 
     @And("there is an employee with initials {string}")
-    public void thereIsAnEmployeeWithInitials(String name) {
-        this.db.getEmployees().put(name, new Employee(name, "UNKNOWN")); // TODO: Shall all creation of employees be with names?
-        this.db.setSignedInEmployee(name);
+    public void thereIsAnEmployeeWithInitials(String employeeID) {
+        this.db.getEmployees().put(employeeID, new Employee(employeeID, "UNKNOWN")); // TODO: Shall all creation of employees be with names?
+        this.db.setSignedInEmployee(employeeID);
         this.db.setInputContext(new EmployeeInputContext());
     }
 
     @And("the following employees are given")
     public void theFollowingEmployeesAreGiven(List<String> employees) {
-        for (String name: employees) {
-            thereIsAnEmployeeWithInitials(name);
+        for (String employeeID: employees) {
+            thereIsAnEmployeeWithInitials(employeeID);
         }
     }
 

@@ -17,6 +17,7 @@ public class Activity {
     protected Date endWeek = null;
     protected Date startWeek = null;
 
+    // EmployeeID --> EmployeeActivityIntermediate
     protected HashMap<String, EmployeeActivityIntermediate> trackedTime = new HashMap<>();
 
     public Activity(String name, Project project) {
