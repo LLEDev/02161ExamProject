@@ -50,7 +50,7 @@ public class EmployeeInputContext extends InputContext {
         TODO: Remember to use this.writeOutput instead of System.out.print!
      */
 
-    // String projectID, String PMID
+    // String projectID, String PMID TODO: Isn't it employeeID?
     public boolean cmdAssignPM(String[] args) throws Exception {
         if (checkArgumentlength(args.length,2)) {
             return false;
