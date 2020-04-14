@@ -51,10 +51,11 @@ public class EmployeeInputContext extends InputContext {
      */
 
     // String projectID, String PMID TODO: Isn't it employeeID?
-    public boolean cmdAssignPM(String[] args) throws Exception {
+    public boolean cmdAssignPM(String[] args) {
         if (checkArgumentlength(args.length,2)) {
             return false;
         }
+
         CompanyDB db = CompanyDB.getInstance();
         Project project = db.getProject(args[0]);
         if (checkIfNull(project)) {
@@ -66,7 +67,16 @@ public class EmployeeInputContext extends InputContext {
             this.writeOutput("Employee does not exist");
             return false;
         }
-        project.assignPM(employee);
+
+        // TODO: Review
+        // I have added handling of the exception. Hope it's all cool beans 😀
+        try {
+            project.assignPM(employee);
+        } catch (Exception e) {
+            this.writeOutput(e.getMessage());
+            return false;
+        }
+
         this.writeOutput("Employee assigned as PM");
         return true;
     }
