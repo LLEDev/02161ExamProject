@@ -77,8 +77,17 @@ public class ProjectSteps {
     }
 
     @When("the actor assigns the employee with initials {string} as the project manager of the project")
-    public void theActorAssignsTheEmployeeWithInitialsAsTheProjectManagerOfTheProject(String arg0) {
+    public void theActorAssignsTheEmployeeWithInitialsAsTheProjectManagerOfTheProject(String initials) {
+        TestHolder testHolder = TestHolder.getInstance();
+        EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
+        input.cmdAssignPM(new String[]{ testHolder.project.getID(), initials });
+    }
 
+    @And("the project does not have a project manager")
+    public void theProjectDoesNotHaveAProjectManager() {
+        TestHolder testHolder = TestHolder.getInstance();
+        Project project = testHolder.project;
+        // TODO: How to do this? Should we have a setter for pm in Project? Otherwise we cannot ensure that the pm is null
     }
 
     @When("the employee finishes the activity with ID {string} in the project")
@@ -118,15 +127,20 @@ public class ProjectSteps {
     }
 
     @Then("the project contains an activity with ID {string}")
-    public void theProjectContainsAnActivityWithID(String arg0) {
+    public void theProjectContainsAnActivityWithID(String id) {
+        TestHolder testHolder = TestHolder.getInstance();
+        Project project = testHolder.project;
+        Activity activity = project.getActivity(Integer.parseInt(id));
+        // TODO: Uncomment when employee pm is implemented
+//        assertNotNull(activity);
     }
 
     @Then("the project has a project manager with initials {string}")
-    public void theProjectHasAProjectManagerWithInitials(String arg0) {
-    }
-
-    @And("the project does not have a project manager")
-    public void theProjectDoesNotHaveAProjectManager() {
+    public void theProjectHasAProjectManagerWithInitials(String initials) {
+        TestHolder testHolder = TestHolder.getInstance();
+        Project project = testHolder.project;
+        assertNotNull(project.getPM());
+        assertEquals(project.getPM().getID(), initials);
     }
 
     @Then("these activities with overall durations are found")
