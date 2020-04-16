@@ -33,7 +33,7 @@ public class EmployeeSteps {
 
     @And("there is an employee with initials {string}")
     public void thereIsAnEmployeeWithInitials(String employeeID) {
-        this.db.getEmployees().put(employeeID, new Employee(employeeID, "UNKNOWN")); // TODO: Shall all creation of employees be with names?
+        this.db.getEmployees().put(employeeID, new Employee(employeeID, employeeID));
         this.db.setSignedInEmployee(employeeID);
         this.db.setInputContext(new EmployeeInputContext());
     }
@@ -53,38 +53,39 @@ public class EmployeeSteps {
     public void theEmployeeIsTheProjectManagerForTheProject() {
         TestHolder testHolder = TestHolder.getInstance();
         Project project = testHolder.project;
-        thereIsAnEmployee();
-        //TODO: Handle exceptions for pm before uncommenting
-        //project.assignPM(this.db.getEmployee(this.db.getEmployee("HH")));
+        Employee employee = this.db.getSignedInEmployee();
+        EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
+        String[] args = new String[2];
+        args[0] = project.getID();
+        args[1] = employee.getID();
+        input.cmdAssignPM(args);
     }
 
     @And("the employee with initials {string} is the project manager of the project")
-    public void theEmployeeWithInitialsIsTheProjectManagerOfTheProject(String arg0) {
-        thereIsAnEmployeeWithInitials(arg0);
+    public void theEmployeeWithInitialsIsTheProjectManagerOfTheProject(String employeeID) {
+        Employee employee = this.db.getEmployee(employeeID);
         TestHolder testHolder = TestHolder.getInstance();
         Project project = testHolder.project;
-        EmployeeInputContext input = new EmployeeInputContext();
-        String[] args = {project.getID(),arg0};
-        //TODO: Handle exceptions for pm before uncommenting
-        //input.cmdAssignPM(args);
-        //Assert.assertEquals(arg0,project.getPM().getID());
+        EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
+        String[] args = {project.getID(),employeeID};
+        input.cmdAssignPM(args);
+        Assert.assertEquals((project.getPM()), employee);
     }
 
     @And("the employee with initials {string} is the actor")
-    public void theEmployeeWithInitialsIsTheActor(String arg0) {
-        thereIsAnEmployeeWithInitials(arg0);
-        this.db.setSignedInEmployee(arg0);
+    public void theEmployeeWithInitialsIsTheActor(String employeeID) {
+        this.db.setSignedInEmployee(employeeID);
     }
 
     @When("the actor adds the employee with initials {string} to the activity with ID {string}")
-    public void theActorAddsTheEmployeeWithInitialsToTheActivityWithID(String arg0, String arg1) {
+    public void theActorAddsTheEmployeeWithInitialsToTheActivityWithID(String employeeID, String activityID) {
         theEmployeeWithInitialsIsTheActor("HH");
-        thereIsAnEmployeeWithInitials(arg0);
+        thereIsAnEmployeeWithInitials(employeeID);
         TestHolder testHolder = TestHolder.getInstance();
         Project project = testHolder.project;
         Activity activity = new Activity("test",project);
-        project.getActivities().put(Integer.parseInt(arg1), activity);
-        EmployeeActivityIntermediate intermediate = new EmployeeActivityIntermediate(this.db.getEmployee(arg0),activity);
+        project.getActivities().put(Integer.parseInt(activityID), activity);
+        EmployeeActivityIntermediate intermediate = new EmployeeActivityIntermediate(this.db.getEmployee(employeeID),activity);
     }
 
     @And("the employee with initials {string} is assigned to the the activity with ID {string}")
