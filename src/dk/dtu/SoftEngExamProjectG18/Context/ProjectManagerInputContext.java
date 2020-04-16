@@ -18,7 +18,8 @@ public class ProjectManagerInputContext extends InputContext {
 
     // List of commands:
     // Structure: command -> [usage, method]
-    public final Map<String, String[]> triggers = new HashMap<String, String[]>() {{
+    public static final Map<String, String[]> triggers = new HashMap<String, String[]>() {{
+        putAll(InputContext.getTriggersStatic());
         put("project activity assign", new String[] {
                 "project activity assign {employeeID} {projectID} {activityID}",
                 "cmdAssignEmployeeToActivity"
@@ -47,8 +48,11 @@ public class ProjectManagerInputContext extends InputContext {
         return "a project manager";
     }
 
+    public static Map<String, String[]> getTriggersStatic() {
+        return ProjectManagerInputContext.triggers;
+    }
     public Map<String, String[]> getTriggers() {
-        return this.triggers;
+        return ProjectManagerInputContext.getTriggersStatic();
     }
 
     /*

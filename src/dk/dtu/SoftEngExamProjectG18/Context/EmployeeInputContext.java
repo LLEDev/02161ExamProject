@@ -22,11 +22,11 @@ public class EmployeeInputContext extends InputContext {
         General
      */
 
-    public final Map<String, String[]> triggers = new HashMap<String, String[]>() {{
+    public static final Map<String, String[]> triggers = new HashMap<String, String[]>() {{
+        putAll(InputContext.getTriggersStatic());
         put("hours set", new String[] {"hours set {projectID} {activityID} {date} {hours}", "cmdSetHours"});
         put("hours submit", new String[] {"hours submit {projectID} {activityID} {date} {hours}", "cmdSubmitHours"});
         put("project activity markDone", new String[] {"project activity markDone {projectID} {activityID}", "cmdMarkActivityAsDone"});
-        put("project assign PM", new String[] {"project assign PM {projectID} {PMID}", "cmdAssignPM"});
         put("project create", new String[] {"project create {name} {billable}", "cmdCreateProject"});
         put("request assistance", new String[] {"request assistance {projectID} {activityID} {employeeID}", "cmdRequestAssistance"});
         put("request ooo", new String[] {"request ooo {type} {start} {end}", "cmdRequestOutOfOffice"});
@@ -37,10 +37,12 @@ public class EmployeeInputContext extends InputContext {
         return "an employee";
     }
 
-    public Map<String, String[]> getTriggers() {
-        return this.triggers;
+    public static Map<String, String[]> getTriggersStatic() {
+        return EmployeeInputContext.triggers;
     }
-
+    public Map<String, String[]> getTriggers() {
+        return EmployeeInputContext.getTriggersStatic();
+    }
     /*
         Commands
      */
@@ -49,37 +51,6 @@ public class EmployeeInputContext extends InputContext {
         TODO: !! Important !!
         TODO: Remember to use this.writeOutput instead of System.out.print!
      */
-
-    // String projectID, String PMID TODO: Isn't it employeeID?
-    public boolean cmdAssignPM(String[] args) {
-        if (checkArgumentlength(args.length,2)) {
-            return false;
-        }
-
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = db.getProject(args[0]);
-        if (checkIfNull(project)) {
-            this.writeOutput("Project does not exist");
-            return false;
-        }
-        Employee employee = db.getEmployee(args[1]);
-        if (checkIfNull(employee)) {
-            this.writeOutput("Employee does not exist");
-            return false;
-        }
-
-        // TODO: Review
-        // I have added handling of the exception. Hope it's all cool beans 😀
-        try {
-            project.assignPM(employee);
-        } catch (Exception e) {
-            this.writeOutput(e.getMessage());
-            return false;
-        }
-
-        this.writeOutput("Employee assigned as PM");
-        return true;
-    }
 
     // String name, boolean isBillable
     public boolean cmdCreateProject(String[] args) {

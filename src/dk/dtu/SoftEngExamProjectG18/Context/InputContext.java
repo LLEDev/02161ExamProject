@@ -1,6 +1,7 @@
 package dk.dtu.SoftEngExamProjectG18.Context;
 
 import dk.dtu.SoftEngExamProjectG18.Core.Activity;
+import dk.dtu.SoftEngExamProjectG18.Core.Employee;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
@@ -11,9 +12,48 @@ import java.util.Map;
 abstract public class InputContext {
 
     abstract public String getSingularContextName();
+
     abstract public Map<String, String[]> getTriggers();
 
-    public final Map<String, String[]> triggers = new HashMap<String, String[]>();
+    public static Map<String, String[]> getTriggersStatic() {
+        return triggers;
+    }
+
+     /*
+        Shared Methods
+      */
+
+    // String projectID, String employeeID
+    public boolean cmdAssignPM(String[] args) {
+        if (checkArgumentlength(args.length,2)) {
+            return false;
+        }
+        CompanyDB db = CompanyDB.getInstance();
+        Project project = db.getProject(args[0]);
+        if (checkIfNull(project)) {
+            this.writeOutput("Project does not exist");
+            return false;
+        }
+        Employee employee = db.getEmployee(args[1]);
+        if (checkIfNull(employee)) {
+            this.writeOutput("Employee does not exist");
+            return false;
+        }
+
+        try {
+            project.assignPM(employee);
+        } catch (Exception e) {
+            this.writeOutput(e.getMessage());
+            return false;
+        }
+
+        this.writeOutput("Employee assigned as PM");
+        return true;
+    }
+
+    public static final Map<String, String[]> triggers = new HashMap<String, String[]>() {{
+        put("project assign pm", new String[] {"project assign PM {projectID} {PMID}", "cmdAssignPM"});
+    }};
 
     public static InputContext getContext(InputContextType ict) {
         if(ict == InputContextType.PM) {
