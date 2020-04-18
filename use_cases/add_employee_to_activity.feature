@@ -18,7 +18,7 @@ Feature: Add employee to project activity
         And the following employees are given
             | BS |
             | ABCD |
-        And the employee with initials "ABCD" is assigned to the the activity with ID "1"
+        And the employee with initials "ABCD" is assigned to the activity with ID "1"
         And the employee with initials "BS" has not reached the activity cap
         And the employee with initials "ABCD" is the actor
         When the actor adds the employee with initials "BS" to the activity with ID "1"
