@@ -117,11 +117,7 @@ abstract public class InputContext {
         return (obj==null);
     }
 
-    // TODO: Review
-    // I have updated this as it was working opposite of what it was supposed to - it returned true if the arg length
-    // was equal to the required, which resultated in execution of what was inside the if statement in the method
-    // in which it was utilised. It's a minor change, but thought I'd leave a comment so noone gets mad 😁
-    // Maybe we should consider renaming it to something along the lines of isArgumentInvalid
+    // TODO: Maybe we should consider renaming it to something along the lines of isArgumentInvalid
     protected boolean checkArgumentlength(int argsLength, int requiredLength) {
         if (argsLength != requiredLength) {
             this.writeOutput("Wrong usage.");
