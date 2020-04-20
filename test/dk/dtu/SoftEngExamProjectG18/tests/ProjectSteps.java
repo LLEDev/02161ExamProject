@@ -163,5 +163,12 @@ public class ProjectSteps {
 
     @Then("these activities with overall durations are found")
     public void theseActivitiesWithOverallDurationsAreFound(List<List<String>> durations) {
+        for (List duration : durations) {
+            Project project = this.db.getProject((String) duration.get(0));
+        }
+
+        // TODO: Waiting for:
+        //  What is up with the ids for projects? is it 000001 or 1?
+        //  Assignment of employee to activity (bulk)
     }
 }
