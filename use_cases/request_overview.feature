@@ -6,6 +6,8 @@ Feature: Request overview of project
     Scenario: An employee who is project manager of a project with a single activity requests an overview of the project
         Given that there is a project with name "Test Project"
         And there is an employee
+        And there is an activity with ID "1"
+        And the employee is assigned to the activity with ID "1"
         And the activity with ID "1" has an estimated duration of "10" weeks and registered "5" hours spent
         And the employee is the project manager for the project
         When the employee requests an overview of the project
