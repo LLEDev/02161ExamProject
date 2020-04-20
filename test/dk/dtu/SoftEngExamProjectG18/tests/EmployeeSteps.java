@@ -12,6 +12,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class EmployeeSteps {
@@ -83,26 +84,57 @@ public class EmployeeSteps {
         Activity activity = new Activity("test", project);
         project.getActivities().put(Integer.parseInt(arg1),activity);
         Employee employee = this.db.getEmployee(arg0);
-        //To be continued...
-        //TODO: Is assigning an employee to an activity the same as creating an intermediate? Can't find anything else :/
+        EmployeeActivityIntermediate intermediate = new EmployeeActivityIntermediate(employee, activity);
+        HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<Integer, EmployeeActivityIntermediate>();
+        args.put(activity.getID(),intermediate);
+        employee.getActivities().put(project.getID(),args);
+        this.db.getEmployees().put(arg0,employee);
     }
 
     @When("the actor adds the employee with initials {string} to the activity with ID {string}")
     public void theActorAddsTheEmployeeWithInitialsToTheActivityWithID(String employeeID, String activityID) {
         TestHolder testHolder = TestHolder.getInstance();
         Project project = testHolder.project;
-        //The scenarios are a bit inconsistent, thus the below "if" statement for flexibility
-        if(project.getActivities() == null) {
+        //The scenarios are a bit inconsistent, hence the below "if" statement for flexibility
+        if(project.getActivity(Integer.parseInt(activityID)) == null) {
             project.getActivities().put(Integer.parseInt(activityID),new Activity("test", project));
         }
         Activity activity = project.getActivity(Integer.parseInt(activityID));
         Employee actor = this.db.getSignedInEmployee();
-        //To be continued...
+        //How to use the actor though?
+        Employee employee = this.db.getEmployee(employeeID);
+        EmployeeActivityIntermediate intermediate = new EmployeeActivityIntermediate(employee, activity);
+        HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<Integer, EmployeeActivityIntermediate>();
+        args.put(activity.getID(),intermediate);
+        employee.getActivities().put(project.getID(),args);
     }
 
     @And("the employee is attached to all activities in the projects")
     public void theEmployeeIsAttachedToAllActivitiesInTheProjects(List<String> projects) {
-
+        TestHolder testHolder = TestHolder.getInstance();
+        Employee employee = this.db.getSignedInEmployee();
+        HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> activities = employee.getActivities();
+        for(String projectKey : activities.keySet()) {
+            for(String projectID : projects) {
+                if(projectKey == projectID) {
+                    Project project = this.db.getProject(projectID);
+                    for(int activityKey : activities.get(projectKey).keySet()) {
+                        int counter = 0;
+                        for(int activityID : project.getActivities().keySet()) {
+                            if(activityKey == activityID) {
+                                Assert.assertEquals(activityKey, activityID);
+                            } else {
+                                counter++;
+                            }
+                            if(counter == project.getActivities().size()) {
+                                Assert.assertEquals(activityKey, activityID);
+                                //TODO: Do proper fail statement
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @When("the employee requests assistance from {string} on activity with ID {string} in the project")
@@ -136,7 +168,21 @@ public class EmployeeSteps {
 
     @Then("the employee with initials {string} is assigned to the activity with ID {string}")
     public void theEmployeeWithInitialsIsAssignedToTheActivityWithID(String arg0, String arg1) {
-
+        Employee employee = this.db.getEmployee(arg0);
+        employee.getActivities();
+        HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> activities = employee.getActivities();
+        for(String projectKey : activities.keySet()) {
+            HashMap<Integer, EmployeeActivityIntermediate> activityIdentifyers = activities.get(projectKey);
+            for(int activityKey : activityIdentifyers.keySet()) {
+                if(activityKey == Integer.parseInt(arg1)) {
+                    Assert.assertEquals(Integer.parseInt(arg1), activityKey);
+                    return;
+                }
+            }
+        }
+        //Assert.assertEquals(1,2);
+        //TODO: Do proper fail statement
+        //TODO: Figure out why this method won't work
     }
 
     @Then("the employee sees that the project has a single activity with {string} hours spent out of {string} estimated hours needed")
