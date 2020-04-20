@@ -2,6 +2,7 @@ package dk.dtu.SoftEngExamProjectG18.Context;
 
 import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
+import dk.dtu.SoftEngExamProjectG18.Core.OutOfOfficeActivity;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
@@ -126,7 +127,25 @@ public class EmployeeInputContext extends InputContext {
     }
 
     // OOOActivityType type, Date start, Date end
-    public boolean cmdRequestOutOfOffice(String[] args) { return true; }
+    public boolean cmdRequestOutOfOffice(String[] args) {
+        if (checkArgumentlength(args.length,3)) {
+            return false;
+        }
+        CompanyDB db = CompanyDB.getInstance();
+        Employee employee = db.getSignedInEmployee();
+
+        OOOActivityType type = OOOActivityType.valueOf(args[0]);
+        try {
+            Date start = this.formatter.parse(args[1]);
+            Date end = this.formatter.parse(args[2]);
+            employee.getOOOactivities().add(new OutOfOfficeActivity(type,start,end));
+            this.writeOutput("OOO activity added");
+            return true;
+        } catch (ParseException e) {
+            this.writeOutput("Date must be in format " + this.formatter.toPattern());
+            return false;
+        }
+    }
 
     // String projectID, int activityID, Date date, int setHours
     public boolean cmdSetHours(String[] args) {
