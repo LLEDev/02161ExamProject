@@ -87,7 +87,7 @@ public class ProjectSteps {
     public void theProjectDoesNotHaveAProjectManager() {
         TestHolder testHolder = TestHolder.getInstance();
         Project project = testHolder.project;
-        // TODO: How to do this? Should we have a setter for pm in Project? Otherwise we cannot ensure that the pm is null
+        project.setPM(null);
     }
 
     @When("the employee finishes the activity with ID {string} in the project")
