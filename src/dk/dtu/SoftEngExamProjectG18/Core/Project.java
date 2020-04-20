@@ -93,4 +93,9 @@ public class Project {
     public String getName() {
         return this.name;
     }
+
+
+    public void setPM(Employee PM) {
+        this.PM = PM;
+    }
 }
