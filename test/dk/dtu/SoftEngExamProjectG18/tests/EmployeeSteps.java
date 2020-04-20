@@ -138,6 +138,18 @@ public class EmployeeSteps {
         }
     }
 
+    @Given("the employee is assigned to the activity with ID {string}")
+    public void theEmployeeIsAssignedToTheActivityWithID(String id) {
+        TestHolder testHolder = TestHolder.getInstance();
+        Project project = testHolder.project;
+        Activity activity = project.getActivity(Integer.parseInt(id));
+        Employee employee = this.db.getSignedInEmployee();
+        EmployeeActivityIntermediate intermediate = new EmployeeActivityIntermediate(employee, activity);
+        HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<Integer, EmployeeActivityIntermediate>();
+        args.put(activity.getID(),intermediate);
+        employee.getActivities().put(project.getID(),args);
+    }
+
     @When("the employee requests assistance from {string} on activity with ID {string} in the project")
     public void theEmployeeRequestsAssistanceFromOnActivityWithIDInTheProject(String arg0, String arg1) {
         Employee employee = this.db.getSignedInEmployee();
