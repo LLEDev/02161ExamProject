@@ -4,9 +4,6 @@ import java.util.Date;
 import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
 
 public class OutOfOfficeActivity {
-    protected int ID;
-    protected String name;
-    protected Project project;
     protected OOOActivityType type;
 
     protected boolean isDone = false;
@@ -14,28 +11,17 @@ public class OutOfOfficeActivity {
     protected Date start = null;
     protected Date end = null;
 
-    public OutOfOfficeActivity(String name, Project project, OOOActivityType type) {
-        this.ID = project.incrementNextActivityID();
-        this.name = name;
-        this.project = project;
+    public OutOfOfficeActivity(OOOActivityType type,Date start, Date end) {
         this.type = type;
-
+        this.start=start;
+        this.end=end;
         //TODO: Put into Project hashmap
     }
-
-    public int getID() {
-        return ID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-
     public boolean isDone() {
+        Date today = new Date();
+        if(today.compareTo(this.end)>0) {
+            this.isDone=true;
+        }
         return isDone;
     }
 

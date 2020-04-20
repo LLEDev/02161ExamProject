@@ -1,7 +1,8 @@
 package dk.dtu.SoftEngExamProjectG18.Enum;
 
 public enum OOOActivityType {
-    Holiday,
+    Vacation,
     Illness,
-    course
+    Education,
+    Other
 }

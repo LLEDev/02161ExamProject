@@ -1,7 +1,10 @@
 package dk.dtu.SoftEngExamProjectG18.Core;
 
+import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Employee {
@@ -12,6 +15,8 @@ public class Employee {
 
     // ProjectID --> ActivityID --> EmployeeActivityIntermediate
     protected HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> activities = new HashMap<>();
+
+    protected ArrayList<OutOfOfficeActivity> OOOactivities = new ArrayList<>();
 
     public Employee(String ID, String name) {
         this.ID = ID;
@@ -42,6 +47,21 @@ public class Employee {
 
     public int getWeeklyActivityCap() {
         return weeklyActivityCap;
+    }
+
+    public boolean isOutOfOffie(Date date){
+        if (OOOactivities.isEmpty()) {
+            return false;
+        }
+
+        for (OutOfOfficeActivity current: OOOactivities) {
+            if (current.start.compareTo(date) < 0) {
+                if (!current.isDone) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void setWeeklyActivityCap(int weeklyActivityCap) {

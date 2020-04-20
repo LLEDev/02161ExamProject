@@ -6,11 +6,16 @@ import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ProjectManagerInputContext extends InputContext {
+
+    SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
 
     /*
         General
@@ -123,6 +128,30 @@ public class ProjectManagerInputContext extends InputContext {
             return true;
         }
         return false;
+    }
+
+    // TODO: put in command structur
+    //String employeeID, String Date
+    public boolean cmdRequestEmployeeAvailability(String[] args) throws ParseException {
+        if (checkArgumentlength(args.length,2)) {
+            return false;
+        }
+
+        CompanyDB db = CompanyDB.getInstance();
+        Employee employee = db.getEmployee(args[0]);
+        try {
+            Date date = this.formatter.parse(args[1]);
+            if (employee.isOutOfOffie(date)) {
+                this.writeOutput("Employee is not available");
+                return false;
+            } else {
+                this.writeOutput("Employee is available");
+                return true;
+            }
+        } catch (ParseException e) {
+            this.writeOutput("Date must be in format " + this.formatter.toPattern());
+            return false;
+        }
     }
 
     public boolean cmdRequestOverview(String[] args) {
