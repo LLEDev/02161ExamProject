@@ -11,6 +11,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
+import java.time.LocalDate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -127,7 +128,7 @@ public class EmployeeSteps {
                                 counter++;
                             }
                             if(counter == project.getActivities().size()) {
-                                Assert.assertEquals(activityKey, activityID);
+                                Assert.assertEquals(1, 2);
                                 //TODO: Do proper fail statement
                             }
                         }
@@ -149,17 +150,24 @@ public class EmployeeSteps {
         EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
         String[] args = {project.getID(),Integer.toString(activity.getID()),assistant.getID()};
         //input.cmdRequestAssistance(args);
-        //TODO: Above line makes tests fail when uncommented, haven't gotten around to it yet
+        //TODO: Above line makes tests fail when uncommented, having read cmdRequestAssistance fairly thoroughly I dunno why
     }
 
     @When("the employee requests an overview of the project")
     public void theEmployeeRequestsAnOverviewOfTheProject() {
-
+        //TODO: Cannot be implemented until overview is implemented
     }
 
     @When("the employee submits the work minutes")
     public void theEmployeeSubmitsTheWorkMinutes(List<List<String>> minutes) {
-
+        Employee employee = this.db.getSignedInEmployee();
+        EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
+        LocalDate date = LocalDate.now();
+        for(int i = 0; i < minutes.size(); i++) {
+            List<String> submission = minutes.get(i);
+            String[] args = {submission.get(0),submission.get(1), String.valueOf(date),submission.get(2)};
+            input.cmdSubmitHours(args);
+        }
     }
 
     /*
@@ -187,12 +195,13 @@ public class EmployeeSteps {
 
     @Then("the employee sees that the project has a single activity with {string} hours spent out of {string} estimated hours needed")
     public void theEmployeeSeesThatTheProjectHasASingleActivityWithHoursSpentOutOfEstimatedHoursNeeded(String arg0, String arg1) {
-
+        //TODO: [Awaiting projectStep: "theActivityWithIDHasAnEstimatedDurationOfHoursAndRegisteredHoursSpent"]
     }
 
     @And("the employee with initials {string} has not reached the activity cap")
     public void theEmployeeWithInitialsHasNotReachedTheActivityCap(String arg0) {
-
+        Employee employee = this.db.getEmployee(arg0);
+        Assert.assertTrue(employee.amountOfOpenActivities() > 0);
     }
 
 }
