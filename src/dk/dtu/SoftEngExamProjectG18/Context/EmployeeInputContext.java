@@ -70,6 +70,9 @@ public class EmployeeInputContext extends InputContext {
             }
 
             this.addProjectToDB(project);
+            Activity activity = new Activity("test", project);
+            project.getActivities().put(activity.getID(),activity);
+
 
             return true;
         }
