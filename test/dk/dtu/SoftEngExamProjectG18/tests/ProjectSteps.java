@@ -7,13 +7,14 @@ import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
+import java.util.*;
 
 import static junit.framework.TestCase.*;
 
@@ -101,9 +102,26 @@ public class ProjectSteps {
             input.cmdFinishActivity(new String[]{ id, testHolder.project.getID() });
     }
 
-    @And("the activity with ID {string} has an estimated duration of {string} hours and registered {string} hours spent")
-    public void theActivityWithIDHasAnEstimatedDurationOfHoursAndRegisteredHoursSpent(String id, String duration, String registeredHours) {
+    @Given("the activity with ID {string} has an estimated duration of {string} weeks and registered {string} hours spent")
+    public void theActivityWithIDHasAnEstimatedDurationOfWeeksAndRegisteredHoursSpent(String id, String weeks, String hours) {
+        TestHolder testHolder = TestHolder.getInstance();
+        Project project = testHolder.project;
+        Activity activity = project.getActivity(Integer.parseInt(id));
 
+        Date today = new Date();
+        Date newDate = new Date(today.getTime());
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(newDate);
+        calendar.add(Calendar.DATE, Integer.parseInt(weeks) * 7);
+        newDate.setTime(calendar.getTime().getTime());
+
+        activity.setStartWeek(today);
+        activity.setEndWeek(newDate);
+
+        HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
+        EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(this.db.getSignedInEmployee().getID());
+
+        employeeActivityIntermediate.addMinutes(today, Integer.parseInt(hours) * 60);
     }
 
 
