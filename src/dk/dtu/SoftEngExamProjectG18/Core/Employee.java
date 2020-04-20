@@ -41,6 +41,10 @@ public class Employee {
         return ID;
     }
 
+    public ArrayList<OutOfOfficeActivity> getOOOactivities() {
+        return this.OOOactivities;
+    }
+
     public String getName() {
         return this.name;
     }
