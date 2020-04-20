@@ -134,7 +134,7 @@ public class ProjectSteps {
         TestHolder testHolder = TestHolder.getInstance();
         Project project = testHolder.project;
         Activity activity = project.getActivity(Integer.parseInt(id));
-        // TODO: Uncomment next line when employee pm is implemented...
+        // TODO: Uncomment next line when input context is updated in set pm step
 //        assertTrue(activity.isDone());
     }
 
@@ -149,7 +149,7 @@ public class ProjectSteps {
         TestHolder testHolder = TestHolder.getInstance();
         Project project = testHolder.project;
         Activity activity = project.getActivity(Integer.parseInt(id));
-        // TODO: Uncomment when employee pm is implemented
+        // TODO: Uncomment next line when input context is updated in set pm step
 //        assertNotNull(activity);
     }
 
