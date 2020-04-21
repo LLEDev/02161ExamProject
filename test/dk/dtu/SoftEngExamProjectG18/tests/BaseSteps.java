@@ -4,6 +4,7 @@ import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.CmdResponse;
+import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -12,7 +13,7 @@ abstract public class BaseSteps {
 
     protected final CompanyDB db = CompanyDB.getInstance();
 
-    protected CmdResponse callCmd(InputContext context, String method, String[] args) {
+    protected void callCmd(InputContext context, String method, String[] args) {
         CommandException cmdException = null;
         String response = null;
 
@@ -35,11 +36,12 @@ abstract public class BaseSteps {
 
         context.resetOutput();
 
-        return new CmdResponse(response, cmdException);
+        TestHolder.getInstance().response = new CmdResponse(response, cmdException);
     }
 
     protected void callCmdClean(InputContext context, String method, String[] args) throws Exception {
-        CmdResponse response = this.callCmd(context, method, args);
+        this.callCmd(context, method, args);
+        CmdResponse response = TestHolder.getInstance().response;
         if(!response.isClean()) {
             throw new Exception("Received command response is not clean!");
         }
