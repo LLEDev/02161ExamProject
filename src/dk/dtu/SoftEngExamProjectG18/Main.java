@@ -63,11 +63,13 @@ public class Main {
             FileReader activities = new FileReader(dir + File.separator + "activities.csv");
             FileReader employees = new FileReader(dir + File.separator + "employees.csv");
             FileReader projects = new FileReader(dir + File.separator + "projects.csv");
+            FileReader oooActivities = new FileReader(dir + File.separator + "ooo-activities.csv");
             FileReader workHours = new FileReader(dir + File.separator + "workhours.csv");
 
             CSVReader.readEmployees(employees);
             CSVReader.readProjects(projects);
             CSVReader.readActivities(activities);
+            CSVReader.readOOOActivities(oooActivities);
             CSVReader.readWorkHours(workHours);
 
             return true;
@@ -83,16 +85,17 @@ public class Main {
         InputStream activities = cl.getResourceAsStream("data/activities.csv");
         InputStream employees = cl.getResourceAsStream("data/employees.csv");
         InputStream projects = cl.getResourceAsStream("data/projects.csv");
+        InputStream oooActivities = cl.getResourceAsStream("data/ooo-activities.csv");
         InputStream workHours = cl.getResourceAsStream("data/workhours.csv");
 
-        assert employees != null;
-        assert projects != null;
-        assert activities != null;
-        assert workHours != null;
+        if(activities == null || employees == null || projects == null || oooActivities == null || workHours == null) {
+            return false;
+        }
 
         CSVReader.readEmployees(new InputStreamReader(employees));
         CSVReader.readProjects(new InputStreamReader(projects));
         CSVReader.readActivities(new InputStreamReader(activities));
+        CSVReader.readOOOActivities(new InputStreamReader(oooActivities));
         CSVReader.readWorkHours(new InputStreamReader(workHours));
 
         return true;

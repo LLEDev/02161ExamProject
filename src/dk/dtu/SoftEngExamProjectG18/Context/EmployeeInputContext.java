@@ -135,7 +135,7 @@ public class EmployeeInputContext extends InputContext {
         }
 
         boolean signedInEmployeeIsNotAttachedToActivity = !signedEmployeeProjectActivities.containsKey(activity.getID());
-        boolean otherEmployeeHasNoActivitySlotsLeft = employee.amountOfOpenActivities() == 0;
+        boolean otherEmployeeHasNoActivitySlotsLeft = employee.getNumOpenActivities() == 0;
 
         if(signedInEmployeeIsNotAttachedToActivity) {
             String output = String.format("You are not allowed to work with the given activity, %s.", args[1]);

@@ -25,8 +25,8 @@ public class ProjectManagerInputContext extends InputContext {
         put("project activity finish", new String[]{"project activity finish {projectID}, {activityName}", "cmdFinishActivity"});
         put("project activity estimate", new String[]{"project activity estimate {projectID} {activityID} {minutes}", "cmdSetActivityEstimatedDuration"});
         put("project activity setDates", new String[]{"project activity setDates {projectID} {activityID} {start} {end}", "cmdSetActivityInterval"});
-        put("request overview", new String[]{"request overview", "cmdRequestOverview"});
-        put("request report", new String[]{"request report", "cmdRequestOverview"});
+        put("view availability", new String[]{"view availability {employeeID}", "cmdViewAvailability"});
+        // TODO: Other view operations
     }};
 
     public static Map<String, String[]> getTriggersStatic() {
@@ -72,7 +72,7 @@ public class ProjectManagerInputContext extends InputContext {
         }
 
         Employee employee = this.getEmployee(db, args[0]);
-        if (employee.amountOfOpenActivities() == 0) {
+        if (employee.getNumOpenActivities() == 0) {
             String output = String.format(
                     "The employee, %s, you are requesting assistance from, has no room for any new activities at the moment.",
                     args[1]
@@ -160,5 +160,15 @@ public class ProjectManagerInputContext extends InputContext {
     @SuppressWarnings("unused")
     public void cmdSetActivityInterval(String[] args) {
 
+    }
+
+    // String EmployeeID
+    public void cmdViewAvailability(String[] args) throws CommandException {
+        assertArgumentsValid(args.length, 1);
+
+        CompanyDB db = CompanyDB.getInstance();
+        Employee employee = this.getEmployee(db, args[0]);
+
+        System.out.println(employee.getOOOActivities());
     }
 }

@@ -9,14 +9,12 @@ import java.util.HashMap;
 
 public class Employee {
 
-    protected String ID;
-    protected String name;
-    protected int weeklyActivityCap = 10;
-
     // ProjectID --> ActivityID --> EmployeeActivityIntermediate
     protected HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> activities = new HashMap<>();
-
-    protected ArrayList<OutOfOfficeActivity> OOOactivities = new ArrayList<>();
+    protected String ID;
+    protected String name;
+    protected ArrayList<OutOfOfficeActivity> OOOActivities = new ArrayList<>();
+    protected int weeklyActivityCap = 10;
 
     public Employee(String ID, String name) {
         this.ID = ID;
@@ -29,43 +27,44 @@ public class Employee {
         this.weeklyActivityCap = weeklyActivityCap;
     }
 
+    public void addOOOActivity(OOOActivityType type, Date start, Date end) {
+        this.OOOActivities.add(new OutOfOfficeActivity(type, start, end));
+    }
+
+    public boolean isOutOfOffice(Date date) {
+        for (OutOfOfficeActivity OOOActivity : this.OOOActivities) {
+            if (OOOActivity.start.compareTo(date) > 0 || OOOActivity.end.compareTo(date) < 0) {
+                continue;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     public HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> getActivities() {
         return this.activities;
     }
 
-    public int amountOfOpenActivities() {
-        return weeklyActivityCap - this.activities.size();
-    }
-
     public String getID() {
-        return ID;
-    }
-
-    public ArrayList<OutOfOfficeActivity> getOOOactivities() {
-        return this.OOOactivities;
+        return this.ID;
     }
 
     public String getName() {
         return this.name;
     }
 
-    public int getWeeklyActivityCap() {
-        return weeklyActivityCap;
+    public int getNumOpenActivities() {
+        return this.weeklyActivityCap - this.activities.size();
     }
 
-    public boolean isOutOfOffie(Date date){
-        if (OOOactivities.isEmpty()) {
-            return false;
-        }
+    public ArrayList<OutOfOfficeActivity> getOOOActivities() {
+        return this.OOOActivities;
+    }
 
-        for (OutOfOfficeActivity current: OOOactivities) {
-            if (current.start.compareTo(date) < 0) {
-                if (!current.isDone) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    public int getWeeklyActivityCap() {
+        return this.weeklyActivityCap;
     }
 
     public void setWeeklyActivityCap(int weeklyActivityCap) {

@@ -185,7 +185,7 @@ public class EmployeeSteps extends BaseSteps {
     @And("the employee with initials {string} has not reached the activity cap")
     public void theEmployeeWithInitialsHasNotReachedTheActivityCap(String arg0) {
         Employee employee = this.db.getEmployee(arg0);
-        Assert.assertTrue(employee.amountOfOpenActivities() > 0);
+        Assert.assertTrue(employee.getNumOpenActivities() > 0);
     }
 
 }

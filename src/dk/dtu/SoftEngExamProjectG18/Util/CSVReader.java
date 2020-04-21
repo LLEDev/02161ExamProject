@@ -4,14 +4,19 @@ import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CSVReader {
+
+    protected static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
     protected static boolean getBoolean(HashMap<String, String> entry, String property, boolean def) {
         String val = entry.get(property);
@@ -19,19 +24,9 @@ public class CSVReader {
     }
 
     protected static Date getDate(HashMap<String, String> entry, String property) {
-        String[] date = entry.getOrDefault(property, "").split("-");
-
-        if(date.length == 3) {
-            try {
-                Calendar c = new GregorianCalendar();
-                c.set(Calendar.YEAR, Integer.parseInt(date[0]));
-                c.set(Calendar.MONTH, Integer.parseInt(date[1]) - 1);
-                c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date[2]));
-
-                return c.getTime();
-            } catch(Exception ignored) {}
-        }
-
+        try {
+            return formatter.parse(entry.get(property));
+        } catch (ParseException ignored) {}
         return null;
     }
 
@@ -59,6 +54,14 @@ public class CSVReader {
 
             return c.getTime();
         } catch (NumberFormatException ignored) {}
+
+        return null;
+    }
+
+    protected static OOOActivityType getOOOActivityType(String input) {
+        try {
+            return OOOActivityType.valueOf(input);
+        } catch (Exception ignored) {}
 
         return null;
     }
@@ -152,6 +155,27 @@ public class CSVReader {
             }
 
             activityInstance.setDone(getBoolean(activity, "IsDone", false));
+        }
+    }
+
+    public static void readOOOActivities(Reader fileReader) {
+        CompanyDB db = CompanyDB.getInstance();
+        ArrayList<HashMap<String, String>> OOOActivities = readFile(fileReader);
+
+        for (HashMap<String, String> entry : OOOActivities) {
+            String employeeID = entry.get("Employee ID");
+            String typeID = entry.get("Type");
+
+            Employee employee = db.getEmployee(employeeID);
+            OOOActivityType type = getOOOActivityType(typeID);
+            Date start = getDate(entry, "Start");
+            Date end = getDate(entry, "End");
+
+            if(employee == null || type == null || start == null || end == null) {
+                continue;
+            }
+
+            employee.addOOOActivity(type, start, end);
         }
     }
 

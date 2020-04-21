@@ -4,36 +4,27 @@ import java.util.Date;
 import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
 
 public class OutOfOfficeActivity {
+
     protected OOOActivityType type;
 
-    protected boolean isDone = false; // TODO: IsDone has to be set another way
+    protected Date start;
+    protected Date end;
 
-    protected Date start = null;
-    protected Date end = null;
-
-    public OutOfOfficeActivity(OOOActivityType type,Date start, Date end) {
+    public OutOfOfficeActivity(OOOActivityType type, Date start, Date end) {
         this.type = type;
         this.start = start;
         this.end = end;
-        //TODO: Put into Project hashmap
-    }
-    public boolean isDone() {
-        Date today = new Date();
-        if(today.compareTo(this.end) > 0) {
-            this.isDone=true;
-        }
-        return isDone;
     }
 
     public Date getEnd() {
-        return end;
-    }
-
-    public Date getStart() {
-        return start;
+        return this.end;
     }
 
     public OOOActivityType getType() {
-        return type;
+        return this.type;
+    }
+
+    public Date getStart() {
+        return this.start;
     }
 }
