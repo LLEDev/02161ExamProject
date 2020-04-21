@@ -18,6 +18,10 @@ public class Project {
     protected int nextActivityID = 1;
     protected Employee PM = null;
 
+    protected void setupActivity(String name) {
+        new Activity(name == null ? "First Activity" : name, this);
+    }
+
     protected void setupCreatedAt(Date createdAt) {
         Calendar cal = new GregorianCalendar();
 
@@ -37,6 +41,7 @@ public class Project {
 
         this.setupCreatedAt(null);
         this.setupID();
+        this.setupActivity(null);
     }
 
     public Project(String name, boolean isBillable) {
@@ -45,6 +50,7 @@ public class Project {
 
         this.setupCreatedAt(null);
         this.setupID();
+        this.setupActivity(null);
     }
 
     public Project(String name, Date createdAt, boolean isBillable) {
@@ -53,6 +59,7 @@ public class Project {
 
         this.setupCreatedAt(createdAt);
         this.setupID();
+        this.setupActivity(null);
     }
 
     public Project(String name, Date createdAt, boolean isBillable, Employee PM) {
@@ -62,6 +69,7 @@ public class Project {
 
         this.setupCreatedAt(createdAt);
         this.setupID();
+        this.setupActivity(null);
     }
 
     public int incrementNextActivityID() {
@@ -95,7 +103,14 @@ public class Project {
     }
 
     public String getID() {
-        return this.createdAt.get(Calendar.YEAR) + "-" + this.ID;
+        StringBuilder IDBuilder = new StringBuilder();
+        IDBuilder.append(this.ID);
+
+        while(IDBuilder.length() < 6) {
+            IDBuilder.append("0");
+        }
+
+        return this.createdAt.get(Calendar.YEAR) + "-" + IDBuilder.reverse().toString();
     }
 
     public String getName() {
