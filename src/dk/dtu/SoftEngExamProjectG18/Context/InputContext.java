@@ -10,7 +10,6 @@ import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -171,11 +170,13 @@ abstract public class InputContext {
         Project project = this.getProject(db, args[0]);
         Employee employee = this.getEmployee(db, args[1]);
 
-        String output = project.assignPM(employee) ?
-                "Employee assigned as PM." :
-                "You are not allowed to perform this action.";
+        boolean hasAssignedPM = project.assignPM(employee);
 
-        this.writeOutput(output);
+        if (hasAssignedPM) {
+            this.writeOutput("Employee assigned as PM.");
+            return;
+        }
+        throw new CommandException("Project manager role required");
     }
 
 }
