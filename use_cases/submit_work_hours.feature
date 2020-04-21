@@ -27,4 +27,4 @@ Feature: Submit daily work hours
         And there is an employee
         When the employee submits the work minutes
             | 2020-000001 | 1 | 90 |
-        Then the error message "You are not associated with one or more of these projects" is given
+        Then the error message "You are not associated with one or more of these projects." is given

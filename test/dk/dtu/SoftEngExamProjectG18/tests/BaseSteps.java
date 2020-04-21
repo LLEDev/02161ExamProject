@@ -8,10 +8,12 @@ import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 
 abstract public class BaseSteps {
 
     protected final CompanyDB db = CompanyDB.getInstance();
+    protected final SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
 
     protected void callCmd(InputContext context, String method, String[] args) {
         CommandException cmdException = null;

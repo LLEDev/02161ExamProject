@@ -49,8 +49,8 @@ public class EmployeeInputContext extends InputContext {
     @SuppressWarnings("unused")
     public void helperSetSubmitHours(String[] args, boolean shouldSet) throws CommandException, ParseException {
         assertArgumentsValid(args.length, 4);
-        assertStringParseDateDoable(args[3]);
-        assertStringParseIntDoable(args[4]);
+        assertStringParseDateDoable(args[2]);
+        assertStringParseIntDoable(args[3]);
 
         CompanyDB db = CompanyDB.getInstance();
         Project project = this.getProject(db, args[0]);
@@ -60,8 +60,12 @@ public class EmployeeInputContext extends InputContext {
         HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
         EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(signedInEmployee.getID());
 
-        int minutes = Integer.parseInt(args[4]) * 60;
-        Date date = this.formatter.parse(args[3]);
+        if(employeeActivityIntermediate == null) {
+            throw new CommandException("You are not associated with one or more of these projects.");
+        }
+
+        int minutes = Integer.parseInt(args[3]) * 60;
+        Date date = this.formatter.parse(args[2]);
 
         if(shouldSet) {
             employeeActivityIntermediate.setMinutes(date, minutes);

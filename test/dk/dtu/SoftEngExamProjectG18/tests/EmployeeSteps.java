@@ -14,8 +14,7 @@ import io.cucumber.java.en.When;
 import org.junit.Assert;
 import java.time.LocalDate;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class EmployeeSteps extends BaseSteps {
 
@@ -25,7 +24,7 @@ public class EmployeeSteps extends BaseSteps {
 
     @Given("there is an employee")
     public void thereIsAnEmployee() {
-        this.thereIsAnEmployeeWithInitials("HH");
+        this.thereIsAnEmployeeWithInitials("AA");
     }
 
     @And("there is an employee with initials {string}")
@@ -171,11 +170,10 @@ public class EmployeeSteps extends BaseSteps {
 
     @When("the employee submits the work minutes")
     public void theEmployeeSubmitsTheWorkMinutes(List<List<String>> minutes) throws Exception {
-        Employee employee = this.db.getSignedInEmployee();
         EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
-        LocalDate date = LocalDate.now();
+
         for (List<String> submission : minutes) {
-            String[] args = {submission.get(0), submission.get(1), String.valueOf(date), submission.get(2)};
+            String[] args = {submission.get(0), submission.get(1), this.formatter.format(new Date()), submission.get(2)};
             this.callCmd(input, "cmdSubmitHours", args);
         }
     }
