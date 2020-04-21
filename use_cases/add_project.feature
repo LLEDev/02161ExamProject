@@ -10,4 +10,4 @@ Feature: Add project
     Scenario: Employee creates a project with empty name
         Given there is an employee
         When the employee creates a project with name ""
-        Then the error message "Invalid name" is given
+        Then the error message "The given project name, , is not valid." is given
