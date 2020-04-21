@@ -6,6 +6,7 @@ public class TestHolder {
 
     private static TestHolder instance;
 
+    public CmdResponse response;
     public Project project;
 
     public static TestHolder getInstance() {

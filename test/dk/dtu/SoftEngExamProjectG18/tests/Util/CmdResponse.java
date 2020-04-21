@@ -1,5 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.tests.Util;
 
+import dk.dtu.SoftEngExamProjectG18.Enum.CommandExceptionReason;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 
 public class CmdResponse {
@@ -24,6 +25,21 @@ public class CmdResponse {
         return this.response;
     }
 
+    public boolean exceptionMessageIs(String message) {
+        if(this.ce == null || this.ce.getMessage() == null) {
+            return false;
+        }
+
+        return this.ce.getMessage().equals(message);
+    }
+
+    public boolean exceptionReasonIs(CommandExceptionReason cer) {
+        if(this.ce == null || this.ce.getReason() == null) {
+            return false;
+        }
+
+        return this.ce.getReason().equals(cer);
+    }
 
 
 }

@@ -20,22 +20,6 @@ public class CommandException extends Exception {
         this.reason = cer;
     }
 
-    public boolean exceptionMessageIs(String message) {
-        if(this.getMessage() == null) {
-            return false;
-        }
-
-        return this.getMessage().equals(message);
-    }
-
-    public boolean exceptionReasonIs(CommandExceptionReason cer) {
-        if(this.getReason() == null) {
-            return false;
-        }
-
-        return this.getReason().equals(cer);
-    }
-
     public CommandExceptionReason getReason() {
         return reason;
     }
