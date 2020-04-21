@@ -11,20 +11,31 @@ import java.util.HashMap;
 public class Project {
 
     protected HashMap<Integer, Activity> activities = new HashMap<>();
-    protected Date createdAt = new Date(); // TODO: should this be dynamic?
+    protected Calendar createdAt;
     protected int ID;
     protected boolean isBillable = true;
     protected String name;
     protected int nextActivityID = 1;
     protected Employee PM = null;
 
+    protected void setupCreatedAt(Date createdAt) {
+        Calendar cal = new GregorianCalendar();
+
+        if(createdAt != null) {
+            cal.setTime(createdAt);
+        }
+
+        this.createdAt = cal;
+    }
+
     protected void setupID() {
-        this.ID = CompanyDB.getInstance().incrementNextProjectID(this.createdAt.getYear());
+        this.ID = CompanyDB.getInstance().incrementNextProjectID(this.createdAt.get(Calendar.YEAR));
     }
 
     public Project(String name) {
         this.name = name;
 
+        this.setupCreatedAt(null);
         this.setupID();
     }
 
@@ -32,23 +43,24 @@ public class Project {
         this.isBillable = isBillable;
         this.name = name;
 
+        this.setupCreatedAt(null);
         this.setupID();
     }
 
     public Project(String name, Date createdAt, boolean isBillable) {
-        this.createdAt = createdAt;
         this.isBillable = isBillable;
         this.name = name;
 
+        this.setupCreatedAt(createdAt);
         this.setupID();
     }
 
     public Project(String name, Date createdAt, boolean isBillable, Employee PM) {
-        this.createdAt = createdAt;
         this.isBillable = isBillable;
         this.name = name;
         this.PM = PM;
 
+        this.setupCreatedAt(createdAt);
         this.setupID();
     }
 
@@ -57,14 +69,16 @@ public class Project {
         return this.nextActivityID - 1;
     }
 
-    public boolean assignPM(Employee employee) throws Exception {
-        if (this.PM==null) {
+    public boolean assignPM(Employee employee) {
+        if (this.PM == null) {
             this.PM = employee;
             return true;
         }
+
         CompanyDB db = CompanyDB.getInstance();
         Employee signedInEmployee = db.getSignedInEmployee();
-        if (signedInEmployee==this.PM) {
+
+        if (signedInEmployee == this.PM) {
             this.PM = employee;
             return true;
         }
@@ -81,19 +95,16 @@ public class Project {
     }
 
     public String getID() {
-        Calendar c = new GregorianCalendar();
-        c.setTime(this.createdAt);
-        return c.get(Calendar.YEAR) + "-" + this.ID;
-    }
-
-    public Employee getPM(){
-        return this.PM;
+        return this.createdAt.get(Calendar.YEAR) + "-" + this.ID;
     }
 
     public String getName() {
         return this.name;
     }
 
+    public Employee getPM() {
+        return this.PM;
+    }
 
     public void setPM(Employee PM) {
         this.PM = PM;

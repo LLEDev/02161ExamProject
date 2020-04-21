@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class ProjectManagerInputContext extends InputContext {
 
-    SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+    protected SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
 
     /*
         General

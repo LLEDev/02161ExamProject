@@ -4,20 +4,21 @@ import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 public class EmployeeActivityIntermediate {
+
+    protected SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
     // Date -> Minutes
     protected HashMap<String, Integer> minutesSpent = new HashMap<>();
 
     protected Activity activity;
     protected Employee employee;
-
-    protected String stringifyDate(Date d) {
-        return d.getYear() + "-" + (d.getMonth() + 1) + "-" + d.getDay();
-    }
 
     public EmployeeActivityIntermediate(Employee e, Activity a) {
         this.employee = e;
@@ -41,11 +42,11 @@ public class EmployeeActivityIntermediate {
     }
 
     public int getMinutes(Date d) {
-        return this.minutesSpent.getOrDefault(this.stringifyDate(d), 0);
+        return this.minutesSpent.getOrDefault(this.formatter.format(d), 0);
     }
 
     public void setMinutes(Date d, int minutes) {
-        this.minutesSpent.put(this.stringifyDate(d), minutes);
+        this.minutesSpent.put(this.formatter.format(d), minutes);
     }
 
 

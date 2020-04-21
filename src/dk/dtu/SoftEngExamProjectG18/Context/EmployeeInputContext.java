@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class EmployeeInputContext extends InputContext {
 
-    SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+    protected SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
 
     /*
         General
