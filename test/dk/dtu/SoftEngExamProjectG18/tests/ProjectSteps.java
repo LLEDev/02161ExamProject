@@ -16,6 +16,7 @@ import java.util.*;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class ProjectSteps extends BaseSteps {
 
@@ -81,12 +82,7 @@ public class ProjectSteps extends BaseSteps {
     @When("the employee finishes the activity with ID {string} in the project")
     public void theEmployeeFinishesTheActivityWithIDInTheProject(String id) throws Exception {
         TestHolder testHolder = TestHolder.getInstance();
-        ProjectManagerInputContext input = null;
-        try {
-            input = (ProjectManagerInputContext) this.db.getInputContext();
-        } catch (ClassCastException e) {}
-        if (input != null)
-            this.callCmd(input, "cmdFinishActivity", new String[]{ id, testHolder.project.getID() });
+        this.callCmd(new ProjectManagerInputContext(), "cmdFinishActivity", new String[]{ testHolder.project.getID(), id });
     }
 
     @Given("the activity with ID {string} has an estimated duration of {string} weeks and registered {string} hours spent")
@@ -121,8 +117,7 @@ public class ProjectSteps extends BaseSteps {
         TestHolder testHolder = TestHolder.getInstance();
         Project project = testHolder.project;
         Activity activity = project.getActivity(Integer.parseInt(id));
-        // TODO: Uncomment next line when input context is updated in set pm step
-//        assertTrue(activity.isDone());
+        assertTrue(activity.isDone());
     }
 
     @Then("there is a project with ID {string} and name {string}")
