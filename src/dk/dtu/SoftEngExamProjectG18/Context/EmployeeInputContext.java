@@ -129,11 +129,16 @@ public class EmployeeInputContext extends InputContext {
         HashMap<Integer, EmployeeActivityIntermediate> signedEmployeeProjectActivities =
                 signedInEmployeeActivities.get(project.getID());
 
+        if(signedEmployeeProjectActivities == null) {
+            String output = String.format("You are not allowed to work with the given project, %s.", args[0]);
+            throw new CommandException(output);
+        }
+
         boolean signedInEmployeeIsNotAttachedToActivity = !signedEmployeeProjectActivities.containsKey(activity.getID());
         boolean otherEmployeeHasNoActivitySlotsLeft = employee.amountOfOpenActivities() == 0;
 
         if(signedInEmployeeIsNotAttachedToActivity) {
-            String output = String.format("You are not allowing to work with the given activity, %s.", args[1]);
+            String output = String.format("You are not allowed to work with the given activity, %s.", args[1]);
             throw new CommandException(output);
         }
 

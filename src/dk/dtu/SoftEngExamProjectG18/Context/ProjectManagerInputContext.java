@@ -61,7 +61,6 @@ public class ProjectManagerInputContext extends InputContext {
     @SuppressWarnings("unused")
     public void cmdAssignEmployeeToActivity(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 3);
-        assertStringParseIntDoable(args[0]);
         assertStringParseIntDoable(args[2]);
 
         CompanyDB db = CompanyDB.getInstance();
@@ -70,7 +69,8 @@ public class ProjectManagerInputContext extends InputContext {
         Activity activity = this.getActivity(project, args[2]);
 
         Employee signedInEmployee = db.getSignedInEmployee();
-        if (!signedInEmployee.equals(project.getPM())) {
+
+        if (project.getPM() != null && !signedInEmployee.equals(project.getPM())) {
             throw new CommandException("Project Manager status required.");
         }
 
@@ -84,7 +84,7 @@ public class ProjectManagerInputContext extends InputContext {
         }
 
         EmployeeActivityIntermediate EAI = new EmployeeActivityIntermediate(employee, activity);
-        this.writeOutput("Employee added to activity");
+        this.writeOutput("Employee added to activity.");
     }
 
     // String projectID, String activityName

@@ -1,9 +1,13 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
 import dk.dtu.SoftEngExamProjectG18.Context.EmployeeInputContext;
+import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
+import dk.dtu.SoftEngExamProjectG18.Context.ProjectManagerInputContext;
 import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
+import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.CmdResponse;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
@@ -19,12 +23,22 @@ import java.util.*;
 public class EmployeeSteps extends BaseSteps {
 
     /*
-        Create methods
+        Given (or and) methods
      */
 
     @Given("there is an employee")
     public void thereIsAnEmployee() {
         this.thereIsAnEmployeeWithInitials("AA");
+    }
+
+    @Given("the employee is the project manager for the project")
+    public void theEmployeeIsTheProjectManagerForTheProject() throws Exception {
+        this.theEmployeeWithInitialsIsTheProjectManagerOfTheProject(this.db.getSignedInEmployee().getID());
+    }
+
+    @Given("the employee is assigned to the activity with ID {string}")
+    public void theEmployeeIsAssignedToTheActivityWithID(String id) {
+        this.theEmployeeWithInitialsIsAssignedToTheActivityWithID(this.db.getSignedInEmployee().getID(), id);
     }
 
     @And("there is an employee with initials {string}")
@@ -39,15 +53,6 @@ public class EmployeeSteps extends BaseSteps {
         for (String employeeID: employees) {
             this.thereIsAnEmployeeWithInitials(employeeID);
         }
-    }
-
-    /*
-        Other
-     */
-
-    @Given("the employee is the project manager for the project")
-    public void theEmployeeIsTheProjectManagerForTheProject() throws Exception {
-        this.theEmployeeWithInitialsIsTheProjectManagerOfTheProject(this.db.getSignedInEmployee().getID());
     }
 
     @And("the employee with initials {string} is the project manager of the project")
@@ -83,24 +88,6 @@ public class EmployeeSteps extends BaseSteps {
         this.db.getEmployees().put(arg0,employee);
     }
 
-    @When("the actor adds the employee with initials {string} to the activity with ID {string}")
-    public void theActorAddsTheEmployeeWithInitialsToTheActivityWithID(String employeeID, String activityID) {
-        TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.project;
-        //The scenarios are a bit inconsistent, hence the below "if" statement for flexibility
-        if(project.getActivity(Integer.parseInt(activityID)) == null) {
-            project.getActivities().put(Integer.parseInt(activityID),new Activity("test", project));
-        }
-        Activity activity = project.getActivity(Integer.parseInt(activityID));
-        Employee actor = this.db.getSignedInEmployee();
-        //How to use the actor though?
-        Employee employee = this.db.getEmployee(employeeID);
-        EmployeeActivityIntermediate intermediate = new EmployeeActivityIntermediate(employee, activity);
-        HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<>();
-        args.put(activity.getID(),intermediate);
-        employee.getActivities().put(project.getID(),args);
-    }
-
     @And("the employee is attached to all activities in the projects")
     public void theEmployeeIsAttachedToAllActivitiesInTheProjects(List<String> projects) throws Exception {
         Employee signedInEmployee = this.db.getSignedInEmployee();
@@ -124,22 +111,13 @@ public class EmployeeSteps extends BaseSteps {
         }
     }
 
-    @Given("the employee is assigned to the activity with ID {string}")
-    public void theEmployeeIsAssignedToTheActivityWithID(String id) {
-        this.theEmployeeWithInitialsIsAssignedToTheActivityWithID(this.db.getSignedInEmployee().getID(), id);
-    }
-
     @And("the employee with initials {string} is assigned to the activity with ID {string}")
     public void theEmployeeWithInitialsIsAssignedToTheActivityWithID(String employeeID, String activityID) {
         TestHolder testHolder = TestHolder.getInstance();
         Project project = testHolder.project;
         Activity activity = project.getActivity(Integer.parseInt(activityID));
-        System.out.println(project.getName());
-        System.out.println(project.getActivities());
-        System.out.println(activityID);
 
         Employee employee = this.db.getEmployee(employeeID);
-        System.out.println(this.db.getEmployees());
         EmployeeActivityIntermediate intermediate = new EmployeeActivityIntermediate(employee, activity);
 
         HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<>();
@@ -147,20 +125,25 @@ public class EmployeeSteps extends BaseSteps {
         employee.getActivities().put(project.getID(), args);
     }
 
+    /*
+        When (or and) methods (actions)
+     */
 
-    @When("the employee requests assistance from {string} on activity with ID {string} in the project")
-    public void theEmployeeRequestsAssistanceFromOnActivityWithIDInTheProject(String arg0, String arg1) {
-        Employee employee = this.db.getSignedInEmployee();
-        Employee assistant = this.db.getEmployee(arg0);
+    @When("the actor adds the employee with initials {string} to the activity with ID {string}")
+    public void theActorAddsTheEmployeeWithInitialsToTheActivityWithID(String employeeID, String activityID) {
         TestHolder testHolder = TestHolder.getInstance();
         Project project = testHolder.project;
-        Activity activity = new Activity("test",project);
-        project.getActivities().put(Integer.parseInt(arg1),activity);
-        activity = project.getActivity(Integer.parseInt(arg1));
-        EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
-        String[] args = {project.getID(),Integer.toString(activity.getID()),assistant.getID()};
-        //input.cmdRequestAssistance(args);
-        //TODO: Above line makes tests fail when uncommented, having read cmdRequestAssistance fairly thoroughly I dunno why
+
+        String[] args = {employeeID, project.getID(), activityID};
+        this.callCmd(new ProjectManagerInputContext(), "cmdAssignEmployeeToActivity", args);
+    }
+
+    @When("the employee requests assistance from {string} on activity with ID {string} in the project")
+    public void theEmployeeRequestsAssistanceFromOnActivityWithIDInTheProject(String otherEmployeeID, String activityID) {
+        EmployeeInputContext context = (EmployeeInputContext) CompanyDB.getContext();
+        Project project = TestHolder.getInstance().project;
+
+        this.callCmd(context, "cmdRequestAssistance", new String[] {project.getID(), activityID, otherEmployeeID});
     }
 
     @When("the employee requests an overview of the project")
@@ -179,28 +162,21 @@ public class EmployeeSteps extends BaseSteps {
     }
 
     /*
-        Assert
+        Then (or and) methods (assertions)
      */
 
     @Then("the employee with initials {string} has been assigned to the activity with ID {string}")
-    public void theEmployeeWithInitialsHasBeenAssignedToTheActivityWithID(String arg0, String arg1) {
-        Employee employee = this.db.getEmployee(arg0);
-        employee.getActivities();
-        HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> activities = employee.getActivities();
-        for(String projectKey : activities.keySet()) {
-            HashMap<Integer, EmployeeActivityIntermediate> activityIdentifyers = activities.get(projectKey);
-            for(int activityKey : activityIdentifyers.keySet()) {
-                if(activityKey == Integer.parseInt(arg1)) {
-                    Assert.assertEquals(Integer.parseInt(arg1), activityKey);
-                    return;
-                }
-            }
-        }
-        //Assert.assertEquals(1,2);
-        //TODO: Do proper fail statement
-        //TODO: Figure out why this method won't work
+    public void theEmployeeWithInitialsHasBeenAssignedToTheActivityWithID(String employeeID, String activityIDString) {
+        Employee otherEmployee = this.db.getEmployee(employeeID);
+        Project project = TestHolder.getInstance().project;
+
+        HashMap<Integer, EmployeeActivityIntermediate> otherEmployeeIntermediates =
+                otherEmployee.getActivities().get(project.getID());
+        Assert.assertNotNull(otherEmployeeIntermediates);
+        Assert.assertTrue(otherEmployeeIntermediates.containsKey(Integer.parseInt(activityIDString)));
     }
 
+    // TODO: Fix
     @Then("the employee sees that the project has a single activity with {string} hours spent out of {string} estimated hours needed")
     public void theEmployeeSeesThatTheProjectHasASingleActivityWithHoursSpentOutOfEstimatedHoursNeeded(String arg0, String arg1) {
         //TODO: [Awaiting projectStep: "theActivityWithIDHasAnEstimatedDurationOfHoursAndRegisteredHoursSpent"]

@@ -16,4 +16,4 @@ Feature: Request assistance when working on a project activity
             | HLPR |
             | BS |
         When the employee requests assistance from "HLPR" on activity with ID "1" in the project
-        Then the error message "You are not associated with this project" is given
+        Then the error message "You are not allowed to work with the given project, 2020-000001." is given
