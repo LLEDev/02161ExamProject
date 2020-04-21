@@ -8,7 +8,7 @@ import dk.dtu.SoftEngExamProjectG18.tests.Util.CmdResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class BaseSteps {
+abstract public class BaseSteps {
 
     protected final CompanyDB db = CompanyDB.getInstance();
 
