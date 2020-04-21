@@ -11,59 +11,47 @@ import java.util.Map;
 
 abstract public class InputContext {
 
+    /*
+        Abstract methods
+     */
+
     abstract public String getSingularContextName();
 
     abstract public Map<String, String[]> getTriggers();
 
-    public static Map<String, String[]> getTriggersStatic() {
-        return triggers;
-    }
+    /*
+        Map of shared commands
+     */
 
-     /*
-        Shared Methods
-      */
-
-    // String projectID, String employeeID
-    public boolean cmdAssignPM(String[] args) {
-        if (checkArgumentlength(args.length,2)) {
-            return false;
-        }
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = db.getProject(args[0]);
-        if (checkIfNull(project)) {
-            this.writeOutput("Project does not exist");
-            return false;
-        }
-        Employee employee = db.getEmployee(args[1]);
-        if (checkIfNull(employee)) {
-            this.writeOutput("Employee does not exist");
-            return false;
-        }
-
-        try {
-            project.assignPM(employee);
-        } catch (Exception e) {
-            this.writeOutput(e.getMessage());
-            return false;
-        }
-
-        this.writeOutput("Employee assigned as PM");
-        return true;
-    }
-
-    public static final Map<String, String[]> triggers = new HashMap<String, String[]>() {{
-        put("project assign pm", new String[] {"project assign PM {projectID} {PMID}", "cmdAssignPM"});
+    public static final Map<String, String[]> triggers = new HashMap<>() {{
+        put("project assign pm", new String[]{"project assign PM {projectID} {PMID}", "cmdAssignPM"});
     }};
 
+    /*
+        Misc. fields
+     */
+
+    protected String output = "";
+
+    /*
+        Static getters
+     */
+
     public static InputContext getContext(InputContextType ict) {
-        if(ict == InputContextType.PM) {
+        if (ict == InputContextType.PM) {
             return new ProjectManagerInputContext();
         }
 
         return new EmployeeInputContext();
     }
 
-    protected String output = "";
+    public static Map<String, String[]> getTriggersStatic() {
+        return triggers;
+    }
+
+    /*
+        Output methods
+     */
 
     public String getOutput() {
         return this.output;
@@ -84,13 +72,28 @@ abstract public class InputContext {
     /*
         Utils
      */
-    protected boolean isStringParseIntDoable (String possibleInt) {
+
+    protected boolean isArgumentInvalid(int argsLength, int requiredLength) {
+        if (argsLength != requiredLength) {
+            this.writeOutput("Wrong usage.");
+            return true;
+        }
+
+        return false;
+    }
+
+    protected boolean isNull(Object obj) {
+        return obj == null;
+    }
+
+    protected boolean isStringParseIntDoable(String possibleInt) {
         try {
             Integer.parseInt(possibleInt);
         } catch (NumberFormatException nfe) {
             this.writeOutput("Any number must be given as an integer");
             return false;
         }
+
         return true;
     }
 
@@ -98,32 +101,55 @@ abstract public class InputContext {
         CompanyDB db = CompanyDB.getInstance();
         Project project = db.getProject(projectID);
 
-        if (checkIfNull(project)) {
+        if (isNull(project)) {
             this.writeOutput("Project does not exist");
             return null;
         }
 
         if (isStringParseIntDoable(activityID)) {
             int intActivityID = Integer.parseInt(activityID);
-            if (!checkIfNull(project.getActivity(intActivityID))){
+            if (!isNull(project.getActivity(intActivityID))) {
                 return project.getActivity(intActivityID);
             }
         }
+
         this.writeOutput("Activity does not exist");
         return null;
     }
 
-    protected boolean checkIfNull(Object obj) {
-        return (obj==null);
-    }
+     /*
+        Shared commands - warnings relating to use of reflection API are suppressed
+      */
 
-    // TODO: Maybe we should consider renaming it to something along the lines of isArgumentInvalid
-    protected boolean checkArgumentlength(int argsLength, int requiredLength) {
-        if (argsLength != requiredLength) {
-            this.writeOutput("Wrong usage.");
-            return true;
+    // String projectID, String employeeID
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
+    public boolean cmdAssignPM(String[] args) {
+        if (isArgumentInvalid(args.length, 2)) {
+            return false;
         }
-        return false;
+
+        CompanyDB db = CompanyDB.getInstance();
+        Project project = db.getProject(args[0]);
+        if (isNull(project)) {
+            this.writeOutput("Project does not exist");
+            return false;
+        }
+
+        Employee employee = db.getEmployee(args[1]);
+        if (isNull(employee)) {
+            this.writeOutput("Employee does not exist");
+            return false;
+        }
+
+        try {
+            project.assignPM(employee);
+        } catch (Exception e) {
+            this.writeOutput(e.getMessage());
+            return false;
+        }
+
+        this.writeOutput("Employee assigned as PM");
+        return true;
     }
 
 }

@@ -23,37 +23,48 @@ public class EmployeeInputContext extends InputContext {
         General
      */
 
-    public static final Map<String, String[]> triggers = new HashMap<String, String[]>() {{
+    public static final Map<String, String[]> triggers = new HashMap<>() {{
         putAll(InputContext.getTriggersStatic());
-        put("hours set", new String[] {"hours set {projectID} {activityID} {date} {hours}", "cmdSetHours"});
-        put("hours submit", new String[] {"hours submit {projectID} {activityID} {date} {hours}", "cmdSubmitHours"});
-        put("project activity markDone", new String[] {"project activity markDone {projectID} {activityID}", "cmdMarkActivityAsDone"});
-        put("project create", new String[] {"project create {name} {billable}", "cmdCreateProject"});
-        put("request assistance", new String[] {"request assistance {projectID} {activityID} {employeeID}", "cmdRequestAssistance"});
-        put("request ooo", new String[] {"request ooo {type} {start} {end}", "cmdRequestOutOfOffice"});
-        put("request overview daily", new String[] {"request overview daily", "cmdRequestDailyOverview"});
+        put("hours set", new String[]{"hours set {projectID} {activityID} {date} {hours}", "cmdSetHours"});
+        put("hours submit", new String[]{"hours submit {projectID} {activityID} {date} {hours}", "cmdSubmitHours"});
+        put("project activity markDone", new String[]{"project activity markDone {projectID} {activityID}", "cmdMarkActivityAsDone"});
+        put("project create", new String[]{"project create {name} {billable}", "cmdCreateProject"});
+        put("request assistance", new String[]{"request assistance {projectID} {activityID} {employeeID}", "cmdRequestAssistance"});
+        put("request ooo", new String[]{"request ooo {type} {start} {end}", "cmdRequestOutOfOffice"});
+        put("request overview daily", new String[]{"request overview daily", "cmdRequestDailyOverview"});
     }};
+
+    public static Map<String, String[]> getTriggersStatic() {
+        return EmployeeInputContext.triggers;
+    }
 
     public String getSingularContextName() {
         return "an employee";
     }
 
-    public static Map<String, String[]> getTriggersStatic() {
-        return EmployeeInputContext.triggers;
-    }
     public Map<String, String[]> getTriggers() {
         return EmployeeInputContext.getTriggersStatic();
     }
-    /*
-        Commands
-     */
 
     /*
-        TODO: !! Important !!
-        TODO: Remember to use this.writeOutput instead of System.out.print!
+        Utils
+     */
+
+    protected void addProjectToDB(Project project) {
+        CompanyDB db = CompanyDB.getInstance();
+        db.getProjects().put(project.getID(), project);
+    }
+
+    protected boolean isValidProjectName(String name) {
+        return name.length() != 0;
+    }
+
+    /*
+        Commands - warnings relating to use of reflection API are suppressed
      */
 
     // String name, boolean isBillable
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdCreateProject(String[] args) {
         if (args.length == 0) {
             return false;
@@ -72,7 +83,7 @@ public class EmployeeInputContext extends InputContext {
 
             this.addProjectToDB(project);
             Activity activity = new Activity("test", project);
-            project.getActivities().put(activity.getID(),activity);
+            project.getActivities().put(activity.getID(), activity);
 
 
             return true;
@@ -81,13 +92,14 @@ public class EmployeeInputContext extends InputContext {
     }
 
     // String projectID, int activityID
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdMarkActivityAsDone(String[] args) {
-        if (checkArgumentlength(args.length,2)) {
+        if (isArgumentInvalid(args.length, 2)) {
             return false;
         }
 
         Activity activity = this.getActivityFromProject(args[0], args[1]);
-        if (activity!=null) {
+        if (activity != null) {
             activity.setDone(true);
             this.writeOutput("Activity marked as done");
             return true;
@@ -96,39 +108,42 @@ public class EmployeeInputContext extends InputContext {
     }
 
     // String projectID, int activityID, String employeeID
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdRequestAssistance(String[] args) {
-        if (checkArgumentlength(args.length,3)) {
+        if (isArgumentInvalid(args.length, 3)) {
             return false;
         }
         Activity activity = this.getActivityFromProject(args[0], args[1]);
-        if (activity!=null) {
+        if (activity != null) {
             CompanyDB db = CompanyDB.getInstance();
             Project project = db.getProject(args[0]);
             Employee employee = db.getEmployee(args[2]);
-            if (checkIfNull(employee)) {
+            if (isNull(employee)) {
                 this.writeOutput("Employee does not exist");
                 return false;
             }
             Employee signedInEmployee = db.getSignedInEmployee();
             HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> signedInEmployeeActivities
                     = signedInEmployee.getActivities();
-             if (employee.amountOfOpenActivities()!=0 &&
-                     signedInEmployeeActivities.get(project.getID()).containsKey(activity.getID())) {
-                 employee.getActivities().put(project.getID(),signedInEmployeeActivities.get(project.getID()));
-                 return true;
-             }
+            if (employee.amountOfOpenActivities() != 0 &&
+                    signedInEmployeeActivities.get(project.getID()).containsKey(activity.getID())) {
+                employee.getActivities().put(project.getID(), signedInEmployeeActivities.get(project.getID()));
+                return true;
+            }
         }
         return false;
 
     }
 
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdRequestDailyOverview(String[] args) {
         return true;
     }
 
     // OOOActivityType type, Date start, Date end
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdRequestOutOfOffice(String[] args) {
-        if (checkArgumentlength(args.length,3)) {
+        if (isArgumentInvalid(args.length, 3)) {
             return false;
         }
         CompanyDB db = CompanyDB.getInstance();
@@ -138,7 +153,7 @@ public class EmployeeInputContext extends InputContext {
         try {
             Date start = this.formatter.parse(args[1]);
             Date end = this.formatter.parse(args[2]);
-            employee.getOOOactivities().add(new OutOfOfficeActivity(type,start,end));
+            employee.getOOOactivities().add(new OutOfOfficeActivity(type, start, end));
             this.writeOutput("OOO activity added");
             return true;
         } catch (ParseException e) {
@@ -148,17 +163,18 @@ public class EmployeeInputContext extends InputContext {
     }
 
     // String projectID, int activityID, Date date, int setHours
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdSetHours(String[] args) {
-        if (checkArgumentlength(args.length,4)) {
+        if (isArgumentInvalid(args.length, 4)) {
             return false;
         }
         Activity activity = this.getActivityFromProject(args[0], args[1]);
-        if (activity!=null) {
+        if (activity != null) {
             CompanyDB db = CompanyDB.getInstance();
             Employee employee = db.getSignedInEmployee();
             HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
             EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(employee.getID());
-            if(isStringParseIntDoable(args[4])) {
+            if (isStringParseIntDoable(args[4])) {
                 int minutes = Integer.parseInt(args[4]) * 60;
                 try {
                     Date date = this.formatter.parse(args[3]);
@@ -175,17 +191,18 @@ public class EmployeeInputContext extends InputContext {
     }
 
     // String projectID, int activityID, Date date, int addedHours
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdSubmitHours(String[] args) {
-        if (checkArgumentlength(args.length,4)) {
+        if (isArgumentInvalid(args.length, 4)) {
             return false;
         }
         Activity activity = this.getActivityFromProject(args[0], args[1]);
-        if (activity!=null) {
+        if (activity != null) {
             CompanyDB db = CompanyDB.getInstance();
             Employee employee = db.getSignedInEmployee();
             HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
             EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(employee.getID());
-            if(isStringParseIntDoable(args[4])) {
+            if (isStringParseIntDoable(args[4])) {
                 int minutes = Integer.parseInt(args[4]) * 60;
                 try {
                     Date date = this.formatter.parse(args[3]);
@@ -199,19 +216,6 @@ public class EmployeeInputContext extends InputContext {
             }
         }
         return false;
-    }
-
-    /*
-        Utils
-     */
-
-    private boolean isValidProjectName(String name) {
-        return name.length() != 0;
-    }
-
-    private void addProjectToDB(Project project) {
-        CompanyDB db = CompanyDB.getInstance();
-        db.getProjects().put(project.getID(), project);
     }
 
 }
