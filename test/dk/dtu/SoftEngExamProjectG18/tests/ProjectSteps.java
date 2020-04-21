@@ -68,7 +68,7 @@ public class ProjectSteps extends BaseSteps {
     @When("the actor assigns the employee with initials {string} as the project manager of the project")
     public void theActorAssignsTheEmployeeWithInitialsAsTheProjectManagerOfTheProject(String initials) throws Exception {
         TestHolder testHolder = TestHolder.getInstance();
-        EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
+        InputContext input = this.db.getInputContext();
         this.callCmd(input, "cmdAssignPM", new String[]{ testHolder.project.getID(), initials });
     }
 
