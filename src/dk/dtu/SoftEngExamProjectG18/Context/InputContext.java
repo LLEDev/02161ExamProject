@@ -101,7 +101,8 @@ abstract public class InputContext {
         try {
             this.formatter.parse(possibleDate);
         } catch (ParseException e) {
-            throw new CommandException("Any date must be given in the format " + this.formatter.toPattern());
+            String output = String.format("Any date must be given in the format %s. Received %s.", this.formatter.toPattern(), possibleDate);
+            throw new CommandException(output);
         }
     }
 
@@ -109,7 +110,8 @@ abstract public class InputContext {
         try {
             Integer.parseInt(possibleInt);
         } catch (NumberFormatException nfe) {
-            throw new CommandException("Any number must be given as an integer.");
+            String output = String.format("Any number must be given as an integer. Received %s.", possibleInt);
+            throw new CommandException(output);
         }
     }
 
