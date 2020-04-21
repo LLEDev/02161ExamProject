@@ -1,6 +1,7 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
 import dk.dtu.SoftEngExamProjectG18.Context.EmployeeInputContext;
+import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
 import dk.dtu.SoftEngExamProjectG18.Context.ProjectManagerInputContext;
 import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
@@ -59,14 +60,8 @@ public class ProjectSteps extends BaseSteps {
 
     @When("the employee adds an activity with name {string} to the project")
     public void theEmployeeAddsAnActivityWithNameToTheProject(String name) throws Exception {
-        // TODO: Fix missing "employee is a pm" - test when that is implemented
         TestHolder testHolder = TestHolder.getInstance();
-        ProjectManagerInputContext input = null;
-        try {
-            input = (ProjectManagerInputContext) this.db.getInputContext();
-        } catch (ClassCastException e) {}
-        if (input != null)
-            this.callCmd(input, "cmdCreateActivity", new String[]{ name, testHolder.project.getID() });
+        this.callCmd(new ProjectManagerInputContext(), "cmdCreateActivity", new String[]{ testHolder.project.getID(), name });
     }
 
     @When("the actor assigns the employee with initials {string} as the project manager of the project")
