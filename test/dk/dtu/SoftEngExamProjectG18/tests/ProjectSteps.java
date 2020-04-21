@@ -1,30 +1,21 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
 import dk.dtu.SoftEngExamProjectG18.Context.EmployeeInputContext;
-import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
 import dk.dtu.SoftEngExamProjectG18.Context.ProjectManagerInputContext;
 import dk.dtu.SoftEngExamProjectG18.Core.Activity;
-import dk.dtu.SoftEngExamProjectG18.Core.Employee;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
-import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
+import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static junit.framework.TestCase.*;
 
-public class ProjectSteps {
-
-    private CompanyDB db;
-
-    public ProjectSteps () {
-        this.db = CompanyDB.getInstance();
-    }
+public class ProjectSteps extends BaseSteps {
 
     /*
         Create project(s) methods
@@ -55,10 +46,10 @@ public class ProjectSteps {
     }
 
     @When("the employee creates a project with name {string}")
-    public void theEmployeeCreatesAProjectWithName(String name) {
+    public void theEmployeeCreatesAProjectWithName(String name) throws Exception {
         EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
         String[] projectArguments = new String[] {name};
-        input.cmdCreateProject(projectArguments);
+        this.callCmdClean(input, "cmdCreateProject", projectArguments);
     }
 
     /*
@@ -66,7 +57,7 @@ public class ProjectSteps {
      */
 
     @When("the employee adds an activity with name {string} to the project")
-    public void theEmployeeAddsAnActivityWithNameToTheProject(String name) {
+    public void theEmployeeAddsAnActivityWithNameToTheProject(String name) throws Exception {
         // TODO: Fix missing "employee is a pm" - test when that is implemented
         TestHolder testHolder = TestHolder.getInstance();
         ProjectManagerInputContext input = null;
@@ -74,14 +65,14 @@ public class ProjectSteps {
             input = (ProjectManagerInputContext) this.db.getInputContext();
         } catch (ClassCastException e) {}
         if (input != null)
-            input.cmdCreateActivity(new String[]{ name, testHolder.project.getID() });
+            this.callCmdClean(input, "cmdCreateActivity", new String[]{ name, testHolder.project.getID() });
     }
 
     @When("the actor assigns the employee with initials {string} as the project manager of the project")
-    public void theActorAssignsTheEmployeeWithInitialsAsTheProjectManagerOfTheProject(String initials) {
+    public void theActorAssignsTheEmployeeWithInitialsAsTheProjectManagerOfTheProject(String initials) throws Exception {
         TestHolder testHolder = TestHolder.getInstance();
         EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
-        input.cmdAssignPM(new String[]{ testHolder.project.getID(), initials });
+        this.callCmdClean(input, "cmdAssignPM", new String[]{ testHolder.project.getID(), initials });
     }
 
     @And("the project does not have a project manager")
@@ -92,14 +83,14 @@ public class ProjectSteps {
     }
 
     @When("the employee finishes the activity with ID {string} in the project")
-    public void theEmployeeFinishesTheActivityWithIDInTheProject(String id) {
+    public void theEmployeeFinishesTheActivityWithIDInTheProject(String id) throws Exception {
         TestHolder testHolder = TestHolder.getInstance();
         ProjectManagerInputContext input = null;
         try {
             input = (ProjectManagerInputContext) this.db.getInputContext();
         } catch (ClassCastException e) {}
         if (input != null)
-            input.cmdFinishActivity(new String[]{ id, testHolder.project.getID() });
+            this.callCmdClean(input, "cmdFinishActivity", new String[]{ id, testHolder.project.getID() });
     }
 
     @Given("the activity with ID {string} has an estimated duration of {string} weeks and registered {string} hours spent")

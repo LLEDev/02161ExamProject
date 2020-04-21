@@ -2,21 +2,17 @@ package dk.dtu.SoftEngExamProjectG18.Context;
 
 import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
-import dk.dtu.SoftEngExamProjectG18.Core.OutOfOfficeActivity;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
-import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
+import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EmployeeInputContext extends InputContext {
-
-    protected SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
 
     /*
         General
@@ -46,16 +42,34 @@ public class EmployeeInputContext extends InputContext {
     }
 
     /*
-        Utils
+        Command helpers
      */
 
-    protected void addProjectToDB(Project project) {
-        CompanyDB db = CompanyDB.getInstance();
-        db.getProjects().put(project.getID(), project);
-    }
+    // String projectID, int activityID, Date date, int setHours
+    @SuppressWarnings("unused")
+    public void helperSetSubmitHours(String[] args, boolean shouldSet) throws CommandException, ParseException {
+        assertArgumentsValid(args.length, 4);
+        assertStringParseDateDoable(args[3]);
+        assertStringParseIntDoable(args[4]);
 
-    protected boolean isValidProjectName(String name) {
-        return name.length() != 0;
+        CompanyDB db = CompanyDB.getInstance();
+        Project project = this.getProject(db, args[0]);
+        Activity activity = this.getActivity(project, args[1]);
+
+        Employee signedInEmployee = db.getSignedInEmployee();
+        HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
+        EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(signedInEmployee.getID());
+
+        int minutes = Integer.parseInt(args[4]) * 60;
+        Date date = this.formatter.parse(args[3]);
+
+        if(shouldSet) {
+            employeeActivityIntermediate.setMinutes(date, minutes);
+            this.writeOutput("Hours set.");
+        } else {
+            employeeActivityIntermediate.addMinutes(date, minutes);
+            this.writeOutput("Hours submitted.");
+        }
     }
 
     /*
@@ -63,93 +77,89 @@ public class EmployeeInputContext extends InputContext {
      */
 
     // String name, boolean isBillable
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdCreateProject(String[] args) {
-        if (areArgumentsInvalid(args.length, 0)) {
-            return false;
+    @SuppressWarnings("unused")
+    public void cmdCreateProject(String[] args) throws CommandException {
+        this.assertArgumentsValid(args.length, 0);
+        this.assertValidProjectName(args[0]);
+
+        Project project;
+        if (args.length > 1) {
+            boolean isBillable = Boolean.parseBoolean(args[1]);
+            project = new Project(args[0], isBillable);
+        } else {
+            project = new Project(args[0]);
         }
 
-        if (this.isValidProjectName(args[0])) {
+        this.addProjectToDB(project);
 
-            Project project;
-
-            if (args.length > 1) {
-                boolean isBillable = Boolean.parseBoolean(args[1]);
-                project = new Project(args[0], isBillable);
-            } else {
-                project = new Project(args[0]);
-            }
-
-            this.addProjectToDB(project);
-            Activity activity = new Activity("test", project);
-            project.getActivities().put(activity.getID(), activity);
-
-
-            return true;
-        }
-        return false;
+        Activity activity = new Activity("First Activity", project);
+        project.getActivities().put(activity.getID(), activity);
     }
 
     // String projectID, int activityID
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdMarkActivityAsDone(String[] args) {
-        if (areArgumentsInvalid(args.length, 2)) {
-            return false;
-        }
+    @SuppressWarnings("unused")
+    public void cmdMarkActivityAsDone(String[] args) throws CommandException {
+        this.assertArgumentsValid(args.length, 2);
 
-        Activity activity = this.getActivityFromProject(args[0], args[1]);
-        if (activity != null) {
-            activity.setDone(true);
-            this.writeOutput("Activity marked as done");
-            return true;
-        }
-        return false;
+        CompanyDB db = CompanyDB.getInstance();
+        Project project = this.getProject(db, args[0]);
+        Activity activity = this.getActivity(project, args[1]);
+
+        activity.setDone(true);
+        this.writeOutput("Activity completed.");
     }
 
     // String projectID, int activityID, String employeeID
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdRequestAssistance(String[] args) {
-        if (areArgumentsInvalid(args.length, 3)) {
-            return false;
+    @SuppressWarnings("unused")
+    public void cmdRequestAssistance(String[] args) throws CommandException {
+        this.assertArgumentsValid(args.length, 3);
+
+        CompanyDB db = CompanyDB.getInstance();
+        Project project = this.getProject(db, args[0]);
+        Activity activity = this.getActivity(project, args[1]);
+        Employee employee = this.getEmployee(db, args[2]);
+
+        Employee signedInEmployee = db.getSignedInEmployee();
+        HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> signedInEmployeeActivities
+                = signedInEmployee.getActivities();
+        HashMap<Integer, EmployeeActivityIntermediate> signedEmployeeProjectActivities =
+                signedInEmployeeActivities.get(project.getID());
+
+        boolean signedInEmployeeIsNotAttachedToActivity = !signedEmployeeProjectActivities.containsKey(activity.getID());
+        boolean otherEmployeeHasNoActivitySlotsLeft = employee.amountOfOpenActivities() == 0;
+
+        if(signedInEmployeeIsNotAttachedToActivity) {
+            String output = String.format("You are not allowing to work with the given activity, %s.", args[1]);
+            throw new CommandException(output);
         }
 
-        Activity activity = this.getActivityFromProject(args[0], args[1]);
-        if (activity != null) {
-            CompanyDB db = CompanyDB.getInstance();
-            Project project = db.getProject(args[0]);
-            Employee employee = db.getEmployee(args[2]);
-            if (isNull(employee)) {
-                this.writeOutput("Employee does not exist");
-                return false;
-            }
-            Employee signedInEmployee = db.getSignedInEmployee();
-            HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> signedInEmployeeActivities
-                    = signedInEmployee.getActivities();
-            if (employee.amountOfOpenActivities() != 0 &&
-                    signedInEmployeeActivities.get(project.getID()).containsKey(activity.getID())) {
-                employee.getActivities().put(project.getID(), signedInEmployeeActivities.get(project.getID()));
-                return true;
-            }
+        if(otherEmployeeHasNoActivitySlotsLeft) {
+            String output = String.format(
+                    "The employee, %s, you are requesting assistance from, has no room for any new activities at the moment.",
+                    args[1]
+            );
+            throw new CommandException(output);
         }
-        return false;
 
+        employee.getActivities().put(project.getID(), signedInEmployeeActivities.get(project.getID()));
+        this.writeOutput("Assistance requested.");
     }
 
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdRequestDailyOverview(String[] args) {
-        return true;
+    @SuppressWarnings("unused")
+    public void cmdRequestDailyOverview(String[] args) {
+        // return true;
     }
 
     // OOOActivityType type, Date start, Date end
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdRequestOutOfOffice(String[] args) {
-        if (areArgumentsInvalid(args.length, 3)) {
-            return false;
-        }
+    @SuppressWarnings("unused")
+    public void cmdRequestOutOfOffice(String[] args) throws CommandException {
+        assertArgumentsValid(args.length, 3);
 
         CompanyDB db = CompanyDB.getInstance();
-        Employee employee = db.getSignedInEmployee();
+        Employee signedInEmployee = db.getSignedInEmployee();
 
+        // TODO: Change below to exception-way of doing things
+        /*
         OOOActivityType type = OOOActivityType.valueOf(args[0]);
         try {
             Date start = this.formatter.parse(args[1]);
@@ -161,64 +171,19 @@ public class EmployeeInputContext extends InputContext {
             this.writeOutput("Date must be in format " + this.formatter.toPattern());
             return false;
         }
+        */
     }
 
     // String projectID, int activityID, Date date, int setHours
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdSetHours(String[] args) {
-        if (areArgumentsInvalid(args.length, 4)) {
-            return false;
-        }
-
-        Activity activity = this.getActivityFromProject(args[0], args[1]);
-        if (activity != null) {
-            CompanyDB db = CompanyDB.getInstance();
-            Employee employee = db.getSignedInEmployee();
-            HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
-            EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(employee.getID());
-            if (isStringParseIntDoable(args[4])) {
-                int minutes = Integer.parseInt(args[4]) * 60;
-                try {
-                    Date date = this.formatter.parse(args[3]);
-                    employeeActivityIntermediate.setMinutes(date, minutes);
-                    this.writeOutput("Hours set");
-                    return true;
-                } catch (ParseException e) {
-                    this.writeOutput("Date must be in format " + this.formatter.toPattern());
-                    return false;
-                }
-            }
-        }
-        return false;
+    @SuppressWarnings("unused")
+    public void cmdSetHours(String[] args) throws CommandException, ParseException {
+        this.helperSetSubmitHours(args, true);
     }
 
     // String projectID, int activityID, Date date, int addedHours
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdSubmitHours(String[] args) {
-        if (areArgumentsInvalid(args.length, 4)) {
-            return false;
-        }
-
-        Activity activity = this.getActivityFromProject(args[0], args[1]);
-        if (activity != null) {
-            CompanyDB db = CompanyDB.getInstance();
-            Employee employee = db.getSignedInEmployee();
-            HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
-            EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(employee.getID());
-            if (isStringParseIntDoable(args[4])) {
-                int minutes = Integer.parseInt(args[4]) * 60;
-                try {
-                    Date date = this.formatter.parse(args[3]);
-                    employeeActivityIntermediate.addMinutes(date, minutes);
-                    this.writeOutput("Hours added");
-                    return true;
-                } catch (ParseException e) {
-                    this.writeOutput("Date must be in format " + this.formatter.toPattern());
-                    return false;
-                }
-            }
-        }
-        return false;
+    @SuppressWarnings("unused")
+    public void cmdSubmitHours(String[] args) throws CommandException, ParseException {
+        this.helperSetSubmitHours(args, false);
     }
 
 }

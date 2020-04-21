@@ -4,8 +4,13 @@ import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Enum.CommandExceptionReason;
 import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
+import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +36,7 @@ abstract public class InputContext {
         Misc. fields
      */
 
+    protected SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
     protected String output = "";
 
     /*
@@ -73,43 +79,83 @@ abstract public class InputContext {
         Utils
      */
 
-    protected boolean areArgumentsInvalid(int argsLength, int requiredLength) {
-        return argsLength != requiredLength;
-    }
-
     protected boolean isNull(Object obj) {
         return obj == null;
     }
 
-    protected boolean isStringParseIntDoable(String possibleInt) {
+    /*
+        Command specific utils
+     */
+
+    protected void addProjectToDB(Project project) {
+        CompanyDB db = CompanyDB.getInstance();
+        db.getProjects().put(project.getID(), project);
+    }
+
+    protected void assertArgumentsValid(int argsLength, int requiredLength) throws CommandException {
+        if(argsLength != requiredLength) {
+            throw new CommandException(CommandExceptionReason.INVALID_ARGUMENTS);
+        }
+    }
+
+    protected void assertStringParseDateDoable(String possibleDate) throws CommandException {
+        try {
+            this.formatter.parse(possibleDate);
+        } catch (ParseException e) {
+            throw new CommandException("Any date must be given in the format " + this.formatter.toPattern());
+        }
+    }
+
+    protected void assertStringParseIntDoable(String possibleInt) throws CommandException {
         try {
             Integer.parseInt(possibleInt);
         } catch (NumberFormatException nfe) {
-            this.writeOutput("Any number must be given as an integer");
-            return false;
+            throw new CommandException("Any number must be given as an integer.");
         }
-
-        return true;
     }
 
-    protected Activity getActivityFromProject(String projectID, String activityID) {
-        CompanyDB db = CompanyDB.getInstance();
+    protected void assertValidProjectName(String name) throws CommandException {
+        if(name.length() == 0) {
+            throw new CommandException(String.format("The given project name, %s, is not valid.", name));
+        }
+    }
+
+    protected Activity getActivity(Project project, String activityID) throws CommandException {
+        assertStringParseIntDoable(activityID);
+
+        int intActivityID = Integer.parseInt(activityID);
+        Activity activity = project.getActivity(intActivityID);
+
+        if (isNull(activity)) {
+            String eMsg = String.format(
+                    "The given activity, %s, does not exist within project, %s.",
+                    activityID,
+                    project.getID()
+            );
+            throw new CommandException(eMsg);
+        }
+
+        return activity;
+    }
+
+    protected Employee getEmployee(CompanyDB db, String employeeID) throws CommandException {
+        Employee employee = db.getEmployee(employeeID);
+
+        if (isNull(employee)) {
+            throw new CommandException(String.format("The given employee, %s, does not exist.", employeeID));
+        }
+
+        return employee;
+    }
+
+    protected Project getProject(CompanyDB db, String projectID) throws CommandException {
         Project project = db.getProject(projectID);
 
         if (isNull(project)) {
-            this.writeOutput("Project does not exist");
-            return null;
+            throw new CommandException(String.format("The given project, %s, does not exist.", projectID));
         }
 
-        if (isStringParseIntDoable(activityID)) {
-            int intActivityID = Integer.parseInt(activityID);
-            if (!isNull(project.getActivity(intActivityID))) {
-                return project.getActivity(intActivityID);
-            }
-        }
-
-        this.writeOutput("Activity does not exist");
-        return null;
+        return project;
     }
 
      /*
@@ -117,34 +163,19 @@ abstract public class InputContext {
       */
 
     // String projectID, String employeeID
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdAssignPM(String[] args) {
-        if (areArgumentsInvalid(args.length, 2)) {
-            return false;
-        }
+    @SuppressWarnings("unused")
+    public void cmdAssignPM(String[] args) throws CommandException {
+        assertArgumentsValid(args.length, 2);
 
         CompanyDB db = CompanyDB.getInstance();
-        Project project = db.getProject(args[0]);
-        if (isNull(project)) {
-            this.writeOutput("Project does not exist");
-            return false;
-        }
+        Project project = this.getProject(db, args[0]);
+        Employee employee = this.getEmployee(db, args[1]);
 
-        Employee employee = db.getEmployee(args[1]);
-        if (isNull(employee)) {
-            this.writeOutput("Employee does not exist");
-            return false;
-        }
+        String output = project.assignPM(employee) ?
+                "Employee assigned as PM." :
+                "You are not allowed to perform this action.";
 
-        try {
-            project.assignPM(employee);
-        } catch (Exception e) {
-            this.writeOutput(e.getMessage());
-            return false;
-        }
-
-        this.writeOutput("Employee assigned as PM");
-        return true;
+        this.writeOutput(output);
     }
 
 }

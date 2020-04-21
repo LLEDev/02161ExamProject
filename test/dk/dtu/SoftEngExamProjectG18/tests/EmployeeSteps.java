@@ -4,8 +4,9 @@ import dk.dtu.SoftEngExamProjectG18.Context.EmployeeInputContext;
 import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
-import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
+import dk.dtu.SoftEngExamProjectG18.tests.Util.CmdResponse;
+import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -16,13 +17,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
-public class EmployeeSteps {
-
-    private CompanyDB db;
-
-    public EmployeeSteps () {
-       this.db = CompanyDB.getInstance();
-    }
+public class EmployeeSteps extends BaseSteps {
 
     /*
         Create methods
@@ -30,7 +25,7 @@ public class EmployeeSteps {
 
     @Given("there is an employee")
     public void thereIsAnEmployee() {
-        thereIsAnEmployeeWithInitials("HH");
+        this.thereIsAnEmployeeWithInitials("HH");
     }
 
     @And("there is an employee with initials {string}")
@@ -43,7 +38,7 @@ public class EmployeeSteps {
     @And("the following employees are given")
     public void theFollowingEmployeesAreGiven(List<String> employees) {
         for (String employeeID: employees) {
-            thereIsAnEmployeeWithInitials(employeeID);
+            this.thereIsAnEmployeeWithInitials(employeeID);
         }
     }
 
@@ -52,31 +47,27 @@ public class EmployeeSteps {
      */
 
     @Given("the employee is the project manager for the project")
-    public void theEmployeeIsTheProjectManagerForTheProject() {
-        TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.project;
-        Employee employee = this.db.getSignedInEmployee();
-        EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
-        String[] args = {project.getID(),employee.getID()};
-        input.cmdAssignPM(args);
+    public void theEmployeeIsTheProjectManagerForTheProject() throws Exception {
+        this.theEmployeeWithInitialsIsTheProjectManagerOfTheProject(this.db.getSignedInEmployee().getID());
     }
 
     @And("the employee with initials {string} is the project manager of the project")
-    public void theEmployeeWithInitialsIsTheProjectManagerOfTheProject(String employeeID) {
-        Employee employee = this.db.getEmployee(employeeID);
+    public void theEmployeeWithInitialsIsTheProjectManagerOfTheProject(String employeeID) throws Exception {
         TestHolder testHolder = TestHolder.getInstance();
         Project project = testHolder.project;
+        Employee employee = this.db.getEmployee(employeeID);
         EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
+
         String[] args = {project.getID(),employeeID};
-        input.cmdAssignPM(args);
-        Assert.assertEquals((project.getPM()), employee);
+        this.callCmdClean(input, "cmdAssignPM", args);
+        Assert.assertEquals(project.getPM(), employee);
     }
 
     @And("the employee with initials {string} is the actor")
     public void theEmployeeWithInitialsIsTheActor(String employeeID) {
         this.db.setSignedInEmployee(employeeID);
+        Assert.assertEquals(this.db.getSignedInEmployee().getID(), employeeID);
     }
-    //TODO: Is the above how the actor is supposed to work or have i misunderstood?
 
     @And("the employee with initials {string} is assigned to the the activity with ID {string}")
     public void theEmployeeWithInitialsIsAssignedToTheTheActivityWithID(String arg0, String arg1) {
@@ -86,7 +77,7 @@ public class EmployeeSteps {
         project.getActivities().put(Integer.parseInt(arg1),activity);
         Employee employee = this.db.getEmployee(arg0);
         EmployeeActivityIntermediate intermediate = new EmployeeActivityIntermediate(employee, activity);
-        HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<Integer, EmployeeActivityIntermediate>();
+        HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<>();
         args.put(activity.getID(),intermediate);
         employee.getActivities().put(project.getID(),args);
         this.db.getEmployees().put(arg0,employee);
@@ -105,7 +96,7 @@ public class EmployeeSteps {
         //How to use the actor though?
         Employee employee = this.db.getEmployee(employeeID);
         EmployeeActivityIntermediate intermediate = new EmployeeActivityIntermediate(employee, activity);
-        HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<Integer, EmployeeActivityIntermediate>();
+        HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<>();
         args.put(activity.getID(),intermediate);
         employee.getActivities().put(project.getID(),args);
     }
@@ -117,7 +108,7 @@ public class EmployeeSteps {
         HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> activities = employee.getActivities();
         for(String projectKey : activities.keySet()) {
             for(String projectID : projects) {
-                if(projectKey == projectID) {
+                if(projectKey.equals(projectID)) {
                     Project project = this.db.getProject(projectID);
                     for(int activityKey : activities.get(projectKey).keySet()) {
                         int counter = 0;
@@ -145,7 +136,7 @@ public class EmployeeSteps {
         Activity activity = project.getActivity(Integer.parseInt(id));
         Employee employee = this.db.getSignedInEmployee();
         EmployeeActivityIntermediate intermediate = new EmployeeActivityIntermediate(employee, activity);
-        HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<Integer, EmployeeActivityIntermediate>();
+        HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<>();
         args.put(activity.getID(),intermediate);
         employee.getActivities().put(project.getID(),args);
     }
@@ -171,14 +162,13 @@ public class EmployeeSteps {
     }
 
     @When("the employee submits the work minutes")
-    public void theEmployeeSubmitsTheWorkMinutes(List<List<String>> minutes) {
+    public void theEmployeeSubmitsTheWorkMinutes(List<List<String>> minutes) throws Exception {
         Employee employee = this.db.getSignedInEmployee();
         EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
         LocalDate date = LocalDate.now();
-        for(int i = 0; i < minutes.size(); i++) {
-            List<String> submission = minutes.get(i);
-            String[] args = {submission.get(0),submission.get(1), String.valueOf(date),submission.get(2)};
-            input.cmdSubmitHours(args);
+        for (List<String> submission : minutes) {
+            String[] args = {submission.get(0), submission.get(1), String.valueOf(date), submission.get(2)};
+            this.callCmdClean(input, "cmdSubmitHours", args);
         }
     }
 

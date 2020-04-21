@@ -4,6 +4,7 @@ import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
 import java.text.ParseException;
@@ -13,8 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProjectManagerInputContext extends InputContext {
-
-    protected SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
 
     /*
         General
@@ -59,78 +58,72 @@ public class ProjectManagerInputContext extends InputContext {
      */
 
     // String employeeID, String projectID, int activityID
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdAssignEmployeeToActivity(String[] args) {
-        if (areArgumentsInvalid(args.length, 3)) {
-            return false;
+    @SuppressWarnings("unused")
+    public void cmdAssignEmployeeToActivity(String[] args) throws CommandException {
+        assertArgumentsValid(args.length, 3);
+        assertStringParseIntDoable(args[0]);
+        assertStringParseIntDoable(args[2]);
+
+        CompanyDB db = CompanyDB.getInstance();
+
+        Project project = this.getProject(db, args[1]);
+        Activity activity = this.getActivity(project, args[2]);
+
+        Employee signedInEmployee = db.getSignedInEmployee();
+        if (!signedInEmployee.equals(project.getPM())) {
+            throw new CommandException("Project Manager status required.");
         }
 
-        if (!(isStringParseIntDoable(args[0]) && isStringParseIntDoable(args[2]))) {
-            return false;
+        Employee employee = this.getEmployee(db, args[0]);
+        if (employee.amountOfOpenActivities() == 0) {
+            String output = String.format(
+                    "The employee, %s, you are requesting assistance from, has no room for any new activities at the moment.",
+                    args[1]
+            );
+            throw new CommandException(output);
         }
 
-        Activity activity = this.getActivityFromProject(args[1], args[2]);
-        if (activity != null) {
-            CompanyDB db = CompanyDB.getInstance();
-            Project project = db.getProject(args[1]);
-            Employee PM = db.getSignedInEmployee();
-            if (!(PM.equals(project.getPM()))) {
-                this.writeOutput("Project Manager status required");
-                return false;
-            }
-            Employee employee = db.getEmployee(args[0]);
-            if (employee.amountOfOpenActivities() != 0) {
-                EmployeeActivityIntermediate EAI = new EmployeeActivityIntermediate(employee, activity);
-                this.writeOutput("Employee added to activity");
-                return true;
-            }
-
-        }
-        return false;
+        EmployeeActivityIntermediate EAI = new EmployeeActivityIntermediate(employee, activity);
+        this.writeOutput("Employee added to activity");
     }
 
     // String projectID, String activityName
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdCreateActivity(String[] args) {
-        if (areArgumentsInvalid(args.length, 2)) {
-            return false;
-        }
+    @SuppressWarnings("unused")
+    public void cmdCreateActivity(String[] args) throws CommandException {
+        assertArgumentsValid(args.length, 2);
 
         CompanyDB db = CompanyDB.getInstance();
-        Project project = db.getProject(args[0]);
-        if (isSignedInEmployeePM(project)) {
-            new Activity(args[1], project);
-            return true;
+        Project project = this.getProject(db, args[0]);
+
+        if (!isSignedInEmployeePM(project)) {
+            throw new CommandException("You have to be the project manager of the project to perform this action.");
         }
-        return false;
+
+        new Activity(args[1], project);
     }
 
     // String projectID, String activityID
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdFinishActivity(String[] args) {
-        if (areArgumentsInvalid(args.length, 2)) {
-            return false;
-        }
+    @SuppressWarnings("unused")
+    public void cmdFinishActivity(String[] args) throws CommandException {
+        assertArgumentsValid(args.length, 2);
 
         CompanyDB db = CompanyDB.getInstance();
         Project project = db.getProject(args[0]);
-        if (isSignedInEmployeePM(project)) {
-            if (isStringParseIntDoable(args[1])) {
-                Activity activity = project.getActivity(Integer.parseInt(args[1]));
-                activity.setDone(true);
-            }
-            return true;
+
+        if (!isSignedInEmployeePM(project)) {
+            throw new CommandException("You have to be the project manager of the project to perform this action.");
         }
-        return false;
+
+        Activity activity = this.getActivity(project, args[1]);
+        activity.setDone(true);
     }
 
     // TODO: put in command structur
-    //String employeeID, String Date
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdRequestEmployeeAvailability(String[] args) {
-        if (areArgumentsInvalid(args.length, 2)) {
-            return false;
-        }
+    //String employeeID, String date
+    @SuppressWarnings("unused")
+    public void cmdRequestEmployeeAvailability(String[] args) throws CommandException {
+        /*
+        assertArgumentsValid(args.length, 2);
 
         CompanyDB db = CompanyDB.getInstance();
         Employee employee = db.getEmployee(args[0]);
@@ -147,31 +140,28 @@ public class ProjectManagerInputContext extends InputContext {
             this.writeOutput("Date must be in format " + this.formatter.toPattern());
             return false;
         }
+        */
     }
 
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdRequestOverview(String[] args) {
-        if (areArgumentsInvalid(args.length, 0)) {
-            return false;
-        }
-
-        return true;
+    @SuppressWarnings("unused")
+    public void cmdRequestOverview(String[] args) throws CommandException {
+        // assertArgumentsValid(args.length, 0);
     }
 
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdRequestReport(String[] args) {
-        return true;
+    @SuppressWarnings("unused")
+    public void cmdRequestReport(String[] args) {
+
     }
 
     // int numWeeks
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdSetActivityEstimatedDuration(String[] args) {
-        return true;
+    @SuppressWarnings("unused")
+    public void cmdSetActivityEstimatedDuration(String[] args) {
+
     }
 
     // Date start, Date end
-    @SuppressWarnings({"unused", "UnusedReturnValue"})
-    public boolean cmdSetActivityInterval(String[] args) {
-        return true;
+    @SuppressWarnings("unused")
+    public void cmdSetActivityInterval(String[] args) {
+
     }
 }

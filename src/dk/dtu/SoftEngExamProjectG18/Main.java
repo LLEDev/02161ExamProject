@@ -4,10 +4,13 @@ import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
 import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Enum.CommandExceptionReason;
 import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
+import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Util.CSVReader;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -22,15 +25,33 @@ public class Main {
         InputContext inputContext = CompanyDB.getContext();
 
         Method m = inputContext.getClass().getMethod(method, String[].class);
-        boolean result = (boolean) m.invoke(inputContext, (Object) args.toArray(new String[0]));
 
-        if (result) {
+        try {
+            m.invoke(inputContext, (Object) args.toArray(new String[0]));
             inputContext.printOutput();
-        } else {
-            outSource.println("Usage: " + usage);
+        } catch (InvocationTargetException ite) {
+            if(ite.getTargetException() instanceof CommandException) {
+                handleCommandException((CommandException) ite.getTargetException(), usage);
+            } else {
+                outSource.println("An internal error occurred.");
+            }
         }
 
         inputContext.resetOutput();
+    }
+
+    protected static void handleCommandException(CommandException e, String usage) {
+        if(e.getReason() == CommandExceptionReason.INVALID_ARGUMENTS) {
+            outSource.println("Usage: " + usage);
+            return;
+        }
+
+        if(e.getReason() == CommandExceptionReason.EXECUTION_ERROR) {
+            outSource.println(e.getMessage());
+            return;
+        }
+
+        outSource.println("An internal error occurred.");
     }
 
     protected static boolean loadData(String dir) {

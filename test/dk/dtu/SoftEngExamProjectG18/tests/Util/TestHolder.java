@@ -1,4 +1,4 @@
-package dk.dtu.SoftEngExamProjectG18.tests;
+package dk.dtu.SoftEngExamProjectG18.tests.Util;
 
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 
