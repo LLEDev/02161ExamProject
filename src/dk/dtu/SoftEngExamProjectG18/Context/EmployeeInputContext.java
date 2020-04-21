@@ -79,7 +79,7 @@ public class EmployeeInputContext extends InputContext {
     // String name, boolean isBillable
     @SuppressWarnings("unused")
     public void cmdCreateProject(String[] args) throws CommandException {
-        this.assertArgumentsValid(args.length, 0);
+        this.assertArgumentsValid(args.length, 2);
         this.assertValidProjectName(args[0]);
 
         Project project;
