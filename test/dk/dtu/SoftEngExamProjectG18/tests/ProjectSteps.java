@@ -13,7 +13,8 @@ import io.cucumber.java.en.When;
 
 import java.util.*;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 
 public class ProjectSteps extends BaseSteps {
 
@@ -48,8 +49,8 @@ public class ProjectSteps extends BaseSteps {
     @When("the employee creates a project with name {string}")
     public void theEmployeeCreatesAProjectWithName(String name) throws Exception {
         EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
-        String[] projectArguments = new String[] {name};
-        this.callCmdClean(input, "cmdCreateProject", projectArguments);
+        String[] projectArguments = new String[] {name, "false"};
+        this.callCmd(input, "cmdCreateProject", projectArguments);
     }
 
     /*
@@ -65,14 +66,14 @@ public class ProjectSteps extends BaseSteps {
             input = (ProjectManagerInputContext) this.db.getInputContext();
         } catch (ClassCastException e) {}
         if (input != null)
-            this.callCmdClean(input, "cmdCreateActivity", new String[]{ name, testHolder.project.getID() });
+            this.callCmd(input, "cmdCreateActivity", new String[]{ name, testHolder.project.getID() });
     }
 
     @When("the actor assigns the employee with initials {string} as the project manager of the project")
     public void theActorAssignsTheEmployeeWithInitialsAsTheProjectManagerOfTheProject(String initials) throws Exception {
         TestHolder testHolder = TestHolder.getInstance();
         EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
-        this.callCmdClean(input, "cmdAssignPM", new String[]{ testHolder.project.getID(), initials });
+        this.callCmd(input, "cmdAssignPM", new String[]{ testHolder.project.getID(), initials });
     }
 
     @And("the project does not have a project manager")
@@ -90,7 +91,7 @@ public class ProjectSteps extends BaseSteps {
             input = (ProjectManagerInputContext) this.db.getInputContext();
         } catch (ClassCastException e) {}
         if (input != null)
-            this.callCmdClean(input, "cmdFinishActivity", new String[]{ id, testHolder.project.getID() });
+            this.callCmd(input, "cmdFinishActivity", new String[]{ id, testHolder.project.getID() });
     }
 
     @Given("the activity with ID {string} has an estimated duration of {string} weeks and registered {string} hours spent")
