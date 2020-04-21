@@ -59,7 +59,7 @@ public class EmployeeSteps extends BaseSteps {
         EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
 
         String[] args = {project.getID(),employeeID};
-        this.callCmdClean(input, "cmdAssignPM", args);
+        this.callCmd(input, "cmdAssignPM", args);
         Assert.assertEquals(project.getPM(), employee);
     }
 
@@ -72,11 +72,12 @@ public class EmployeeSteps extends BaseSteps {
     @And("the employee with initials {string} is assigned to the the activity with ID {string}")
     public void theEmployeeWithInitialsIsAssignedToTheTheActivityWithID(String arg0, String arg1) {
         TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.project;
-        Activity activity = new Activity("test", project);
-        project.getActivities().put(Integer.parseInt(arg1),activity);
         Employee employee = this.db.getEmployee(arg0);
+        Project project = testHolder.project;
+        Activity activity = project.getActivity(1);
+
         EmployeeActivityIntermediate intermediate = new EmployeeActivityIntermediate(employee, activity);
+
         HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<>();
         args.put(activity.getID(),intermediate);
         employee.getActivities().put(project.getID(),args);
@@ -102,44 +103,51 @@ public class EmployeeSteps extends BaseSteps {
     }
 
     @And("the employee is attached to all activities in the projects")
-    public void theEmployeeIsAttachedToAllActivitiesInTheProjects(List<String> projects) {
-        TestHolder testHolder = TestHolder.getInstance();
-        Employee employee = this.db.getSignedInEmployee();
-        HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> activities = employee.getActivities();
-        for(String projectKey : activities.keySet()) {
-            for(String projectID : projects) {
-                if(projectKey.equals(projectID)) {
-                    Project project = this.db.getProject(projectID);
-                    for(int activityKey : activities.get(projectKey).keySet()) {
-                        int counter = 0;
-                        for(int activityID : project.getActivities().keySet()) {
-                            if(activityKey == activityID) {
-                                Assert.assertEquals(activityKey, activityID);
-                            } else {
-                                counter++;
-                            }
-                            if(counter == project.getActivities().size()) {
-                                Assert.assertEquals(1, 2);
-                                //TODO: Do proper fail statement
-                            }
-                        }
-                    }
+    public void theEmployeeIsAttachedToAllActivitiesInTheProjects(List<String> projects) throws Exception {
+        Employee signedInEmployee = this.db.getSignedInEmployee();
+
+        for(String projectID : projects) {
+            Project project = this.db.getProject(projectID);
+
+            if(project == null) {
+                throw new Exception("Project with ID " + projectID + " does not exist.");
+            }
+
+            HashMap<Integer, EmployeeActivityIntermediate> employeeProjectActivities = signedInEmployee.getActivities().get(project.getID());
+
+            for(Activity activity : project.getActivities().values()) {
+                if(employeeProjectActivities == null || !employeeProjectActivities.containsKey(activity.getID())) {
+                    new EmployeeActivityIntermediate(signedInEmployee, activity);
                 }
+
+                Assert.assertTrue(signedInEmployee.getActivities().get(project.getID()).containsKey(activity.getID()));
             }
         }
     }
 
     @Given("the employee is assigned to the activity with ID {string}")
     public void theEmployeeIsAssignedToTheActivityWithID(String id) {
+        this.theEmployeeWithInitialsIsAssignedToTheActivityWithID(this.db.getSignedInEmployee().getID(), id);
+    }
+
+    @And("the employee with initials {string} is assigned to the activity with ID {string}")
+    public void theEmployeeWithInitialsIsAssignedToTheActivityWithID(String employeeID, String activityID) {
         TestHolder testHolder = TestHolder.getInstance();
         Project project = testHolder.project;
-        Activity activity = project.getActivity(Integer.parseInt(id));
-        Employee employee = this.db.getSignedInEmployee();
+        Activity activity = project.getActivity(Integer.parseInt(activityID));
+        System.out.println(project.getName());
+        System.out.println(project.getActivities());
+        System.out.println(activityID);
+
+        Employee employee = this.db.getEmployee(employeeID);
+        System.out.println(this.db.getEmployees());
         EmployeeActivityIntermediate intermediate = new EmployeeActivityIntermediate(employee, activity);
+
         HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<>();
-        args.put(activity.getID(),intermediate);
-        employee.getActivities().put(project.getID(),args);
+        args.put(activity.getID(), intermediate);
+        employee.getActivities().put(project.getID(), args);
     }
+
 
     @When("the employee requests assistance from {string} on activity with ID {string} in the project")
     public void theEmployeeRequestsAssistanceFromOnActivityWithIDInTheProject(String arg0, String arg1) {
@@ -168,7 +176,7 @@ public class EmployeeSteps extends BaseSteps {
         LocalDate date = LocalDate.now();
         for (List<String> submission : minutes) {
             String[] args = {submission.get(0), submission.get(1), String.valueOf(date), submission.get(2)};
-            this.callCmdClean(input, "cmdSubmitHours", args);
+            this.callCmd(input, "cmdSubmitHours", args);
         }
     }
 
@@ -176,8 +184,8 @@ public class EmployeeSteps extends BaseSteps {
         Assert
      */
 
-    @Then("the employee with initials {string} is assigned to the activity with ID {string}")
-    public void theEmployeeWithInitialsIsAssignedToTheActivityWithID(String arg0, String arg1) {
+    @Then("the employee with initials {string} has been assigned to the activity with ID {string}")
+    public void theEmployeeWithInitialsHasBeenAssignedToTheActivityWithID(String arg0, String arg1) {
         Employee employee = this.db.getEmployee(arg0);
         employee.getActivities();
         HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> activities = employee.getActivities();
