@@ -10,7 +10,6 @@ import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +65,7 @@ public class EmployeeInputContext extends InputContext {
     // String name, boolean isBillable
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdCreateProject(String[] args) {
-        if (args.length == 0) {
+        if (areArgumentsInvalid(args.length, 0)) {
             return false;
         }
 
@@ -94,7 +93,7 @@ public class EmployeeInputContext extends InputContext {
     // String projectID, int activityID
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdMarkActivityAsDone(String[] args) {
-        if (isArgumentInvalid(args.length, 2)) {
+        if (areArgumentsInvalid(args.length, 2)) {
             return false;
         }
 
@@ -110,9 +109,10 @@ public class EmployeeInputContext extends InputContext {
     // String projectID, int activityID, String employeeID
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdRequestAssistance(String[] args) {
-        if (isArgumentInvalid(args.length, 3)) {
+        if (areArgumentsInvalid(args.length, 3)) {
             return false;
         }
+
         Activity activity = this.getActivityFromProject(args[0], args[1]);
         if (activity != null) {
             CompanyDB db = CompanyDB.getInstance();
@@ -143,9 +143,10 @@ public class EmployeeInputContext extends InputContext {
     // OOOActivityType type, Date start, Date end
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdRequestOutOfOffice(String[] args) {
-        if (isArgumentInvalid(args.length, 3)) {
+        if (areArgumentsInvalid(args.length, 3)) {
             return false;
         }
+
         CompanyDB db = CompanyDB.getInstance();
         Employee employee = db.getSignedInEmployee();
 
@@ -165,9 +166,10 @@ public class EmployeeInputContext extends InputContext {
     // String projectID, int activityID, Date date, int setHours
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdSetHours(String[] args) {
-        if (isArgumentInvalid(args.length, 4)) {
+        if (areArgumentsInvalid(args.length, 4)) {
             return false;
         }
+
         Activity activity = this.getActivityFromProject(args[0], args[1]);
         if (activity != null) {
             CompanyDB db = CompanyDB.getInstance();
@@ -193,9 +195,10 @@ public class EmployeeInputContext extends InputContext {
     // String projectID, int activityID, Date date, int addedHours
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdSubmitHours(String[] args) {
-        if (isArgumentInvalid(args.length, 4)) {
+        if (areArgumentsInvalid(args.length, 4)) {
             return false;
         }
+
         Activity activity = this.getActivityFromProject(args[0], args[1]);
         if (activity != null) {
             CompanyDB db = CompanyDB.getInstance();

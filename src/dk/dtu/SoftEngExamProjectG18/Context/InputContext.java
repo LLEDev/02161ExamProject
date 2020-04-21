@@ -73,13 +73,8 @@ abstract public class InputContext {
         Utils
      */
 
-    protected boolean isArgumentInvalid(int argsLength, int requiredLength) {
-        if (argsLength != requiredLength) {
-            this.writeOutput("Wrong usage.");
-            return true;
-        }
-
-        return false;
+    protected boolean areArgumentsInvalid(int argsLength, int requiredLength) {
+        return argsLength != requiredLength;
     }
 
     protected boolean isNull(Object obj) {
@@ -124,7 +119,7 @@ abstract public class InputContext {
     // String projectID, String employeeID
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdAssignPM(String[] args) {
-        if (isArgumentInvalid(args.length, 2)) {
+        if (areArgumentsInvalid(args.length, 2)) {
             return false;
         }
 

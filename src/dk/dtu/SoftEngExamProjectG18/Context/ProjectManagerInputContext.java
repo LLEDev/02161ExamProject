@@ -8,7 +8,6 @@ import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +61,7 @@ public class ProjectManagerInputContext extends InputContext {
     // String employeeID, String projectID, int activityID
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdAssignEmployeeToActivity(String[] args) {
-        if (isArgumentInvalid(args.length, 3)) {
+        if (areArgumentsInvalid(args.length, 3)) {
             return false;
         }
 
@@ -93,8 +92,9 @@ public class ProjectManagerInputContext extends InputContext {
     // String projectID, String activityName
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdCreateActivity(String[] args) {
-        if (args.length != 2)
+        if (areArgumentsInvalid(args.length, 2)) {
             return false;
+        }
 
         CompanyDB db = CompanyDB.getInstance();
         Project project = db.getProject(args[0]);
@@ -108,8 +108,9 @@ public class ProjectManagerInputContext extends InputContext {
     // String projectID, String activityID
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdFinishActivity(String[] args) {
-        if (args.length != 2)
+        if (areArgumentsInvalid(args.length, 2)) {
             return false;
+        }
 
         CompanyDB db = CompanyDB.getInstance();
         Project project = db.getProject(args[0]);
@@ -127,7 +128,7 @@ public class ProjectManagerInputContext extends InputContext {
     //String employeeID, String Date
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdRequestEmployeeAvailability(String[] args) {
-        if (isArgumentInvalid(args.length, 2)) {
+        if (areArgumentsInvalid(args.length, 2)) {
             return false;
         }
 
@@ -150,7 +151,7 @@ public class ProjectManagerInputContext extends InputContext {
 
     @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean cmdRequestOverview(String[] args) {
-        if (args.length > 0) {
+        if (areArgumentsInvalid(args.length, 0)) {
             return false;
         }
 
