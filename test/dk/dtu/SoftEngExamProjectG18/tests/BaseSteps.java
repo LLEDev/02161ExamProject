@@ -39,12 +39,4 @@ abstract public class BaseSteps {
         TestHolder.getInstance().response = new CmdResponse(response, cmdException);
     }
 
-    protected void callCmdClean(InputContext context, String method, String[] args) throws Exception {
-        this.callCmd(context, method, args);
-        CmdResponse response = TestHolder.getInstance().response;
-        if(!response.isClean()) {
-            throw new Exception("Received command response is not clean!");
-        }
-    }
-
 }
