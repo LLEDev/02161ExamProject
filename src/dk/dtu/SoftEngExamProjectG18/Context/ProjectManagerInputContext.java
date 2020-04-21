@@ -96,7 +96,7 @@ public class ProjectManagerInputContext extends InputContext {
         Project project = this.getProject(db, args[0]);
 
         if (!isSignedInEmployeePM(project)) {
-            throw new CommandException("You have to be the project manager of the project to perform this action.");
+            throw new CommandException("Project manager role required");
         }
 
         new Activity(args[1], project);
@@ -111,7 +111,7 @@ public class ProjectManagerInputContext extends InputContext {
         Project project = db.getProject(args[0]);
 
         if (!isSignedInEmployeePM(project)) {
-            throw new CommandException("You have to be the project manager of the project to perform this action.");
+            throw new CommandException("Project manager role required");
         }
 
         Activity activity = this.getActivity(project, args[1]);
