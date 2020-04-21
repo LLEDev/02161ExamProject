@@ -7,9 +7,6 @@ import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,9 +45,9 @@ public class ProjectManagerInputContext extends InputContext {
         Utils
      */
 
-    protected boolean isSignedInEmployeePM(Project project) {
+    protected boolean isSignedInEmployeeNotPM(Project project) {
         CompanyDB db = CompanyDB.getInstance();
-        return db.getSignedInEmployee() == project.getPM();
+        return db.getSignedInEmployee() != project.getPM();
     }
 
     /*
@@ -95,7 +92,7 @@ public class ProjectManagerInputContext extends InputContext {
         CompanyDB db = CompanyDB.getInstance();
         Project project = this.getProject(db, args[0]);
 
-        if (!isSignedInEmployeePM(project)) {
+        if (isSignedInEmployeeNotPM(project)) {
             throw new CommandException("Project manager role required");
         }
 
@@ -110,7 +107,7 @@ public class ProjectManagerInputContext extends InputContext {
         CompanyDB db = CompanyDB.getInstance();
         Project project = db.getProject(args[0]);
 
-        if (!isSignedInEmployeePM(project)) {
+        if (isSignedInEmployeeNotPM(project)) {
             throw new CommandException("Project manager role required");
         }
 
