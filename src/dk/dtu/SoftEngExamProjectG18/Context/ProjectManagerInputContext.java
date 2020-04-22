@@ -24,7 +24,7 @@ public class ProjectManagerInputContext extends InputContext {
         putAll(InputContext.getTriggersStatic());
         put("project activity assign", new String[]{"project activity assign {employeeID} {projectID} {activityID}", "cmdAssignEmployeeToActivity"});
         put("project activity create", new String[]{"project activity create {projectID}, {activityName}", "cmdCreateActivity"});
-        put("project activity estimate", new String[]{"project activity estimate {projectID} {activityID} {weeks}", "cmdSetActivityEstimatedDuration"});
+        put("project activity estimate", new String[]{"project activity estimate {projectID} {activityID} {work hours}", "cmdSetActivityEstimatedDuration"});
         put("project activity finish", new String[]{"project activity finish {projectID}, {activityName}", "cmdFinishActivity"});
         put("project activity setweeks", new String[]{"project activity setWeeks {projectID} {activityID} {startWeek} {endWeek}", "cmdSetActivityInterval"});
         put("view activity", new String[]{"view activity {projectID} {activityID}", "cmdViewActivity"});
@@ -129,14 +129,14 @@ public class ProjectManagerInputContext extends InputContext {
         Project project = this.getProject(db, args[0]);
         Activity activity = this.getActivity(project, args[1]);
 
-        int numWeeks = Integer.parseInt(args[2]);
-        if(numWeeks <= 0) {
-            String output = String.format("The estimated number of weeks has to be bigger than 0. %s received.", numWeeks);
+        int numHours = Integer.parseInt(args[2]);
+        if(numHours <= 0) {
+            String output = String.format("The estimated number of work hours has to be bigger than 0. %s received.", numHours);
             throw new CommandException(output);
         }
 
-        activity.setEstimatedWeeks(numWeeks);
-        this.writeOutput("Estimated number of weeks updated.");
+        activity.setEstimatedHours(numHours);
+        this.writeOutput("Estimated number of work hours updated.");
     }
 
     // String projectID, int activityID, Date start, Date end

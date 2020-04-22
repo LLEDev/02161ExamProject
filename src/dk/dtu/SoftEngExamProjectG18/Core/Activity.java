@@ -16,7 +16,7 @@ public class Activity implements Extractable<Activity> {
 
     protected Date endWeek = null;
     protected Date startWeek = null;
-    protected int estimatedWeeks = 0;
+    protected int estimatedHours = 0;
 
     protected boolean isDone = false;
 
@@ -39,8 +39,8 @@ public class Activity implements Extractable<Activity> {
         return this.endWeek;
     }
 
-    public int getEstimatedWeeks() {
-        return estimatedWeeks;
+    public int getEstimatedHours() {
+        return this.estimatedHours;
     }
 
     public int getID() {
@@ -71,8 +71,8 @@ public class Activity implements Extractable<Activity> {
         this.endWeek = endWeek;
     }
 
-    public void setEstimatedWeeks(int estimatedWeeks) {
-        this.estimatedWeeks = estimatedWeeks;
+    public void setEstimatedHours(int estimatedHours) {
+        this.estimatedHours = estimatedHours;
     }
 
     public void setStartWeek(Date startWeek) {
@@ -115,7 +115,7 @@ public class Activity implements Extractable<Activity> {
             entry.put("Name", activity.getName());
             entry.put("Start week", startWeek);
             entry.put("End week", endWeek);
-            entry.put("Estimated duration", activity.getEstimatedWeeks() + " weeks");
+            entry.put("Estimated duration", activity.getEstimatedHours() + " work hours");
 
             result.add(entry);
         }
