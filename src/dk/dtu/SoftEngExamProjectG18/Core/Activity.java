@@ -12,10 +12,11 @@ public class Activity {
     protected String name;
     protected Project project;
 
-    protected boolean isDone = false;
-
     protected Date endWeek = null;
     protected Date startWeek = null;
+    protected int estimatedWeeks = 0;
+
+    protected boolean isDone = false;
 
     // EmployeeID --> EmployeeActivityIntermediate
     protected HashMap<String, EmployeeActivityIntermediate> trackedTime = new HashMap<>();
@@ -28,28 +29,32 @@ public class Activity {
         project.getActivities().put(this.ID, this);
     }
 
-    public int getID() {
-        return ID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-
     public boolean isDone() {
-        return isDone;
+        return this.isDone;
     }
 
     public Date getEndWeek() {
-        return endWeek;
+        return this.endWeek;
+    }
+
+    public int getEstimatedWeeks() {
+        return estimatedWeeks;
+    }
+
+    public int getID() {
+        return this.ID;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public Project getProject() {
+        return this.project;
     }
 
     public Date getStartWeek() {
-        return startWeek;
+        return this.startWeek;
     }
 
     public HashMap<String, EmployeeActivityIntermediate> getTrackedTime() {
@@ -57,11 +62,15 @@ public class Activity {
     }
 
     public void setDone(boolean done) {
-        isDone = done;
+        this.isDone = done;
     }
 
     public void setEndWeek(Date endWeek) {
         this.endWeek = endWeek;
+    }
+
+    public void setEstimatedWeeks(int estimatedWeeks) {
+        this.estimatedWeeks = estimatedWeeks;
     }
 
     public void setStartWeek(Date startWeek) {
