@@ -139,6 +139,31 @@ public class Main {
         return false;
     }
 
+    protected static String[] splitInput(String input) {
+        boolean splitAllowed = true;
+        ArrayList<String> tokens = new ArrayList<>();
+        String[] inputSplit = input.split("");
+
+        StringBuilder current = new StringBuilder();
+        for(String c : inputSplit) {
+            if(splitAllowed && c.equals(" ")) {
+                tokens.add(current.toString());
+                current.setLength(0);
+                continue;
+            }
+
+            if(c.equals("\"")) {
+                splitAllowed = !splitAllowed;
+                continue;
+            }
+
+            current.append(c);
+        }
+        tokens.add(current.toString());
+
+        return tokens.toArray(String[]::new);
+    }
+
     /*
         Basic commands
      */
@@ -185,11 +210,14 @@ public class Main {
 
         outSource.println("Welcome, " + db.getSignedInEmployee().getName() + ".");
         outSource.println("You are now signed in as (and acting as) " + CompanyDB.getContext().getSingularContextName() + ".");
+        outSource.println("Type 'help' to view available commands within this context.");
+        outSource.println("Multi word arguments can be passed using \"quotes\".");
+        outSource.println();
 
         inputScanner = new Scanner(inputSource);
         try {
             while (inputScanner.hasNextLine()) {
-                redirectInput(inputScanner.nextLine().trim().split(" "));
+                redirectInput(splitInput(inputScanner.nextLine().trim()));
             }
         } catch(IllegalStateException ignored) {} // Thrown when quitting
     }
