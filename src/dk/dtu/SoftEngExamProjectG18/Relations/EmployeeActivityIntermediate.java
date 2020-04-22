@@ -45,9 +45,11 @@ public class EmployeeActivityIntermediate {
         return this.minutesSpent.getOrDefault(this.formatter.format(d), 0);
     }
 
+    public int getTotalMinutes() {
+        return this.minutesSpent.values().stream().mapToInt(i -> i).sum();
+    }
+
     public void setMinutes(Date d, int minutes) {
         this.minutesSpent.put(this.formatter.format(d), minutes);
     }
-
-
 }

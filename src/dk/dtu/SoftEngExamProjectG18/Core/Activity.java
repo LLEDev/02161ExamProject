@@ -59,6 +59,10 @@ public class Activity implements Extractable<Activity> {
         return this.startWeek;
     }
 
+    public int getTotalTrackedMinutes() {
+        return this.getTrackedTime().values().stream().mapToInt(EmployeeActivityIntermediate::getTotalMinutes).sum();
+    }
+
     public HashMap<String, EmployeeActivityIntermediate> getTrackedTime() {
         return this.trackedTime;
     }
@@ -110,12 +114,15 @@ public class Activity implements Extractable<Activity> {
                 endWeek = weekFormatter.format(activity.getEndWeek());
             } catch (Exception ignored) {}
 
+            int trackedHours = (int) Math.ceil(activity.getTotalTrackedMinutes() / 60.0);
+
             HashMap<String, String> entry = new HashMap<>();
             entry.put("ID", String.valueOf(activity.getID()));
             entry.put("Name", activity.getName());
             entry.put("Start week", startWeek);
             entry.put("End week", endWeek);
-            entry.put("Estimated duration", activity.getEstimatedHours() + " work hours");
+            entry.put("Estimated work hours", String.valueOf(activity.getEstimatedHours()));
+            entry.put("Tracked work hours", String.valueOf(trackedHours));
 
             result.add(entry);
         }

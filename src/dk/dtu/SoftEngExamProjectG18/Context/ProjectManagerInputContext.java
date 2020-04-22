@@ -203,13 +203,13 @@ public class ProjectManagerInputContext extends InputContext {
         this.writeOutput("Project details:\n");
         this.writeOutput(String.format(" - ID: %s\n", project.getID()));
         this.writeOutput(String.format(" - Name: %s\n", project.getName()));
-        this.writeOutput(String.format(" - Estimated remaining work: %s\n", 0));
+        this.writeOutput(String.format(" - Estimated remaining work: %s work hours\n", project.getEstimatedWorkHoursLeft()));
 
         this.writeOutput("\nProject activities:\n");
         ArrayList<Activity> collection = new ArrayList<>(project.getActivities().values());
         this.writeOutput(Table.make(
                 "overview",
-                new String[] {"ID", "Name", "Start week", "End week", "Estimated duration"},
+                new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours", "Tracked work hours"},
                 collection
         ));
     }

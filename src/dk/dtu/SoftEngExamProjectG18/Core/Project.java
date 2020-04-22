@@ -102,6 +102,13 @@ public class Project implements Extractable<Project> {
         return this.activities;
     }
 
+    public int getEstimatedWorkHoursLeft() {
+        double minutesLeft = this.getActivities().values().stream()
+                .mapToInt(a -> Math.max(a.getEstimatedHours() * 60 - a.getTotalTrackedMinutes(), 0)).sum();
+
+        return (int) Math.ceil(minutesLeft / 60.0);
+    }
+
     public String getID() {
         StringBuilder IDBuilder = new StringBuilder();
         IDBuilder.append(this.ID);
