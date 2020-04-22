@@ -190,17 +190,28 @@ public class CSVReader {
             Employee employee = db.getEmployee(employeeID);
             Project project = db.getProject(projectID);
 
-            if (employee != null && project != null) {
-                Activity activity = project.getActivity(activityID);
-
-                Date date = getDate(entry, "Date");
-                int minutes = getInt(entry, "Minutes", 0);
-
-                if (date != null && minutes >= 0) {
-                    EmployeeActivityIntermediate eai = new EmployeeActivityIntermediate(employee, activity);
-                    eai.setMinutes(date, minutes);
-                }
+            if (employee == null || project == null) {
+                continue;
             }
+
+            Activity activity = project.getActivity(activityID);
+
+            Date date = getDate(entry, "Date");
+            int minutes = getInt(entry, "Minutes", 0);
+
+            if (date == null || minutes < 0) {
+                continue;
+            }
+
+            HashMap<Integer, EmployeeActivityIntermediate> alreadyTrackedActivities = employee.getActivities().get(project.getID());
+
+            EmployeeActivityIntermediate eai;
+            if(alreadyTrackedActivities != null && alreadyTrackedActivities.containsKey(activity.getID())) {
+                eai = alreadyTrackedActivities.get(activity.getID());
+            } else {
+                eai = new EmployeeActivityIntermediate(employee, activity);
+            }
+            eai.setMinutes(date, minutes);
         }
     }
 }
