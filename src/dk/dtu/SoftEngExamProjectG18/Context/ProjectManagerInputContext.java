@@ -49,6 +49,8 @@ public class ProjectManagerInputContext extends InputContext {
         Command utils
      */
 
+    protected SimpleDateFormat weekFormatter = new SimpleDateFormat("yyyy-ww");
+
     protected void assertSignedInEmployeePM(Project project) throws CommandException {
         CompanyDB db = CompanyDB.getInstance();
         if (db.getSignedInEmployee() != project.getPM()) {
@@ -148,11 +150,9 @@ public class ProjectManagerInputContext extends InputContext {
         Project project = this.getProject(db, args[0]);
         Activity activity = this.getActivity(project, args[1]);
 
-        SimpleDateFormat weekFormatter = new SimpleDateFormat("yyyy-ww");
-
         try {
-            Date start = weekFormatter.parse(args[2]);
-            Date end = weekFormatter.parse(args[3]);
+            Date start = this.weekFormatter.parse(args[2]);
+            Date end = this.weekFormatter.parse(args[3]);
 
             if(start.compareTo(end) >= 0) {
                 String output = String.format("The given start week, %s, is after the given end week, %s.", args[2], args[3]);
@@ -164,7 +164,7 @@ public class ProjectManagerInputContext extends InputContext {
 
             this.writeOutput("Start/end weeks updated.");
         } catch (ParseException e) {
-            String output = String.format("Any week must be given in the format %s. Received %s and %s.", weekFormatter.toPattern(), args[2], args[3]);
+            String output = String.format("Any week must be given in the format %s. Received %s and %s.", this.weekFormatter.toPattern(), args[2], args[3]);
             throw new CommandException(output);
         }
     }
@@ -178,7 +178,30 @@ public class ProjectManagerInputContext extends InputContext {
         Project project = this.getProject(db, args[0]);
         Activity activity = this.getActivity(project, args[1]);
 
-        System.out.println(project + " " + activity);
+        String startWeek = null;
+        String endWeek = null;
+        try {
+            startWeek = this.weekFormatter.format(activity.getStartWeek());
+            endWeek = this.weekFormatter.format(activity.getEndWeek());
+        } catch (Exception ignored) {}
+
+        int trackedHours = (int) Math.ceil(activity.getTotalTrackedMinutes() / 60.0);
+
+        this.writeOutput("Activity details:\n");
+        this.writeOutput(String.format(" - ID: %s\n", activity.getID()));
+        this.writeOutput(String.format(" - Name: %s\n", activity.getName()));
+        this.writeOutput(String.format(" - Start Week: %s\n", startWeek));
+        this.writeOutput(String.format(" - End Week: %s\n", endWeek));
+        this.writeOutput(String.format(" - Estimated work hours: %s\n", activity.getEstimatedHours()));
+        this.writeOutput(String.format(" - Tracked work hours: %s\n", trackedHours));
+
+        this.writeOutput("\nTracked time:\n");
+        ArrayList<EmployeeActivityIntermediate> collection = new ArrayList<>(activity.getTrackedTime().values());
+        this.writeOutput(Table.make(
+                "overview",
+                new String[] {"Employee", "Date", "Minutes"},
+                collection
+        ));
     }
 
     // String date

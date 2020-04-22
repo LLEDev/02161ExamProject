@@ -3,14 +3,12 @@ package dk.dtu.SoftEngExamProjectG18.Relations;
 import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
+import dk.dtu.SoftEngExamProjectG18.Interface.Extractable;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
+import java.util.*;
 
-public class EmployeeActivityIntermediate {
+public class EmployeeActivityIntermediate implements Extractable<EmployeeActivityIntermediate> {
 
     protected SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -41,6 +39,14 @@ public class EmployeeActivityIntermediate {
         this.setMinutes(d, cumulatedMinutes);
     }
 
+    public Activity getActivity() {
+        return this.activity;
+    }
+
+    public Employee getEmployee() {
+        return this.employee;
+    }
+
     public int getMinutes(Date d) {
         return this.minutesSpent.getOrDefault(this.formatter.format(d), 0);
     }
@@ -51,5 +57,43 @@ public class EmployeeActivityIntermediate {
 
     public void setMinutes(Date d, int minutes) {
         this.minutesSpent.put(this.formatter.format(d), minutes);
+    }
+
+    /*
+        Table extraction methods
+     */
+
+    @Override
+    public ArrayList<HashMap<String, String>> extract(String context, ArrayList<? extends Extractable<?>> collection) {
+        if(context.equals("overview")) {
+            return this.extractOverview(collection);
+        }
+
+        return null;
+    }
+
+    public ArrayList<HashMap<String, String>> extractOverview(ArrayList<? extends Extractable<?>> collection) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
+
+        for(Extractable<?> extractable : collection) {
+            if(!(extractable instanceof EmployeeActivityIntermediate)) {
+                continue;
+            }
+
+            EmployeeActivityIntermediate eai = (EmployeeActivityIntermediate) extractable;
+
+            for(String date : eai.minutesSpent.keySet()) {
+                int minutes = eai.minutesSpent.get(date);
+
+                HashMap<String, String> entry = new HashMap<>();
+                entry.put("Employee", eai.getEmployee().getName());
+                entry.put("Date", date);
+                entry.put("Minutes", String.valueOf(minutes));
+
+                result.add(entry);
+            }
+        }
+
+        return result;
     }
 }
