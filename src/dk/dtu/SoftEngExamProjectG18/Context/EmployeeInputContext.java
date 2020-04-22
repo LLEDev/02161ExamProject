@@ -94,10 +94,9 @@ public class EmployeeInputContext extends InputContext {
             project = new Project(args[0]);
         }
 
-        this.addProjectToDB(project);
-
-        Activity activity = new Activity("First Activity", project);
-        project.getActivities().put(activity.getID(), activity);
+        CompanyDB db = CompanyDB.getInstance();
+        db.getProjects().put(project.getID(), project);
+        this.writeOutput("Project created.");
     }
 
     // String projectID, int activityID
@@ -156,7 +155,7 @@ public class EmployeeInputContext extends InputContext {
 
     @SuppressWarnings("unused")
     public void cmdRequestDailyOverview(String[] args) {
-        // return true;
+        // TODO
     }
 
     // OOOActivityType type, Date start, Date end
@@ -167,20 +166,7 @@ public class EmployeeInputContext extends InputContext {
         CompanyDB db = CompanyDB.getInstance();
         Employee signedInEmployee = db.getSignedInEmployee();
 
-        // TODO: Change below to exception-way of doing things
-        /*
-        OOOActivityType type = OOOActivityType.valueOf(args[0]);
-        try {
-            Date start = this.formatter.parse(args[1]);
-            Date end = this.formatter.parse(args[2]);
-            employee.getOOOactivities().add(new OutOfOfficeActivity(type, start, end));
-            this.writeOutput("OOO activity added");
-            return true;
-        } catch (ParseException e) {
-            this.writeOutput("Date must be in format " + this.formatter.toPattern());
-            return false;
-        }
-        */
+        // TODO
     }
 
     // String projectID, int activityID, Date date, int setHours

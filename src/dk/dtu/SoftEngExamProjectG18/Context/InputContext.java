@@ -86,11 +86,6 @@ abstract public class InputContext {
         Command specific utils
      */
 
-    protected void addProjectToDB(Project project) {
-        CompanyDB db = CompanyDB.getInstance();
-        db.getProjects().put(project.getID(), project);
-    }
-
     protected void assertArgumentsValid(int argsLength, int requiredLength) throws CommandException {
         if(argsLength != requiredLength) {
             throw new CommandException(CommandExceptionReason.INVALID_ARGUMENTS);
