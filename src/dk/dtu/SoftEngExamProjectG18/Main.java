@@ -195,6 +195,8 @@ public class Main {
      */
 
     public static void main(String[] args) throws Exception {
+        CompanyDB db = CompanyDB.getInstance();
+
         if(args.length < 2) {
             outSource.println("Usage: java -jar 02161ExamProject {Employee Initials} {Context=Emp/PM)} [Data folder/N]");
             return;
