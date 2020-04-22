@@ -6,12 +6,11 @@ import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
+import dk.dtu.SoftEngExamProjectG18.Util.Table;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ProjectManagerInputContext extends InputContext {
 
@@ -102,6 +101,7 @@ public class ProjectManagerInputContext extends InputContext {
         assertSignedInEmployeePM(project);
 
         new Activity(args[1], project);
+        this.writeOutput("Activity created.");
     }
 
     // String projectID, String activityID
@@ -116,6 +116,7 @@ public class ProjectManagerInputContext extends InputContext {
 
         Activity activity = this.getActivity(project, args[1]);
         activity.setDone(true);
+        this.writeOutput("Activity finished.");
     }
 
     // String projectID, int activityID, int numWeeks
@@ -158,6 +159,9 @@ public class ProjectManagerInputContext extends InputContext {
                 throw new CommandException(output);
             }
 
+            activity.setStartWeek(start);
+            activity.setEndWeek(end);
+
             this.writeOutput("Start/end weeks updated.");
         } catch (ParseException e) {
             String output = String.format("Any week must be given in the format %s. Received %s and %s.", weekFormatter.toPattern(), args[2], args[3]);
@@ -166,6 +170,7 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     // String projectID, activityID
+    @SuppressWarnings("unused")
     public void cmdViewActivity(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 2);
 
@@ -177,6 +182,7 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     // String date
+    @SuppressWarnings("unused")
     public void cmdViewAvailability(String[] args) throws CommandException, ParseException {
         assertArgumentsValid(args.length, 1);
         assertStringParseDateDoable(args[0]);
@@ -187,16 +193,29 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     // String projectID
+    @SuppressWarnings("unused")
     public void cmdViewProject(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 1);
 
         CompanyDB db = CompanyDB.getInstance();
         Project project = this.getProject(db, args[0]);
 
-        System.out.println(project);
+        this.writeOutput("Project details:\n");
+        this.writeOutput(String.format(" - ID: %s\n", project.getID()));
+        this.writeOutput(String.format(" - Name: %s\n", project.getName()));
+        this.writeOutput(String.format(" - Estimated remaining work: %s\n", 0));
+
+        this.writeOutput("\nProject activities:\n");
+        ArrayList<Activity> collection = new ArrayList<>(project.getActivities().values());
+        this.writeOutput(Table.make(
+                "overview",
+                new String[] {"ID", "Name", "Start week", "End week", "Estimated duration"},
+                collection
+        ));
     }
 
     // String employeeID
+    @SuppressWarnings("unused")
     public void cmdViewSchedule(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 1);
 

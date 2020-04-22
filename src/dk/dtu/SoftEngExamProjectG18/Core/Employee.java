@@ -1,13 +1,14 @@
 package dk.dtu.SoftEngExamProjectG18.Core;
 
 import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
+import dk.dtu.SoftEngExamProjectG18.Interface.Extractable;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class Employee {
+public class Employee implements Extractable<Employee> {
 
     // ProjectID --> ActivityID --> EmployeeActivityIntermediate
     protected HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> activities = new HashMap<>();
@@ -71,4 +72,29 @@ public class Employee {
         this.weeklyActivityCap = weeklyActivityCap;
     }
 
+
+    /*
+        Table extraction methods
+     */
+
+    @Override
+    public ArrayList<HashMap<String, String>> extract(String context, ArrayList<? extends Extractable<?>> collection) {
+        if(context.equals("availability")) {
+            return this.extractAvailability(collection);
+        }
+
+        if(context.equals("schedule")) {
+            return this.extractSchedule(collection);
+        }
+
+        return null;
+    }
+
+    public ArrayList<HashMap<String, String>> extractAvailability(ArrayList<? extends Extractable<?>> collection) {
+        return null;
+    }
+
+    public ArrayList<HashMap<String, String>> extractSchedule(ArrayList<? extends Extractable<?>> collection) {
+        return null;
+    }
 }

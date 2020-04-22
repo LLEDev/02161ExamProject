@@ -1,14 +1,11 @@
 package dk.dtu.SoftEngExamProjectG18.Core;
 
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
-import io.cucumber.java.ca.Cal;
+import dk.dtu.SoftEngExamProjectG18.Interface.Extractable;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
+import java.util.*;
 
-public class Project {
+public class Project implements Extractable<Project> {
 
     protected HashMap<Integer, Activity> activities = new HashMap<>();
     protected Calendar createdAt;
@@ -123,5 +120,22 @@ public class Project {
 
     public void setPM(Employee PM) {
         this.PM = PM;
+    }
+
+    /*
+        Table extraction methods
+     */
+
+    @Override
+    public ArrayList<HashMap<String, String>> extract(String context, ArrayList<? extends Extractable<?>> collection) {
+        if(context.equals("overview")) {
+            return this.extractOverview(collection);
+        }
+
+        return null;
+    }
+
+    public ArrayList<HashMap<String, String>> extractOverview(ArrayList<? extends Extractable<?>> collection) {
+        return null;
     }
 }
