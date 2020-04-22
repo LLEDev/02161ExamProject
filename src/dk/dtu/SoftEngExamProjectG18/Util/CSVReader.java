@@ -127,7 +127,7 @@ public class CSVReader {
             boolean isBillable = getBoolean(project, "IsBillable", true);
             Employee PM = db.getEmployee(project.getOrDefault("PM", null));
 
-            Project p = new Project(name, createdAt, isBillable, PM);
+            Project p = new Project(name, createdAt, isBillable, PM, false);
             db.getProjects().put(p.getID(), p);
         }
     }

@@ -59,14 +59,17 @@ public class Project implements Extractable<Project> {
         this.setupActivity(null);
     }
 
-    public Project(String name, Date createdAt, boolean isBillable, Employee PM) {
+    public Project(String name, Date createdAt, boolean isBillable, Employee PM, boolean setupActivity) {
         this.isBillable = isBillable;
         this.name = name;
         this.PM = PM;
 
         this.setupCreatedAt(createdAt);
         this.setupID();
-        this.setupActivity(null);
+
+        if(setupActivity) { // Do not setup activity if data is imported through CSVReader
+            this.setupActivity(null);
+        }
     }
 
     public int incrementNextActivityID() {
