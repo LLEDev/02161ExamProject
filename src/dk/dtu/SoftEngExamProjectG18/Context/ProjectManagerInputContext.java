@@ -2,6 +2,7 @@ package dk.dtu.SoftEngExamProjectG18.Context;
 
 import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
+import dk.dtu.SoftEngExamProjectG18.Core.OutOfOfficeActivity;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
@@ -232,7 +233,7 @@ public class ProjectManagerInputContext extends InputContext {
         ArrayList<Activity> collection = new ArrayList<>(project.getActivities().values());
         this.writeOutput(Table.make(
                 "overview",
-                new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours", "Tracked work hours"},
+                new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"},
                 collection
         ));
     }
@@ -245,6 +246,38 @@ public class ProjectManagerInputContext extends InputContext {
         CompanyDB db = CompanyDB.getInstance();
         Employee employee = this.getEmployee(db, args[0]);
 
-        System.out.println(employee.getOOOActivities());
+        HashMap<String, Activity> allActivities = new HashMap<>();
+        for(HashMap<Integer, EmployeeActivityIntermediate> activities : employee.getActivities().values()) {
+            for(EmployeeActivityIntermediate intermediate : activities.values()) {
+                Activity activity = intermediate.getActivity();
+                String combinedID = activity.getProject().getID() + "-" + activity.getID();
+
+                if(activity.isDone() || allActivities.containsKey(combinedID)) {
+                    continue;
+                }
+
+                allActivities.put(combinedID, activity);
+            }
+        }
+
+        this.writeOutput("Employee details:\n");
+        this.writeOutput(String.format(" - ID: %s\n", employee.getID()));
+        this.writeOutput(String.format(" - Name: %s\n", employee.getName()));
+
+        this.writeOutput("\nWorking on the following active activities:\n");
+        ArrayList<Activity> activityCollection = new ArrayList<>(allActivities.values());
+        this.writeOutput(Table.make(
+                "overview",
+                new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"},
+                activityCollection
+        ) + "\n");
+
+        this.writeOutput("\nPlanned out-of-office activities:\n");
+        ArrayList<OutOfOfficeActivity> OOOCollection = new ArrayList<>(employee.getOOOActivities());
+        this.writeOutput(Table.make(
+                "overview",
+                new String[] {"Type", "Start", "End"},
+                OOOCollection
+        ));
     }
 }

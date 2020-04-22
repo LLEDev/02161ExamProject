@@ -121,8 +121,8 @@ public class Activity implements Extractable<Activity> {
             entry.put("Name", activity.getName());
             entry.put("Start week", startWeek);
             entry.put("End week", endWeek);
-            entry.put("Estimated work hours", String.valueOf(activity.getEstimatedHours()));
-            entry.put("Tracked work hours", String.valueOf(trackedHours));
+            entry.put("Estimated work hours (in total)", String.valueOf(activity.getEstimatedHours()));
+            entry.put("Tracked work hours (in total)", String.valueOf(trackedHours));
 
             result.add(entry);
         }

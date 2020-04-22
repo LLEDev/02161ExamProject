@@ -1,9 +1,14 @@
 package dk.dtu.SoftEngExamProjectG18.Core;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
+import java.util.HashMap;
 
-public class OutOfOfficeActivity {
+import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
+import dk.dtu.SoftEngExamProjectG18.Interface.Extractable;
+
+public class OutOfOfficeActivity implements Extractable<OutOfOfficeActivity> {
 
     protected OOOActivityType type;
 
@@ -26,5 +31,41 @@ public class OutOfOfficeActivity {
 
     public Date getStart() {
         return this.start;
+    }
+
+    /*
+        Table extraction methods
+     */
+
+    @Override
+    public ArrayList<HashMap<String, String>> extract(String context, ArrayList<? extends Extractable<?>> collection) {
+        if(context.equals("overview")) {
+            return this.extractOverview(collection);
+        }
+
+        return null;
+    }
+
+    public ArrayList<HashMap<String, String>> extractOverview(ArrayList<? extends Extractable<?>> collection) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
+
+        for(Extractable<?> extractable : collection) {
+            if(!(extractable instanceof OutOfOfficeActivity)) {
+                continue;
+            }
+
+            OutOfOfficeActivity OOOActivity = (OutOfOfficeActivity) extractable;
+
+            HashMap<String, String> entry = new HashMap<>();
+            entry.put("Type", OOOActivity.getType().toString());
+            entry.put("Start", formatter.format(OOOActivity.getStart()));
+            entry.put("End", formatter.format(OOOActivity.getEnd()));
+
+            result.add(entry);
+        }
+
+        return result;
     }
 }
