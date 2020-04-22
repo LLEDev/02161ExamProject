@@ -1,8 +1,10 @@
 package dk.dtu.SoftEngExamProjectG18.Core;
 
+import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Interfaces.Extractable;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
+import io.cucumber.java.sl.In;
 
 import java.util.*;
 
@@ -99,6 +101,10 @@ public class Employee implements Extractable<Employee> {
             return this.extractAvailability((Date) metaData.get("date"), collection);
         }
 
+        if(context.equals("submissions") && collection.size() == 1 && collection.get(0) instanceof Employee) {
+            return this.extractSubmissions((Employee) collection.get(0));
+        }
+
         return null;
     }
 
@@ -148,6 +154,36 @@ public class Employee implements Extractable<Employee> {
             entry.put("Available activity slots", String.valueOf(employee.getWeeklyActivityCap() - activeActivities));
 
             result.add(entry);
+        }
+
+        return result;
+    }
+
+    public ArrayList<HashMap<String, String>> extractSubmissions(Employee employee) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
+
+        Date today = new Date();
+
+        for(HashMap<Integer, EmployeeActivityIntermediate> projectActivities : employee.getActivities().values()) {
+            for(EmployeeActivityIntermediate eai : projectActivities.values()) {
+                String formattedDate = eai.getFormatter().format(today);
+                HashMap<String, Integer> minutesSpent = eai.getMinutesSpent();
+
+                if(!minutesSpent.containsKey(formattedDate)) {
+                    continue;
+                }
+
+                Activity activity = eai.getActivity();
+                Project project = activity.getProject();
+
+                double trackedHours = minutesSpent.get(formattedDate) / 60.0;
+
+                HashMap<String, String> entry = new HashMap<>();
+                entry.put("Project ID", project.getID());
+                entry.put("Activity ID", String.valueOf(activity.getID()));
+                entry.put("Tracked hours", String.valueOf(trackedHours));
+                result.add(entry);
+            }
         }
 
         return result;

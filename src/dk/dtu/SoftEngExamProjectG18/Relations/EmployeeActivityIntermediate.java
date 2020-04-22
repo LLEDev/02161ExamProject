@@ -47,8 +47,16 @@ public class EmployeeActivityIntermediate implements Extractable<EmployeeActivit
         return this.employee;
     }
 
+    public SimpleDateFormat getFormatter() {
+        return this.formatter;
+    }
+
     public int getMinutes(Date d) {
         return this.minutesSpent.getOrDefault(this.formatter.format(d), 0);
+    }
+
+    public HashMap<String, Integer> getMinutesSpent() {
+        return this.minutesSpent;
     }
 
     public int getTotalMinutes() {

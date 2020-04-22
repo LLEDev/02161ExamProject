@@ -6,8 +6,10 @@ import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
+import dk.dtu.SoftEngExamProjectG18.Util.Table;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +28,7 @@ public class EmployeeInputContext extends InputContext {
         put("project create", new String[]{"project create {name} {billable}", "cmdCreateProject"});
         put("request assistance", new String[]{"request assistance {projectID} {activityID} {employeeID}", "cmdRequestAssistance"});
         put("request ooo", new String[]{"request ooo {type} {start} {end}", "cmdRequestOutOfOffice"});
-        put("request overview daily", new String[]{"request overview daily", "cmdRequestDailyOverview"});
+        put("view submissions", new String[]{"view submissions", "cmdViewSubmissions"});
     }};
 
     public static Map<String, String[]> getTriggersStatic() {
@@ -153,11 +155,6 @@ public class EmployeeInputContext extends InputContext {
         this.writeOutput("Assistance requested.");
     }
 
-    @SuppressWarnings("unused")
-    public void cmdRequestDailyOverview(String[] args) {
-        // TODO
-    }
-
     // OOOActivityType type, Date start, Date end
     @SuppressWarnings("unused")
     public void cmdRequestOutOfOffice(String[] args) throws CommandException {
@@ -179,6 +176,22 @@ public class EmployeeInputContext extends InputContext {
     @SuppressWarnings("unused")
     public void cmdSubmitHours(String[] args) throws CommandException, ParseException {
         this.helperSetSubmitHours(args, false);
+    }
+
+    @SuppressWarnings("unused")
+    public void cmdViewSubmissions(String[] args) throws CommandException {
+        assertArgumentsValid(args.length, 0);
+
+        Employee signedInEmployee = CompanyDB.getInstance().getSignedInEmployee();
+
+        ArrayList<Employee> employeeList = new ArrayList<>();
+        employeeList.add(signedInEmployee);
+
+        this.writeOutput(Table.make(
+                "submissions",
+                new String[] {"Project ID", "Activity ID", "Tracked hours"},
+                employeeList
+        ));
     }
 
 }
