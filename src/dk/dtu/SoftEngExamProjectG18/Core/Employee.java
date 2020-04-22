@@ -1,12 +1,10 @@
 package dk.dtu.SoftEngExamProjectG18.Core;
 
 import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
-import dk.dtu.SoftEngExamProjectG18.Interface.Extractable;
+import dk.dtu.SoftEngExamProjectG18.Interfaces.Extractable;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 public class Employee implements Extractable<Employee> {
 
@@ -48,6 +46,24 @@ public class Employee implements Extractable<Employee> {
         return this.activities;
     }
 
+    public ArrayList<Activity> getAllActiveActivities() {
+        HashMap<String, Activity> allActivities = new HashMap<>();
+        for(HashMap<Integer, EmployeeActivityIntermediate> activities : this.getActivities().values()) {
+            for(EmployeeActivityIntermediate intermediate : activities.values()) {
+                Activity activity = intermediate.getActivity();
+                String combinedID = activity.getProject().getID() + "-" + activity.getID();
+
+                if(activity.isDone() || allActivities.containsKey(combinedID)) {
+                    continue;
+                }
+
+                allActivities.put(combinedID, activity);
+            }
+        }
+
+        return new ArrayList<>(allActivities.values());
+    }
+
     public String getID() {
         return this.ID;
     }
@@ -78,23 +94,62 @@ public class Employee implements Extractable<Employee> {
      */
 
     @Override
-    public ArrayList<HashMap<String, String>> extract(String context, ArrayList<? extends Extractable<?>> collection) {
-        if(context.equals("availability")) {
-            return this.extractAvailability(collection);
-        }
-
-        if(context.equals("schedule")) {
-            return this.extractSchedule(collection);
+    public ArrayList<HashMap<String, String>> extract(String context, HashMap<String, Object> metaData, ArrayList<? extends Extractable<?>> collection) {
+        if(context.equals("availability") && metaData.containsKey("date") && metaData.get("date") instanceof Date) {
+            return this.extractAvailability((Date) metaData.get("date"), collection);
         }
 
         return null;
     }
 
-    public ArrayList<HashMap<String, String>> extractAvailability(ArrayList<? extends Extractable<?>> collection) {
-        return null;
-    }
+    public ArrayList<HashMap<String, String>> extractAvailability(Date date, ArrayList<? extends Extractable<?>> collection) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
 
-    public ArrayList<HashMap<String, String>> extractSchedule(ArrayList<? extends Extractable<?>> collection) {
-        return null;
+        for(Extractable<?> extractable : collection) {
+            if (!(extractable instanceof Employee)) {
+                continue;
+            }
+
+            Employee employee = (Employee) extractable;
+
+            boolean isAvailable = true;
+            for(OutOfOfficeActivity OOOActivity : employee.getOOOActivities()) {
+                if(OOOActivity.getStart().compareTo(date) <= 0 && OOOActivity.getEnd().compareTo(date) >= 0) {
+                    isAvailable = false;
+                    break;
+                }
+            }
+
+            if(!isAvailable) {
+                continue;
+            }
+
+            int activeActivities = 0;
+            for(Activity activity : this.getAllActiveActivities()) {
+                Date start = activity.getStartWeek();
+
+                Calendar endCal = new GregorianCalendar();
+                endCal.add(Calendar.WEEK_OF_YEAR, 1);
+                endCal.add(Calendar.SECOND, -1);
+                Date end = endCal.getTime();
+
+                if(start.compareTo(date) <= 0 && end.compareTo(date) >= 0) {
+                    activeActivities++;
+                }
+            }
+
+            if(activeActivities >= this.getWeeklyActivityCap()) {
+                continue;
+            }
+
+            HashMap<String, String> entry = new HashMap<>();
+            entry.put("ID", employee.getID());
+            entry.put("Name", employee.getName());
+            entry.put("Available activity slots", String.valueOf(this.getWeeklyActivityCap() - activeActivities));
+
+            result.add(entry);
+        }
+
+        return result;
     }
 }

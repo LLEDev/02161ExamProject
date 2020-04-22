@@ -213,7 +213,17 @@ public class ProjectManagerInputContext extends InputContext {
 
         Date d = this.formatter.parse(args[0]);
 
-        System.out.println(d);
+        ArrayList<Employee> collection = new ArrayList<>(CompanyDB.getInstance().getEmployees().values());
+        HashMap<String, Object> meta = new HashMap<>();
+        meta.put("date", d);
+
+        this.writeOutput(String.format("\nAvailable employees at %s:\n", args[0]));
+        this.writeOutput(Table.make(
+                "availability",
+                new String[] {"ID", "Name", "Available activity slots"},
+                meta,
+                collection
+        ));
     }
 
     // String projectID
@@ -246,26 +256,12 @@ public class ProjectManagerInputContext extends InputContext {
         CompanyDB db = CompanyDB.getInstance();
         Employee employee = this.getEmployee(db, args[0]);
 
-        HashMap<String, Activity> allActivities = new HashMap<>();
-        for(HashMap<Integer, EmployeeActivityIntermediate> activities : employee.getActivities().values()) {
-            for(EmployeeActivityIntermediate intermediate : activities.values()) {
-                Activity activity = intermediate.getActivity();
-                String combinedID = activity.getProject().getID() + "-" + activity.getID();
-
-                if(activity.isDone() || allActivities.containsKey(combinedID)) {
-                    continue;
-                }
-
-                allActivities.put(combinedID, activity);
-            }
-        }
-
         this.writeOutput("Employee details:\n");
         this.writeOutput(String.format(" - ID: %s\n", employee.getID()));
         this.writeOutput(String.format(" - Name: %s\n", employee.getName()));
 
         this.writeOutput("\nWorking on the following active activities:\n");
-        ArrayList<Activity> activityCollection = new ArrayList<>(allActivities.values());
+        ArrayList<Activity> activityCollection = employee.getAllActiveActivities();
         this.writeOutput(Table.make(
                 "overview",
                 new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"},

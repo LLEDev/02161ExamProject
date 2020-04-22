@@ -1,6 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.Core;
 
-import dk.dtu.SoftEngExamProjectG18.Interface.Extractable;
+import dk.dtu.SoftEngExamProjectG18.Interfaces.Extractable;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
 import java.text.SimpleDateFormat;
@@ -88,7 +88,7 @@ public class Activity implements Extractable<Activity> {
      */
 
     @Override
-    public ArrayList<HashMap<String, String>> extract(String context, ArrayList<? extends Extractable<?>> collection) {
+    public ArrayList<HashMap<String, String>> extract(String context, HashMap<String, Object> metaData, ArrayList<? extends Extractable<?>> collection) {
         if(context.equals("overview")) {
             return this.extractOverview(collection);
         }

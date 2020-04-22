@@ -1,6 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.Util;
 
-import dk.dtu.SoftEngExamProjectG18.Interface.Extractable;
+import dk.dtu.SoftEngExamProjectG18.Interfaces.Extractable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,12 +76,12 @@ public class Table {
         return sb.toString();
     }
 
-    public static String make(String context, String[] keyOrder, ArrayList<? extends Extractable<?>> collection) {
+    public static String make(String context, String[] keyOrder, HashMap<String, Object> metaData, ArrayList<? extends Extractable<?>> collection) {
         if(collection.size() == 0) {
             return "No data found.";
         }
 
-        ArrayList<HashMap<String, String>> data = collection.get(0).extract(context, collection);
+        ArrayList<HashMap<String, String>> data = collection.get(0).extract(context, metaData, collection);
 
         HashMap<String, Integer> columnWidths = determineColumnWidths(keyOrder, data);
         String delimiter = makeDelimiter(columnWidths);
@@ -97,6 +97,10 @@ public class Table {
         }
 
         return result.toString();
+    }
+
+    public static String make(String context, String[] keyOrder, ArrayList<? extends Extractable<?>> collection) {
+        return make(context, keyOrder, new HashMap<>(), collection);
     }
 
 }
