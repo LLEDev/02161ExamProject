@@ -94,7 +94,6 @@ public class CSVReader {
         return lines;
     }
 
-    // TODO: Activity cap is loaded wrongly
     public static void readEmployees(Reader fileReader) {
         CompanyDB db = CompanyDB.getInstance();
         ArrayList<HashMap<String, String>> employees = readFile(fileReader);

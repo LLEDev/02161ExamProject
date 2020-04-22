@@ -145,7 +145,7 @@ public class Employee implements Extractable<Employee> {
             HashMap<String, String> entry = new HashMap<>();
             entry.put("ID", employee.getID());
             entry.put("Name", employee.getName());
-            entry.put("Available activity slots", String.valueOf(this.getWeeklyActivityCap() - activeActivities));
+            entry.put("Available activity slots", String.valueOf(employee.getWeeklyActivityCap() - activeActivities));
 
             result.add(entry);
         }
