@@ -2,17 +2,16 @@ package dk.dtu.SoftEngExamProjectG18.Context;
 
 import dk.dtu.SoftEngExamProjectG18.Core.Activity;
 import dk.dtu.SoftEngExamProjectG18.Core.Employee;
+import dk.dtu.SoftEngExamProjectG18.Core.OutOfOfficeActivity;
 import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 import dk.dtu.SoftEngExamProjectG18.Util.Table;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class EmployeeInputContext extends InputContext {
 
@@ -47,7 +46,7 @@ public class EmployeeInputContext extends InputContext {
         Command helpers
      */
 
-    // String projectID, int activityID, Date date, int setHours
+    // Command arguments: String projectID, int activityID, Date date, int setHours
     @SuppressWarnings("unused")
     public void helperSetSubmitHours(String[] args, boolean shouldSet) throws CommandException, ParseException {
         assertArgumentsValid(args.length, 4);
@@ -82,7 +81,7 @@ public class EmployeeInputContext extends InputContext {
         Commands - warnings relating to use of reflection API are suppressed
      */
 
-    // String name, boolean isBillable
+    // Command arguments: String name, boolean isBillable
     @SuppressWarnings("unused")
     public void cmdCreateProject(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
@@ -101,7 +100,7 @@ public class EmployeeInputContext extends InputContext {
         this.writeOutput("Project created.");
     }
 
-    // String projectID, int activityID
+    // Command arguments: String projectID, int activityID
     @SuppressWarnings("unused")
     public void cmdMarkActivityAsDone(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
@@ -114,7 +113,7 @@ public class EmployeeInputContext extends InputContext {
         this.writeOutput("Activity completed.");
     }
 
-    // String projectID, int activityID, String employeeID
+    // Command arguments: String projectID, int activityID, String employeeID
     @SuppressWarnings("unused")
     public void cmdRequestAssistance(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 3);
@@ -155,29 +154,59 @@ public class EmployeeInputContext extends InputContext {
         this.writeOutput("Assistance requested.");
     }
 
-    // OOOActivityType type, Date start, Date end
+    // Command arguments: OOOActivityType type, Date start, Date end
     @SuppressWarnings("unused")
-    public void cmdRequestOutOfOffice(String[] args) throws CommandException {
-        assertArgumentsValid(args.length, 3);
+    public void cmdRequestOutOfOffice(String[] args) throws CommandException, ParseException {
+        this.assertArgumentsValid(args.length, 3);
+        this.assertStringParseDateDoable(args[1]);
+        this.assertStringParseDateDoable(args[2]);
 
         CompanyDB db = CompanyDB.getInstance();
         Employee signedInEmployee = db.getSignedInEmployee();
 
-        // TODO
+        OOOActivityType type = null;
+        for(OOOActivityType OOOType : OOOActivityType.values()) {
+            if(args[0].toLowerCase().equals(OOOType.toString().toLowerCase())) {
+                type = OOOType;
+                break;
+            }
+        }
+
+        if(type == null) {
+            String optionDelimiter = ", ";
+            String options = Arrays.stream(OOOActivityType.values())
+                    .map(t -> optionDelimiter + t.toString().toLowerCase())
+                    .reduce("", String::concat)
+                    .substring(optionDelimiter.length());
+
+            String output = String.format(
+                    "Please specify a valid out-of-office activity type. Valid options are: %s. Received: %s.",
+                    options,
+                    args[0]
+            );
+            throw new CommandException(output);
+        }
+
+        Date start = this.formatter.parse(args[1]);
+        Date end = this.formatter.parse(args[2]);
+
+        signedInEmployee.getOOOActivities().add(new OutOfOfficeActivity(type, start, end));
+        this.writeOutput("Out-of-office activity requested.");
     }
 
-    // String projectID, int activityID, Date date, int setHours
+    // Command arguments: String projectID, int activityID, Date date, int setHours
     @SuppressWarnings("unused")
     public void cmdSetHours(String[] args) throws CommandException, ParseException {
         this.helperSetSubmitHours(args, true);
     }
 
-    // String projectID, int activityID, Date date, int addedHours
+    // Command arguments: String projectID, int activityID, Date date, int addedHours
     @SuppressWarnings("unused")
     public void cmdSubmitHours(String[] args) throws CommandException, ParseException {
         this.helperSetSubmitHours(args, false);
     }
 
+    // Command arguments:
     @SuppressWarnings("unused")
     public void cmdViewSubmissions(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 0);

@@ -63,7 +63,7 @@ public class ProjectManagerInputContext extends InputContext {
         Commands - warnings relating to use of reflection API are suppressed
      */
 
-    // String employeeID, String projectID, int activityID
+    // Command arguments: String employeeID, String projectID, int activityID
     @SuppressWarnings("unused")
     public void cmdAssignEmployeeToActivity(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 3);
@@ -93,7 +93,7 @@ public class ProjectManagerInputContext extends InputContext {
         this.writeOutput("Employee added to activity.");
     }
 
-    // String projectID, String activityName
+    // Command arguments: String projectID, String activityName
     @SuppressWarnings("unused")
     public void cmdCreateActivity(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 2);
@@ -107,7 +107,7 @@ public class ProjectManagerInputContext extends InputContext {
         this.writeOutput("Activity created.");
     }
 
-    // String projectID, String activityID
+    // Command arguments: String projectID, String activityID
     @SuppressWarnings("unused")
     public void cmdFinishActivity(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 2);
@@ -122,7 +122,7 @@ public class ProjectManagerInputContext extends InputContext {
         this.writeOutput("Activity finished.");
     }
 
-    // String projectID, int activityID, int numWeeks
+    // Command arguments: String projectID, int activityID, int numWeeks
     @SuppressWarnings("unused")
     public void cmdSetActivityEstimatedDuration(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 3);
@@ -142,7 +142,7 @@ public class ProjectManagerInputContext extends InputContext {
         this.writeOutput("Estimated number of work hours updated.");
     }
 
-    // String projectID, int activityID, Date start, Date end
+    // Command arguments: String projectID, int activityID, Date start, Date end
     @SuppressWarnings("unused")
     public void cmdSetActivityInterval(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 4);
@@ -170,7 +170,7 @@ public class ProjectManagerInputContext extends InputContext {
         }
     }
 
-    // String projectID, activityID
+    // Command arguments: String projectID, activityID
     @SuppressWarnings("unused")
     public void cmdViewActivity(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 2);
@@ -205,7 +205,7 @@ public class ProjectManagerInputContext extends InputContext {
         ));
     }
 
-    // String date
+    // Command arguments: String date
     @SuppressWarnings("unused")
     public void cmdViewAvailability(String[] args) throws CommandException, ParseException {
         assertArgumentsValid(args.length, 1);
@@ -226,7 +226,7 @@ public class ProjectManagerInputContext extends InputContext {
         ));
     }
 
-    // String projectID
+    // Command arguments: String projectID
     @SuppressWarnings("unused")
     public void cmdViewProject(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 1);
@@ -248,7 +248,7 @@ public class ProjectManagerInputContext extends InputContext {
         ));
     }
 
-    // String employeeID
+    // Command arguments: String employeeID
     @SuppressWarnings("unused")
     public void cmdViewSchedule(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 1);
