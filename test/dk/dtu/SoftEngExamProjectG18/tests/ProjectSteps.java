@@ -44,8 +44,14 @@ public class ProjectSteps extends BaseSteps {
     public void thereIsAnActivityWithID(String id) {
         TestHolder testHolder = TestHolder.getInstance();
         Project project = testHolder.project;
+        int ID = Integer.parseInt(id);
+
+        if(project.getActivities().containsKey(ID)) {
+            return;
+        }
+
         Activity activity = new Activity("Test Activity", project);
-        project.getActivities().put(1, activity);
+        project.getActivities().put(ID, activity);
     }
 
     @When("the employee creates a project with name {string}")

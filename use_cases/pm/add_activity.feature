@@ -13,4 +13,4 @@ Feature: Add activity
         Given that there is a project with name "Test Project"
         And there is an employee
         When the employee adds an activity with name "Test Activity" to the project
-        Then the error message "Project manager role required" is given
+        Then the error message "Project manager role required." is given

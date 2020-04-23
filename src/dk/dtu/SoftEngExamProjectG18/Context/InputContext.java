@@ -173,7 +173,7 @@ abstract public class InputContext {
             this.writeOutput("Employee assigned as PM.");
             return;
         }
-        throw new CommandException("Project manager role required");
+        throw new CommandException("Project manager role required.");
     }
 
 }

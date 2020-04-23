@@ -15,4 +15,4 @@ Feature: Finish activity
         And there is an employee
         And there is an activity with ID "1"
         When the employee finishes the activity with ID "1" in the project
-        Then the error message "Project manager role required" is given
+        Then the error message "Project manager role required." is given

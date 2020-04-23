@@ -20,7 +20,7 @@ Feature: Assign project manager
         And the employee with initials "BS" is the project manager of the project
         And the employee with initials "TED" is the actor
         When the actor assigns the employee with initials "MTW" as the project manager of the project
-        Then the error message "Project manager role required" is given
+        Then the error message "Project manager role required." is given
 
     Scenario: Employee who is a project manager assigns project manager to their project
         Given that there is a project with name "Test Project"

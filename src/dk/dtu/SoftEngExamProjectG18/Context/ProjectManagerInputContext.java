@@ -30,7 +30,7 @@ public class ProjectManagerInputContext extends InputContext {
         put("project activity setweeks", new String[]{"project activity setWeeks {projectID} {activityID} {startWeek} {endWeek}", "cmdSetActivityInterval"});
         put("view activity", new String[]{"view activity {projectID} {activityID}", "cmdViewActivity"});
         put("view availability", new String[]{"view availability {date}", "cmdViewAvailability"});
-        put("view project", new String[]{"view project {employeeID}", "cmdViewProject"});
+        put("view project", new String[]{"view project {projectID}", "cmdViewProject"});
         put("view schedule", new String[]{"view schedule {employeeID}", "cmdViewSchedule"});
     }};
 
@@ -55,7 +55,7 @@ public class ProjectManagerInputContext extends InputContext {
     protected void assertSignedInEmployeePM(Project project) throws CommandException {
         CompanyDB db = CompanyDB.getInstance();
         if (db.getSignedInEmployee() != project.getPM()) {
-            throw new CommandException("Project manager role required");
+            throw new CommandException("Project manager role required.");
         }
     }
 
@@ -233,6 +233,8 @@ public class ProjectManagerInputContext extends InputContext {
 
         CompanyDB db = CompanyDB.getInstance();
         Project project = this.getProject(db, args[0]);
+
+        assertSignedInEmployeePM(project);
 
         this.writeOutput("Project details:\n");
         this.writeOutput(String.format(" - ID: %s\n", project.getID()));

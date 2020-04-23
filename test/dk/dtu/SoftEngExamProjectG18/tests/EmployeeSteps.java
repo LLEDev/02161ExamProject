@@ -146,9 +146,10 @@ public class EmployeeSteps extends BaseSteps {
         this.callCmd(context, "cmdRequestAssistance", new String[] {project.getID(), activityID, otherEmployeeID});
     }
 
-    @When("the employee requests an overview of the project")
-    public void theEmployeeRequestsAnOverviewOfTheProject() {
-        //TODO: Cannot be implemented until overview is implemented
+    @When("the employee requests a view of the project")
+    public void theEmployeeRequestsAViewOfTheProject() {
+        String projectID = TestHolder.getInstance().project.getID();
+        this.callCmd(new ProjectManagerInputContext(), "cmdViewProject", new String[]{projectID});
     }
 
     @When("the employee submits the work minutes")
@@ -176,16 +177,9 @@ public class EmployeeSteps extends BaseSteps {
         Assert.assertTrue(otherEmployeeIntermediates.containsKey(Integer.parseInt(activityIDString)));
     }
 
-    // TODO: Fix
-    @Then("the employee sees that the project has a single activity with {string} hours spent out of {string} estimated hours needed")
-    public void theEmployeeSeesThatTheProjectHasASingleActivityWithHoursSpentOutOfEstimatedHoursNeeded(String arg0, String arg1) {
-        //TODO: [Awaiting projectStep: "theActivityWithIDHasAnEstimatedDurationOfHoursAndRegisteredHoursSpent"]
-    }
-
     @And("the employee with initials {string} has not reached the activity cap")
     public void theEmployeeWithInitialsHasNotReachedTheActivityCap(String arg0) {
         Employee employee = this.db.getEmployee(arg0);
         Assert.assertTrue(employee.getNumOpenActivities() > 0);
     }
-
 }
