@@ -208,10 +208,9 @@ public class Main {
             return;
         }
 
-        outSource.println("Welcome, " + db.getSignedInEmployee().getName() + ".");
-        outSource.println("You are now signed in as (and acting as) " + CompanyDB.getContext().getSingularContextName() + ".");
+        outSource.println("Welcome, " + db.getSignedInEmployee().getName() + ". You are now signed in as (and acting as) " + CompanyDB.getContext().getSingularContextName() + ".");
         outSource.println("Type 'help' to view available commands within this context.");
-        outSource.println("Multi word arguments can be passed using \"quotes\".");
+        outSource.println("Multi word arguments can be passed using \"quotes\". Dates are parsed/presented using format yyyy-MM-dd.");
         outSource.println();
 
         inputScanner = new Scanner(inputSource);
