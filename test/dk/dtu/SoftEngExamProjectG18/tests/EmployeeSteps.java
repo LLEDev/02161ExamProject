@@ -129,15 +129,14 @@ public class EmployeeSteps extends BaseSteps {
 
     @And("the employee has the following work minutes")
     public void theEmployeeHasTheFollowingWorkMinutes(List<List<String>> workMinutes) throws Exception {
-        CompanyDB db = CompanyDB.getInstance();
-        Employee employee = db.getSignedInEmployee();
+        Employee employee = this.db.getSignedInEmployee();
 
         for(List<String> entry : workMinutes) {
             if(entry.size() != 4) {
                 throw new Exception("WorkMinutes entry has the wrong dimensions");
             }
 
-            Project project = db.getProject(entry.get(0));
+            Project project = this.db.getProject(entry.get(0));
             Activity activity = project.getActivity(Integer.parseInt(entry.get(1)));
             Date date = this.formatter.parse(entry.get(2));
             int minutes = Integer.parseInt(entry.get(3));
@@ -189,6 +188,11 @@ public class EmployeeSteps extends BaseSteps {
         this.callCmd(new ProjectManagerInputContext(), "cmdViewAvailability", new String[]{date});
     }
 
+    @When("the employee requests a view of the schedule of the employee with ID {string}")
+    public void theEmployeeRequestsAViewOfTheScheduleOfTheEmployeeWithID(String employee) {
+        this.callCmd(new ProjectManagerInputContext(), "cmdViewSchedule", new String[]{employee});
+    }
+
     @When("the employee submits the work minutes")
     public void theEmployeeSubmitsTheWorkMinutes(List<List<String>> minutes) throws Exception {
         EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
@@ -196,6 +200,20 @@ public class EmployeeSteps extends BaseSteps {
         for (List<String> submission : minutes) {
             String[] args = {submission.get(0), submission.get(1), this.formatter.format(new Date()), submission.get(2)};
             this.callCmd(input, "cmdSubmitHours", args);
+        }
+    }
+
+    @When("the employee requests the following OOO activities")
+    public void theEmployeeRequestsTheFollowingOOOActivities(List<List<String>> activities) throws Exception {
+        EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
+
+        for(List<String> activity : activities) {
+            if(activity.size() != 3) {
+                throw new Exception("Invalid OOO activity entry given.");
+            }
+
+            String[] args = {activity.get(0), activity.get(1), activity.get(2)};
+            this.callCmd(input, "cmdRequestOutOfOffice", args);
         }
     }
 
