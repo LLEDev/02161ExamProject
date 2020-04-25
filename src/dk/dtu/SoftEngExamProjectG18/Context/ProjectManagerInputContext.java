@@ -177,6 +177,9 @@ public class ProjectManagerInputContext extends InputContext {
 
         CompanyDB db = CompanyDB.getInstance();
         Project project = this.getProject(db, args[0]);
+
+        assertSignedInEmployeePM(project);
+
         Activity activity = this.getActivity(project, args[1]);
 
         String startWeek = null;
