@@ -1,9 +1,15 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
+import dk.dtu.SoftEngExamProjectG18.Context.EmployeeInputContext;
+import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
+import dk.dtu.SoftEngExamProjectG18.Core.Employee;
+import dk.dtu.SoftEngExamProjectG18.Core.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.junit.Assert;
 
 import java.util.Arrays;
@@ -75,5 +81,31 @@ public class MiscSteps {
         }
 
         Assert.assertTrue(tableFound);
+    }
+
+    @When("the InputContext assertions are tested with invalid values, CommandExceptions are thrown")
+    public void theInputContextAssertionsAreTestedWithInvalidValuesCommandExceptionsAreThrown() {
+        CompanyDB db = CompanyDB.getInstance();
+        String employeeID = "AA";
+
+        db.getEmployees().put(employeeID, new Employee(employeeID, employeeID));
+        db.setSignedInEmployee(employeeID);
+        db.setInputContext(new EmployeeInputContext());
+
+        InputContext context = CompanyDB.getContext();
+        Employee employee = db.getSignedInEmployee();
+        employee.setWeeklyActivityCap(0);
+        Project project = new Project("Project");
+
+        Class<CommandException> e = CommandException.class;
+        Assert.assertThrows(e, () -> context.assertArgumentsValid(2, 1));
+        Assert.assertThrows(e, () -> context.assertAvailableActivities(employee));
+        Assert.assertThrows(e, () -> context.assertSignedInEmployeePM(project));
+        Assert.assertThrows(e, () -> context.assertStringParseDateDoable("NOT-A-DATE"));
+        Assert.assertThrows(e, () -> context.assertStringParseIntDoable("NOT-AN-INT"));
+        Assert.assertThrows(e, () -> context.assertValidProjectName(""));
+        Assert.assertThrows(e, () -> context.getActivity(project, "3"));
+        Assert.assertThrows(e, () -> context.getEmployee(db, "NOT-AN-EMPLOYEE"));
+        Assert.assertThrows(e, () -> context.getProject(db, "NOT-A-PROJECT"));
     }
 }

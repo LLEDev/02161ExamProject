@@ -75,7 +75,7 @@ abstract public class InputContext {
         Utils
      */
 
-    protected boolean isNull(Object obj) {
+    public boolean isNull(Object obj) {
         return obj == null;
     }
 
@@ -84,13 +84,13 @@ abstract public class InputContext {
         Command specific utils
      */
 
-    protected void assertArgumentsValid(int argsLength, int requiredLength) throws CommandException {
+    public void assertArgumentsValid(int argsLength, int requiredLength) throws CommandException {
         if(argsLength != requiredLength) {
             throw new CommandException(CommandExceptionReason.INVALID_ARGUMENTS);
         }
     }
 
-    protected void assertAvailableActivities(Employee employee) throws CommandException {
+    public void assertAvailableActivities(Employee employee) throws CommandException {
         if (employee.getNumOpenActivities() > 0) {
             return;
         }
@@ -102,14 +102,14 @@ abstract public class InputContext {
         throw new CommandException(output);
     }
 
-    protected void assertSignedInEmployeePM(Project project) throws CommandException {
+    public void assertSignedInEmployeePM(Project project) throws CommandException {
         CompanyDB db = CompanyDB.getInstance();
         if (db.getSignedInEmployee() != project.getPM()) {
             throw new CommandException("Project manager role required.");
         }
     }
 
-    protected void assertStringParseDateDoable(String possibleDate) throws CommandException {
+    public void assertStringParseDateDoable(String possibleDate) throws CommandException {
         try {
             this.formatter.parse(possibleDate);
         } catch (ParseException e) {
@@ -118,7 +118,7 @@ abstract public class InputContext {
         }
     }
 
-    protected void assertStringParseIntDoable(String possibleInt) throws CommandException {
+    public void assertStringParseIntDoable(String possibleInt) throws CommandException {
         try {
             Integer.parseInt(possibleInt);
         } catch (NumberFormatException nfe) {
@@ -127,13 +127,13 @@ abstract public class InputContext {
         }
     }
 
-    protected void assertValidProjectName(String name) throws CommandException {
+    public void assertValidProjectName(String name) throws CommandException {
         if(name.length() == 0) {
             throw new CommandException(String.format("The given project name, %s, is not valid.", name));
         }
     }
 
-    protected Activity getActivity(Project project, String activityID) throws CommandException {
+    public Activity getActivity(Project project, String activityID) throws CommandException {
         assertStringParseIntDoable(activityID);
 
         int intActivityID = Integer.parseInt(activityID);
@@ -151,7 +151,7 @@ abstract public class InputContext {
         return activity;
     }
 
-    protected Employee getEmployee(CompanyDB db, String employeeID) throws CommandException {
+    public Employee getEmployee(CompanyDB db, String employeeID) throws CommandException {
         Employee employee = db.getEmployee(employeeID);
 
         if (isNull(employee)) {
@@ -161,7 +161,7 @@ abstract public class InputContext {
         return employee;
     }
 
-    protected Project getProject(CompanyDB db, String projectID) throws CommandException {
+    public Project getProject(CompanyDB db, String projectID) throws CommandException {
         Project project = db.getProject(projectID);
 
         if (isNull(project)) {
