@@ -47,7 +47,7 @@ public class OutOfOfficeActivity implements Extractable<OutOfOfficeActivity> {
     }
 
     public ArrayList<HashMap<String, String>> extractOverview(ArrayList<? extends Extractable<?>> collection) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 

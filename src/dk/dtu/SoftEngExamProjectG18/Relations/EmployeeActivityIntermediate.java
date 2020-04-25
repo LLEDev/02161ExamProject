@@ -10,7 +10,7 @@ import java.util.*;
 
 public class EmployeeActivityIntermediate implements Extractable<EmployeeActivityIntermediate> {
 
-    protected SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+    protected SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
     // Date -> Minutes
     protected HashMap<String, Integer> minutesSpent = new HashMap<>();

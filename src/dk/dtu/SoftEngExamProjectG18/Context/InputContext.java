@@ -35,7 +35,7 @@ abstract public class InputContext {
         Misc. fields
      */
 
-    protected SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+    protected SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     protected String output = "";
 
     /*
