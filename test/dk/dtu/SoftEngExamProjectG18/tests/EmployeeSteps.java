@@ -178,6 +178,12 @@ public class EmployeeSteps extends BaseSteps {
         this.callCmd(new ProjectManagerInputContext(), "cmdViewProject", new String[]{projectID});
     }
 
+    @When("the employee requests a view of activity {string}")
+    public void theEmployeeRequestsAViewOfActivity(String activityID) {
+        String projectID = TestHolder.getInstance().project.getID();
+        this.callCmd(new ProjectManagerInputContext(), "cmdViewActivity", new String[]{projectID, activityID});
+    }
+
     @When("the employee requests a view of available employees at the date {string}")
     public void theEmployeeRequestsAViewOfAvailableEmployeesAtTheDate(String date) {
         this.callCmd(new ProjectManagerInputContext(), "cmdViewAvailability", new String[]{date});
