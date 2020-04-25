@@ -28,30 +28,25 @@ public class Main {
 
         try {
             m.invoke(inputContext, (Object) args.toArray(new String[0]));
-            inputContext.printOutput();
+            outSource.println(inputContext.getOutput());
         } catch (InvocationTargetException ite) {
-            if(ite.getTargetException() instanceof CommandException) {
-                handleCommandException((CommandException) ite.getTargetException(), usage);
-            } else {
-                outSource.println("An internal error occurred.");
-            }
+            handleCommandException(ite.getTargetException(), usage);
         }
 
         inputContext.resetOutput();
     }
 
-    protected static void handleCommandException(CommandException e, String usage) {
-        if(e.getReason() == CommandExceptionReason.INVALID_ARGUMENTS) {
-            outSource.println("Usage: " + usage);
-            return;
+    protected static void handleCommandException(Throwable t, String usage) {
+        if(t instanceof CommandException) {
+            CommandException ce = (CommandException) t;
+
+            if(ce.getReason() == CommandExceptionReason.INVALID_ARGUMENTS) {
+                outSource.println("Usage: " + usage);
+                return;
+            }
         }
 
-        if(e.getReason() == CommandExceptionReason.EXECUTION_ERROR) {
-            outSource.println(e.getMessage());
-            return;
-        }
-
-        outSource.println("An internal error occurred.");
+        outSource.println(t.getMessage());
     }
 
     protected static boolean loadData(String dir) {
@@ -88,17 +83,21 @@ public class Main {
         InputStream oooActivities = cl.getResourceAsStream("data/ooo-activities.csv");
         InputStream workHours = cl.getResourceAsStream("data/workhours.csv");
 
-        if(activities == null || employees == null || projects == null || oooActivities == null || workHours == null) {
-            return false;
+        boolean success = activities != null
+                && employees != null
+                && projects != null
+                && oooActivities != null
+                && workHours != null;
+
+        if(success) {
+            CSVReader.readEmployees(new InputStreamReader(employees));
+            CSVReader.readProjects(new InputStreamReader(projects));
+            CSVReader.readActivities(new InputStreamReader(activities));
+            CSVReader.readOOOActivities(new InputStreamReader(oooActivities));
+            CSVReader.readWorkHours(new InputStreamReader(workHours));
         }
 
-        CSVReader.readEmployees(new InputStreamReader(employees));
-        CSVReader.readProjects(new InputStreamReader(projects));
-        CSVReader.readActivities(new InputStreamReader(activities));
-        CSVReader.readOOOActivities(new InputStreamReader(oooActivities));
-        CSVReader.readWorkHours(new InputStreamReader(workHours));
-
-        return true;
+        return success;
     }
 
     protected static boolean redirectBasicInput(String[] input) {
@@ -246,11 +245,7 @@ public class Main {
             String usage = trigger[0];
             String method = trigger[1];
 
-            int argsFrom = i + 1;
-            ArrayList<String> args = new ArrayList<>();
-            for(int j = argsFrom; j < inputVariants.size(); j++) {
-                args.add(input[j]);
-            }
+            ArrayList<String> args = new ArrayList<>(Arrays.asList(input).subList(i + 1, inputVariants.size()));
 
             callMethod(method, usage, args);
 

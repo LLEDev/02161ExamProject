@@ -62,10 +62,6 @@ abstract public class InputContext {
         return this.output;
     }
 
-    public void printOutput() {
-        System.out.println(this.output);
-    }
-
     public void resetOutput() {
         this.output = "";
     }

@@ -13,13 +13,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class MainSteps {
 
     // Inputted commands
-    protected static String input = "help\nrequest overview\nrequest overview arg1\nunknown command";
+    protected static String input = String.join("\n", new String[]{
+            "help",
+            "view availability",
+            "view availability 2020-04-01",
+            "view availability \"arg 2\"",
+            "unknown command"
+    });
 
     // System output can be collected using this variable
     protected static ByteArrayOutputStream outputTo = new ByteArrayOutputStream();
