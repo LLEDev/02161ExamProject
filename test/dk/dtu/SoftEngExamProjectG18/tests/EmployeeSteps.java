@@ -16,6 +16,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
+
+import java.text.ParseException;
 import java.time.LocalDate;
 
 import java.util.*;
@@ -125,6 +127,30 @@ public class EmployeeSteps extends BaseSteps {
         employee.getActivities().put(project.getID(), args);
     }
 
+    @And("the employee has the following work minutes")
+    public void theEmployeeHasTheFollowingWorkMinutes(List<List<String>> workMinutes) throws Exception {
+        CompanyDB db = CompanyDB.getInstance();
+        Employee employee = db.getSignedInEmployee();
+
+        for(List<String> entry : workMinutes) {
+            if(entry.size() != 4) {
+                throw new Exception("WorkMinutes entry has the wrong dimensions");
+            }
+
+            Project project = db.getProject(entry.get(0));
+            Activity activity = project.getActivity(Integer.parseInt(entry.get(1)));
+            Date date = this.formatter.parse(entry.get(2));
+            int minutes = Integer.parseInt(entry.get(3));
+
+            Assert.assertNotNull(project);
+            Assert.assertNotNull(activity);
+            Assert.assertNotNull(date);
+
+            EmployeeActivityIntermediate eai = new EmployeeActivityIntermediate(employee, activity);
+            eai.setMinutes(date, minutes);
+        }
+    }
+
     /*
         When (or and) methods (actions)
      */
@@ -150,6 +176,11 @@ public class EmployeeSteps extends BaseSteps {
     public void theEmployeeRequestsAViewOfTheProject() {
         String projectID = TestHolder.getInstance().project.getID();
         this.callCmd(new ProjectManagerInputContext(), "cmdViewProject", new String[]{projectID});
+    }
+
+    @When("the employee requests a view of available employees at the date {string}")
+    public void theEmployeeRequestsAViewOfAvailableEmployeesAtTheDate(String date) {
+        this.callCmd(new ProjectManagerInputContext(), "cmdViewAvailability", new String[]{date});
     }
 
     @When("the employee submits the work minutes")

@@ -11,7 +11,10 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Assert;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static junit.framework.TestCase.assertEquals;
@@ -52,6 +55,34 @@ public class ProjectSteps extends BaseSteps {
 
         Activity activity = new Activity("Test Activity", project);
         project.getActivities().put(ID, activity);
+    }
+
+    @And("the project has the following activities")
+    public void theProjectHasTheFollowingActivities(List<List<String>> activities) throws ParseException {
+        TestHolder th = TestHolder.getInstance();
+        Project project = th.project;
+        Assert.assertNotNull(project);
+
+        project.clearActivities();
+
+        SimpleDateFormat weekFormatter = new SimpleDateFormat("yyyy-ww");
+        for(List<String> activityString : activities) {
+            if(activityString.size() == 0) {
+                continue;
+            }
+
+            Activity activity = new Activity(activityString.get(0), project);
+
+            for(int i = 1; i < activityString.size(); i++) {
+                String cell = activityString.get(i);
+
+                switch(i) {
+                    case 1: activity.setEstimatedHours(Integer.parseInt(cell)); break;
+                    case 2: activity.setStartWeek(weekFormatter.parse(cell)); break;
+                    case 3: activity.setEndWeek(weekFormatter.parse(cell)); break;
+                }
+            }
+        }
     }
 
     @When("the employee creates a project with name {string}")

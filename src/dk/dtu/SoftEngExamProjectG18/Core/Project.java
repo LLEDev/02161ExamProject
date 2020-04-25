@@ -72,11 +72,6 @@ public class Project implements Extractable<Project> {
         }
     }
 
-    public int incrementNextActivityID() {
-        this.nextActivityID++;
-        return this.nextActivityID - 1;
-    }
-
     public boolean assignPM(Employee employee) {
         if (this.PM == null) {
             this.PM = employee;
@@ -92,6 +87,16 @@ public class Project implements Extractable<Project> {
         }
 
         return false;
+    }
+
+    public void clearActivities() {
+        this.getActivities().clear();
+        this.nextActivityID = 1;
+    }
+
+    public int incrementNextActivityID() {
+        this.nextActivityID++;
+        return this.nextActivityID - 1;
     }
 
     public Activity getActivity(int ID) {
