@@ -49,10 +49,18 @@ Feature: Run Main application
         And "Welcome, Hans Hansen" is not a part of the output
         Then the output will be reset
 
-    Scenario: A user signs in and quits
+    Scenario: A user signs in as project manager and quits
         When a user boots the application with the following arguments
             | HH |
             | PM |
+        And a user quits the application
+        Then "Bye!" is a part of the output
+        Then the output will be reset
+
+    Scenario: A user signs in as employee and quits
+        When a user boots the application with the following arguments
+            | HH |
+            | EMP |
         And a user quits the application
         Then "Bye!" is a part of the output
         Then the output will be reset

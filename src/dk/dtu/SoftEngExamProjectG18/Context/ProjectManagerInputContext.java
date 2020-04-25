@@ -47,47 +47,23 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     /*
-        Command utils
-     */
-
-    protected SimpleDateFormat weekFormatter = new SimpleDateFormat("yyyy-ww");
-
-    protected void assertSignedInEmployeePM(Project project) throws CommandException {
-        CompanyDB db = CompanyDB.getInstance();
-        if (db.getSignedInEmployee() != project.getPM()) {
-            throw new CommandException("Project manager role required.");
-        }
-    }
-
-    /*
         Commands - warnings relating to use of reflection API are suppressed
      */
 
     // Command arguments: String employeeID, String projectID, int activityID
     @SuppressWarnings("unused")
     public void cmdAssignEmployeeToActivity(String[] args) throws CommandException {
-        assertArgumentsValid(args.length, 3);
-        assertStringParseIntDoable(args[2]);
+        this.assertArgumentsValid(args.length, 3);
+        this.assertStringParseIntDoable(args[2]);
 
         CompanyDB db = CompanyDB.getInstance();
 
         Project project = this.getProject(db, args[1]);
+        this.assertSignedInEmployeePM(project);
+
         Activity activity = this.getActivity(project, args[2]);
-
-        Employee signedInEmployee = db.getSignedInEmployee();
-
-        if (project.getPM() != null && !signedInEmployee.equals(project.getPM())) {
-            throw new CommandException("Project Manager status required.");
-        }
-
         Employee employee = this.getEmployee(db, args[0]);
-        if (employee.getNumOpenActivities() == 0) {
-            String output = String.format(
-                    "The employee, %s, you are requesting assistance from, has no room for any new activities at the moment.",
-                    args[1]
-            );
-            throw new CommandException(output);
-        }
+        this.assertAvailableActivities(employee);
 
         EmployeeActivityIntermediate EAI = new EmployeeActivityIntermediate(employee, activity);
         this.writeOutput("Employee added to activity.");
@@ -96,12 +72,12 @@ public class ProjectManagerInputContext extends InputContext {
     // Command arguments: String projectID, String activityName
     @SuppressWarnings("unused")
     public void cmdCreateActivity(String[] args) throws CommandException {
-        assertArgumentsValid(args.length, 2);
+        this.assertArgumentsValid(args.length, 2);
 
         CompanyDB db = CompanyDB.getInstance();
         Project project = this.getProject(db, args[0]);
 
-        assertSignedInEmployeePM(project);
+        this.assertSignedInEmployeePM(project);
 
         new Activity(args[1], project);
         this.writeOutput("Activity created.");
@@ -110,12 +86,12 @@ public class ProjectManagerInputContext extends InputContext {
     // Command arguments: String projectID, String activityID
     @SuppressWarnings("unused")
     public void cmdFinishActivity(String[] args) throws CommandException {
-        assertArgumentsValid(args.length, 2);
+        this.assertArgumentsValid(args.length, 2);
 
         CompanyDB db = CompanyDB.getInstance();
         Project project = db.getProject(args[0]);
 
-        assertSignedInEmployeePM(project);
+        this.assertSignedInEmployeePM(project);
 
         Activity activity = this.getActivity(project, args[1]);
         activity.setDone(true);
@@ -125,8 +101,8 @@ public class ProjectManagerInputContext extends InputContext {
     // Command arguments: String projectID, int activityID, int numWeeks
     @SuppressWarnings("unused")
     public void cmdSetActivityEstimatedDuration(String[] args) throws CommandException {
-        assertArgumentsValid(args.length, 3);
-        assertStringParseIntDoable(args[2]);
+        this.assertArgumentsValid(args.length, 3);
+        this.assertStringParseIntDoable(args[2]);
 
         CompanyDB db = CompanyDB.getInstance();
         Project project = this.getProject(db, args[0]);
@@ -145,7 +121,7 @@ public class ProjectManagerInputContext extends InputContext {
     // Command arguments: String projectID, int activityID, Date start, Date end
     @SuppressWarnings("unused")
     public void cmdSetActivityInterval(String[] args) throws CommandException {
-        assertArgumentsValid(args.length, 4);
+        this.assertArgumentsValid(args.length, 4);
 
         CompanyDB db = CompanyDB.getInstance();
         Project project = this.getProject(db, args[0]);
@@ -173,12 +149,12 @@ public class ProjectManagerInputContext extends InputContext {
     // Command arguments: String projectID, activityID
     @SuppressWarnings("unused")
     public void cmdViewActivity(String[] args) throws CommandException {
-        assertArgumentsValid(args.length, 2);
+        this.assertArgumentsValid(args.length, 2);
 
         CompanyDB db = CompanyDB.getInstance();
         Project project = this.getProject(db, args[0]);
 
-        assertSignedInEmployeePM(project);
+        this.assertSignedInEmployeePM(project);
 
         Activity activity = this.getActivity(project, args[1]);
 
@@ -211,8 +187,8 @@ public class ProjectManagerInputContext extends InputContext {
     // Command arguments: String date
     @SuppressWarnings("unused")
     public void cmdViewAvailability(String[] args) throws CommandException, ParseException {
-        assertArgumentsValid(args.length, 1);
-        assertStringParseDateDoable(args[0]);
+        this.assertArgumentsValid(args.length, 1);
+        this.assertStringParseDateDoable(args[0]);
 
         Date d = this.formatter.parse(args[0]);
 
@@ -232,12 +208,12 @@ public class ProjectManagerInputContext extends InputContext {
     // Command arguments: String projectID
     @SuppressWarnings("unused")
     public void cmdViewProject(String[] args) throws CommandException {
-        assertArgumentsValid(args.length, 1);
+        this.assertArgumentsValid(args.length, 1);
 
         CompanyDB db = CompanyDB.getInstance();
         Project project = this.getProject(db, args[0]);
 
-        assertSignedInEmployeePM(project);
+        this.assertSignedInEmployeePM(project);
 
         this.writeOutput("Project details:\n");
         this.writeOutput(String.format(" - ID: %s\n", project.getID()));
@@ -256,7 +232,7 @@ public class ProjectManagerInputContext extends InputContext {
     // Command arguments: String employeeID
     @SuppressWarnings("unused")
     public void cmdViewSchedule(String[] args) throws CommandException {
-        assertArgumentsValid(args.length, 1);
+        this.assertArgumentsValid(args.length, 1);
 
         CompanyDB db = CompanyDB.getInstance();
         Employee employee = this.getEmployee(db, args[0]);

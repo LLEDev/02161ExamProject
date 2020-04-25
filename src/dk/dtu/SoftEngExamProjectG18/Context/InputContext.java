@@ -36,6 +36,7 @@ abstract public class InputContext {
      */
 
     protected SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    protected SimpleDateFormat weekFormatter = new SimpleDateFormat("yyyy-ww");
     protected String output = "";
 
     /*
@@ -78,6 +79,7 @@ abstract public class InputContext {
         return obj == null;
     }
 
+
     /*
         Command specific utils
      */
@@ -85,6 +87,25 @@ abstract public class InputContext {
     protected void assertArgumentsValid(int argsLength, int requiredLength) throws CommandException {
         if(argsLength != requiredLength) {
             throw new CommandException(CommandExceptionReason.INVALID_ARGUMENTS);
+        }
+    }
+
+    protected void assertAvailableActivities(Employee employee) throws CommandException {
+        if (employee.getNumOpenActivities() > 0) {
+            return;
+        }
+
+        String output = String.format(
+                "The employee %s has no room for any new activities at the moment.",
+                employee.getID()
+        );
+        throw new CommandException(output);
+    }
+
+    protected void assertSignedInEmployeePM(Project project) throws CommandException {
+        CompanyDB db = CompanyDB.getInstance();
+        if (db.getSignedInEmployee() != project.getPM()) {
+            throw new CommandException("Project manager role required.");
         }
     }
 

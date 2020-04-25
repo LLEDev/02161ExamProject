@@ -49,9 +49,9 @@ public class EmployeeInputContext extends InputContext {
     // Command arguments: String projectID, int activityID, Date date, int setHours
     @SuppressWarnings("unused")
     public void helperSetSubmitHours(String[] args, boolean shouldSet) throws CommandException, ParseException {
-        assertArgumentsValid(args.length, 4);
-        assertStringParseDateDoable(args[2]);
-        assertStringParseIntDoable(args[3]);
+        this.assertArgumentsValid(args.length, 4);
+        this.assertStringParseDateDoable(args[2]);
+        this.assertStringParseIntDoable(args[3]);
 
         CompanyDB db = CompanyDB.getInstance();
         Project project = this.getProject(db, args[0]);
@@ -135,20 +135,13 @@ public class EmployeeInputContext extends InputContext {
         }
 
         boolean signedInEmployeeIsNotAttachedToActivity = !signedEmployeeProjectActivities.containsKey(activity.getID());
-        boolean otherEmployeeHasNoActivitySlotsLeft = employee.getNumOpenActivities() == 0;
 
         if(signedInEmployeeIsNotAttachedToActivity) {
             String output = String.format("You are not allowed to work with the given activity, %s.", args[1]);
             throw new CommandException(output);
         }
 
-        if(otherEmployeeHasNoActivitySlotsLeft) {
-            String output = String.format(
-                    "The employee, %s, you are requesting assistance from, has no room for any new activities at the moment.",
-                    args[1]
-            );
-            throw new CommandException(output);
-        }
+        this.assertAvailableActivities(employee);
 
         employee.getActivities().put(project.getID(), signedInEmployeeActivities.get(project.getID()));
         this.writeOutput("Assistance requested.");
@@ -209,7 +202,7 @@ public class EmployeeInputContext extends InputContext {
     // Command arguments:
     @SuppressWarnings("unused")
     public void cmdViewSubmissions(String[] args) throws CommandException {
-        assertArgumentsValid(args.length, 0);
+        this.assertArgumentsValid(args.length, 0);
 
         Employee signedInEmployee = CompanyDB.getInstance().getSignedInEmployee();
 

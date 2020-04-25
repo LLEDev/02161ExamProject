@@ -22,5 +22,5 @@ Feature: Add employee to project activity
         And the employee with initials "BS" has not reached the activity cap
         And the employee with initials "ABCD" is the actor
         When the actor adds the employee with initials "BS" to the activity with ID "1"
-        Then the employee with initials "BS" has been assigned to the activity with ID "1"
+        Then the error message "Project manager role required." is given
 
