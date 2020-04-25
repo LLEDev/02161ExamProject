@@ -131,7 +131,7 @@ public class Employee implements Extractable<Employee> {
             }
 
             int activeActivities = 0;
-            for(Activity activity : this.getAllActiveActivities()) {
+            for(Activity activity : employee.getAllActiveActivities()) {
                 Date start = activity.getStartWeek();
 
                 Calendar endCal = new GregorianCalendar();
@@ -144,7 +144,7 @@ public class Employee implements Extractable<Employee> {
                 }
             }
 
-            if(activeActivities >= this.getWeeklyActivityCap()) {
+            if(activeActivities >= employee.getWeeklyActivityCap()) {
                 continue;
             }
 
