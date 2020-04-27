@@ -6,6 +6,7 @@ Feature: Project view
         Given that there is a project with name "Test Project"
         And there is an employee
         And the employee is assigned to the activity with ID "1"
+        # TODO: Implement ability to set date on below
         And the activity with ID "1" has an estimated duration of "10" weeks and registered "5" hours spent
         And the employee is the project manager for the project
         When the employee requests a view of the project
