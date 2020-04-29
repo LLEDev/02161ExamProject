@@ -1,4 +1,4 @@
-package dk.dtu.SoftEngExamProjectG18.Core;
+package dk.dtu.SoftEngExamProjectG18.Business;
 
 import dk.dtu.SoftEngExamProjectG18.Interfaces.Extractable;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;

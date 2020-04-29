@@ -1,6 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.tests.Util;
 
-import dk.dtu.SoftEngExamProjectG18.Core.Project;
+import dk.dtu.SoftEngExamProjectG18.Business.Project;
 
 public class TestHolder {
 

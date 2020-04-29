@@ -1,8 +1,8 @@
 package dk.dtu.SoftEngExamProjectG18.DB;
 
 import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
-import dk.dtu.SoftEngExamProjectG18.Core.Employee;
-import dk.dtu.SoftEngExamProjectG18.Core.Project;
+import dk.dtu.SoftEngExamProjectG18.Business.Employee;
+import dk.dtu.SoftEngExamProjectG18.Business.Project;
 
 import java.util.HashMap;
 

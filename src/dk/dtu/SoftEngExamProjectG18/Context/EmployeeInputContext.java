@@ -1,9 +1,9 @@
 package dk.dtu.SoftEngExamProjectG18.Context;
 
-import dk.dtu.SoftEngExamProjectG18.Core.Activity;
-import dk.dtu.SoftEngExamProjectG18.Core.Employee;
-import dk.dtu.SoftEngExamProjectG18.Core.OutOfOfficeActivity;
-import dk.dtu.SoftEngExamProjectG18.Core.Project;
+import dk.dtu.SoftEngExamProjectG18.Business.Activity;
+import dk.dtu.SoftEngExamProjectG18.Business.Employee;
+import dk.dtu.SoftEngExamProjectG18.Business.OutOfOfficeActivity;
+import dk.dtu.SoftEngExamProjectG18.Business.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
@@ -87,17 +87,15 @@ public class EmployeeInputContext extends InputContext {
         this.assertArgumentsValid(args.length, 2);
         this.assertValidProjectName(args[0]);
 
-        Project project;
-        if (args.length > 1) {
-            boolean isBillable = Boolean.parseBoolean(args[1]);
-            project = new Project(args[0], isBillable);
-        } else {
-            project = new Project(args[0]);
-        }
+        String name = args[0];
+        boolean isBillable = Boolean.parseBoolean(args[1]);
 
-        CompanyDB db = CompanyDB.getInstance();
-        db.getProjects().put(project.getID(), project);
-        this.writeOutput("Project created.");
+        // Project project = new Project(name, isBillable);
+        // this.db.getProjects().put(project.getID(), project);
+
+        this.catchException(() -> this.application.createProject(args[0], isBillable))
+            .writeOnSuccess(() -> "Project created.")
+            .writeOnFailure(ce -> String.format("Project not created due to error: %s.", ce.getMessage()));
     }
 
     // Command arguments: String projectID, int activityID

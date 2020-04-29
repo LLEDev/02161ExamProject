@@ -1,4 +1,4 @@
-package dk.dtu.SoftEngExamProjectG18.Core;
+package dk.dtu.SoftEngExamProjectG18.Business;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

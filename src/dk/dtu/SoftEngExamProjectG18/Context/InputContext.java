@@ -1,8 +1,9 @@
 package dk.dtu.SoftEngExamProjectG18.Context;
 
-import dk.dtu.SoftEngExamProjectG18.Core.Activity;
-import dk.dtu.SoftEngExamProjectG18.Core.Employee;
-import dk.dtu.SoftEngExamProjectG18.Core.Project;
+import dk.dtu.SoftEngExamProjectG18.Business.Activity;
+import dk.dtu.SoftEngExamProjectG18.Business.Application;
+import dk.dtu.SoftEngExamProjectG18.Business.Employee;
+import dk.dtu.SoftEngExamProjectG18.Business.Project;
 import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.CommandExceptionReason;
 import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
@@ -27,6 +28,7 @@ abstract public class InputContext {
         Map of shared commands
      */
 
+    // TODO: Add "switch" command
     public static final Map<String, String[]> triggers = new HashMap<>() {{
         put("project assign pm", new String[]{"project assign PM {projectID} {PMID}", "cmdAssignPM"});
     }};
@@ -35,6 +37,7 @@ abstract public class InputContext {
         Misc. fields
      */
 
+    protected Application application = Application.getInstance();
     protected SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     protected SimpleDateFormat weekFormatter = new SimpleDateFormat("yyyy-ww");
     protected String output = "";

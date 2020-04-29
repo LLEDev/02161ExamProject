@@ -1,10 +1,8 @@
-package dk.dtu.SoftEngExamProjectG18.Core;
+package dk.dtu.SoftEngExamProjectG18.Business;
 
-import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Interfaces.Extractable;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
-import io.cucumber.java.sl.In;
 
 import java.util.*;
 
