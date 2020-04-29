@@ -1,6 +1,8 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
-import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Exceptions.AccessDeniedException;
+import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Interfaces.Extractable;
 
 import java.util.*;
@@ -8,7 +10,7 @@ import java.util.*;
 public class Project implements Extractable<Project> {
 
     protected HashMap<Integer, Activity> activities = new HashMap<>();
-    protected Calendar createdAt;
+    protected Calendar createdAt = null;
     protected int ID;
     protected boolean isBillable = true;
     protected String name;
@@ -29,64 +31,62 @@ public class Project implements Extractable<Project> {
         this.createdAt = cal;
     }
 
-    protected void setupID() {
-        this.ID = CompanyDB.getInstance().incrementNextProjectID(this.createdAt.get(Calendar.YEAR));
+    protected void setupID(int nextID) {
+        if(nextID <= 0) {
+            throw new IllegalArgumentException("The given project ID is not valid.");
+        }
+
+        this.ID = nextID;
     }
 
-    public Project(String name) {
-        this.name = name;
+    protected void setupName(String name) throws IllegalArgumentException {
+        if(name.length() == 0) {
+            throw new IllegalArgumentException(String.format("The given project name, %s, is not valid.", name));
+        }
+    }
 
-        this.setupCreatedAt(null);
-        this.setupID();
+    public Project(int nextID, String name) throws IllegalArgumentException {
+        this.setupID(nextID);
+        this.setupName(name);
         this.setupActivity(null);
     }
 
-    public Project(String name, boolean isBillable) {
+    public Project(int nextID, String name, boolean isBillable) throws IllegalArgumentException {
+        this(nextID, name);
         this.isBillable = isBillable;
-        this.name = name;
-
-        this.setupCreatedAt(null);
-        this.setupID();
-        this.setupActivity(null);
     }
 
-    public Project(String name, Date createdAt, boolean isBillable) {
-        this.isBillable = isBillable;
-        this.name = name;
+    public Project(int nextID, String name, Date createdAt, boolean isBillable) {
+        this(nextID, name, isBillable);
 
         this.setupCreatedAt(createdAt);
-        this.setupID();
-        this.setupActivity(null);
     }
 
-    public Project(String name, Date createdAt, boolean isBillable, Employee PM, boolean setupActivity) {
+    public Project(int nextID, String name, Date createdAt, boolean isBillable, Employee PM, boolean setupActivity) {
+        this.setupID(nextID);
+        this.setupName(name);
+
         this.isBillable = isBillable;
-        this.name = name;
         this.PM = PM;
 
         this.setupCreatedAt(createdAt);
-        this.setupID();
 
         if(setupActivity) { // Do not setup activity if data is imported through CSVReader
             this.setupActivity(null);
         }
     }
 
-    public boolean assignPM(Employee employee) {
+    public void assignPM(Employee newPM, Employee signedInEmployee) throws AccessDeniedException {
         if (this.PM == null) {
-            this.PM = employee;
-            return true;
+            this.PM = newPM;
+            return;
         }
 
-        CompanyDB db = CompanyDB.getInstance();
-        Employee signedInEmployee = db.getSignedInEmployee();
-
-        if (signedInEmployee == this.PM) {
-            this.PM = employee;
-            return true;
+        if (signedInEmployee != this.PM) {
+            throw new AccessDeniedException("Project manager role required.");
         }
 
-        return false;
+        this.PM = newPM;
     }
 
     public void clearActivities() {
@@ -97,6 +97,10 @@ public class Project implements Extractable<Project> {
     public int incrementNextActivityID() {
         this.nextActivityID++;
         return this.nextActivityID - 1;
+    }
+
+    public boolean isPM(Employee employee) {
+        return this.getPM() != null && this.getPM().equals(employee);
     }
 
     public Activity getActivity(int ID) {

@@ -1,7 +1,9 @@
 package dk.dtu.SoftEngExamProjectG18;
 
+import dk.dtu.SoftEngExamProjectG18.Business.Application;
+import dk.dtu.SoftEngExamProjectG18.Context.Action;
 import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
-import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.CommandExceptionReason;
 import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
@@ -14,25 +16,11 @@ import java.util.*;
 
 public class Main {
 
+    protected static Application application = null;
     protected static InputStream inputSource = System.in;
     protected static PrintStream outSource = System.out;
 
     protected static Scanner inputScanner;
-
-    protected static void callMethod(String method, String usage, ArrayList<String> args) throws Exception {
-        InputContext inputContext = CompanyDB.getContext();
-
-        Method m = inputContext.getClass().getMethod(method, String[].class);
-
-        try {
-            m.invoke(inputContext, (Object) args.toArray(new String[0]));
-            outSource.println(inputContext.getOutput());
-        } catch (InvocationTargetException ite) {
-            handleCommandException(ite.getTargetException(), usage);
-        }
-
-        inputContext.resetOutput();
-    }
 
     protected static void handleCommandException(Throwable t, String usage) {
         if(t instanceof CommandException) {
@@ -112,23 +100,31 @@ public class Main {
         return false;
     }
 
-    protected static boolean setupContext(InputContextType ict) {
-        InputContext ic = InputContext.getContext(ict);
-        CompanyDB.getInstance().setInputContext(ic);
-        return true;
+    protected static void runAction(Action action, ArrayList<String> args) throws Exception {
+        InputContext inputContext = application.getContext();
+
+        try {
+            action.run(args.toArray(String[]::new));
+            outSource.println(inputContext.getOutput());
+        } catch (Exception e) {
+            handleCommandException(e, action.getFullSignature());
+        }
+
+        inputContext.resetOutput();
+    }
+
+    protected static void setupContext(InputContextType ict) {
+        Application.init(ict);
+        application = Application.getInstance();
     }
 
     protected static boolean signIn(String ID, String context) {
-        CompanyDB db = CompanyDB.getInstance();
-
-        if(!db.setSignedInEmployee(ID)) {
-            outSource.println("This employee is not registered in the system.");
-            return false;
-        }
-
         for(InputContextType type : InputContextType.values()) {
             if(context.equalsIgnoreCase(type.toString())) {
-                return setupContext(type);
+                setupContext(type);
+                application.setSignedInEmployee(ID);
+
+                break;
             }
         }
 
@@ -167,8 +163,8 @@ public class Main {
 
     protected static void help() {
         ArrayList<String> usages = new ArrayList<>();
-        for(String[] cmd : CompanyDB.getContext().getTriggers().values()) {
-            usages.add(cmd[0]);
+        for(Action action : application.getContext().getTriggers().values()) {
+            usages.add(action.getFullSignature());
         }
 
         Collections.sort(usages);
@@ -192,8 +188,6 @@ public class Main {
      */
 
     public static void main(String[] args) throws Exception {
-        CompanyDB db = CompanyDB.getInstance();
-
         if(args.length < 2) {
             outSource.println("Usage: java -jar 02161ExamProject {Employee Initials} {Context=Emp/PM)} [Data folder/N]");
             return;
@@ -205,7 +199,7 @@ public class Main {
             return;
         }
 
-        outSource.println("Welcome, " + db.getSignedInEmployee().getName() + ". You are now signed in as (and acting as) " + CompanyDB.getContext().getSingularContextName() + ".");
+        outSource.println("Welcome, " + application.getSignedInEmployee().getName() + ". You are now signed in as (and acting as) " + application.getContext().getSingularContextName() + ".");
         outSource.println("Type 'help' to view available commands within this context.");
         outSource.println("Multi word arguments can be passed using \"quotes\". Dates are parsed/presented using format yyyy-MM-dd.");
         outSource.println();
@@ -230,7 +224,7 @@ public class Main {
             inputVariants.add(inputVariants.get(inputVariants.size() - 1) + " " + input[i]);
         }
 
-        InputContext inputContext = CompanyDB.getContext();
+        InputContext inputContext = application.getContext();
 
         for(int i = 0; i < inputVariants.size(); i++) {
             String variant = inputVariants.get(i).toLowerCase();
@@ -239,13 +233,10 @@ public class Main {
                 continue;
             }
 
-            String[] trigger = inputContext.getTriggers().get(variant);
-            String usage = trigger[0];
-            String method = trigger[1];
-
+            Action action = inputContext.getTriggers().get(variant);
             ArrayList<String> args = new ArrayList<>(Arrays.asList(input).subList(i + 1, inputVariants.size()));
 
-            callMethod(method, usage, args);
+            runAction(action, args);
 
             return;
         }

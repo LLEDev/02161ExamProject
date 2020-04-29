@@ -3,7 +3,7 @@ package dk.dtu.SoftEngExamProjectG18.Util;
 import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
@@ -95,6 +95,7 @@ public class CSVReader {
     }
 
     public static void readEmployees(Reader fileReader) {
+        /*
         CompanyDB db = CompanyDB.getInstance();
         ArrayList<HashMap<String, String>> employees = readFile(fileReader);
 
@@ -110,9 +111,11 @@ public class CSVReader {
 
             db.getEmployees().put(ID, new Employee(ID, name, cap));
         }
+        */
     }
 
     public static void readProjects(Reader fileReader) {
+        /*
         CompanyDB db = CompanyDB.getInstance();
         ArrayList<HashMap<String, String>> projects = readFile(fileReader);
 
@@ -130,9 +133,11 @@ public class CSVReader {
             Project p = new Project(name, createdAt, isBillable, PM, false);
             db.getProjects().put(p.getID(), p);
         }
+        */
     }
 
     public static void readActivities(Reader fileReader) {
+        /*
         CompanyDB db = CompanyDB.getInstance();
         ArrayList<HashMap<String, String>> activities = readFile(fileReader);
 
@@ -156,9 +161,11 @@ public class CSVReader {
 
             activityInstance.setDone(getBoolean(activity, "IsDone", false));
         }
+        */
     }
 
     public static void readOOOActivities(Reader fileReader) {
+        /*
         CompanyDB db = CompanyDB.getInstance();
         ArrayList<HashMap<String, String>> OOOActivities = readFile(fileReader);
 
@@ -177,9 +184,11 @@ public class CSVReader {
 
             employee.addOOOActivity(type, start, end);
         }
+        */
     }
 
     public static void readWorkHours(Reader fileReader) {
+        /*
         CompanyDB db = CompanyDB.getInstance();
         ArrayList<HashMap<String, String>> workHours = readFile(fileReader);
 
@@ -213,5 +222,6 @@ public class CSVReader {
             }
             eai.setMinutes(date, minutes);
         }
+        */
     }
 }

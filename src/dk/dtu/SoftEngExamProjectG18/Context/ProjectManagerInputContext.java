@@ -4,9 +4,10 @@ import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.OutOfOfficeActivity;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
+import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.Util.Table;
 
 import java.text.ParseException;
@@ -18,35 +19,28 @@ public class ProjectManagerInputContext extends InputContext {
         General
      */
 
-    // List of commands:
-    // Structure: command -> [usage, method]
-    public static final Map<String, String[]> triggers = new HashMap<>() {{
-        putAll(InputContext.getTriggersStatic());
-        put("project activity assign", new String[]{"project activity assign {employeeID} {projectID} {activityID}", "cmdAssignEmployeeToActivity"});
-        put("project activity create", new String[]{"project activity create {projectID}, {activityName}", "cmdCreateActivity"});
-        put("project activity estimate", new String[]{"project activity estimate {projectID} {activityID} {work hours}", "cmdSetActivityEstimatedDuration"});
-        put("project activity finish", new String[]{"project activity finish {projectID}, {activityName}", "cmdFinishActivity"});
-        put("project activity setweeks", new String[]{"project activity setWeeks {projectID} {activityID} {startWeek} {endWeek}", "cmdSetActivityInterval"});
-        put("view activity", new String[]{"view activity {projectID} {activityID}", "cmdViewActivity"});
-        put("view availability", new String[]{"view availability {date}", "cmdViewAvailability"});
-        put("view project", new String[]{"view project {projectID}", "cmdViewProject"});
-        put("view schedule", new String[]{"view schedule {employeeID}", "cmdViewSchedule"});
-    }};
-
-    public static Map<String, String[]> getTriggersStatic() {
-        return ProjectManagerInputContext.triggers;
-    }
+    protected ActionMap triggers = ActionMap.build(super.getTriggers(), new Action[]{
+        new Action("project activity assign", new String[]{"employeeID", "projectID", "activityID"}, this::cmdAssignEmployeeToActivity),
+        new Action("project activity create", new String[]{"projectID", "activityName"}, this::cmdCreateActivity),
+        new Action("project activity estimate", new String[]{"projectID", "activityID", "workHours"}, this::cmdSetActivityEstimatedDuration),
+        new Action("project activity finish", new String[]{"projectID", "activityName"}, this::cmdFinishActivity),
+        new Action("project activity setweeks", new String[]{"projectID", "activityID", "startWeek", "endWeek"}, this::cmdSetActivityInterval),
+        new Action("view activity", new String[]{"projectID", "activityID"}, this::cmdViewActivity),
+        new Action("view availability", new String[]{"date"}, this::cmdViewAvailability),
+        new Action("view project", new String[]{"projectID"}, this::cmdViewProject),
+        new Action("view schedule", new String[]{"employeeID"}, this::cmdViewSchedule),
+    });
 
     public String getSingularContextName() {
         return "a project manager";
     }
 
-    public Map<String, String[]> getTriggers() {
-        return ProjectManagerInputContext.getTriggersStatic();
+    public ActionMap getTriggers() {
+        return this.triggers;
     }
 
     /*
-        Commands - warnings relating to use of reflection API are suppressed
+        Commands
      */
 
     // Command arguments: String employeeID, String projectID, int activityID
@@ -55,17 +49,14 @@ public class ProjectManagerInputContext extends InputContext {
         this.assertArgumentsValid(args.length, 3);
         this.assertStringParseIntDoable(args[2]);
 
-        CompanyDB db = CompanyDB.getInstance();
+        String employeeID = args[0];
+        String projectID = args[1];
+        int activityID = Integer.parseInt(args[2]);
 
-        Project project = this.getProject(db, args[1]);
-        this.assertSignedInEmployeePM(project);
-
-        Activity activity = this.getActivity(project, args[2]);
-        Employee employee = this.getEmployee(db, args[0]);
-        this.assertAvailableActivities(employee);
-
-        EmployeeActivityIntermediate EAI = new EmployeeActivityIntermediate(employee, activity);
-        this.writeOutput("Employee added to activity.");
+        this.wrapExceptions(() -> this.application.assignEmployeeToActivity(employeeID, projectID, activityID))
+            .outputOnSuccess(() -> "Employee added to activity.")
+            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .run();
     }
 
     // Command arguments: String projectID, String activityName
@@ -73,13 +64,13 @@ public class ProjectManagerInputContext extends InputContext {
     public void cmdCreateActivity(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
 
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = this.getProject(db, args[0]);
+        String projectID = args[0];
+        String activityName = args[1];
 
-        this.assertSignedInEmployeePM(project);
-
-        new Activity(args[1], project);
-        this.writeOutput("Activity created.");
+        this.wrapExceptions(() -> this.application.createActivity(projectID, activityName))
+            .outputOnSuccess(() -> "Activity created.")
+            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .run();
     }
 
     // Command arguments: String projectID, String activityID
@@ -87,100 +78,92 @@ public class ProjectManagerInputContext extends InputContext {
     public void cmdFinishActivity(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
 
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = db.getProject(args[0]);
+        String projectID = args[0];
+        int activityID = Integer.parseInt(args[1]);
 
-        this.assertSignedInEmployeePM(project);
-
-        Activity activity = this.getActivity(project, args[1]);
-        activity.setDone(true);
-        this.writeOutput("Activity finished.");
+        this.wrapExceptions(() -> this.application.finishActivity(projectID, activityID))
+            .outputOnSuccess(() -> "Activity finished.")
+            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .run();
     }
 
-    // Command arguments: String projectID, int activityID, int numWeeks
+    // Command arguments: String projectID, int activityID, int numHours
     @SuppressWarnings("unused")
     public void cmdSetActivityEstimatedDuration(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 3);
         this.assertStringParseIntDoable(args[2]);
 
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = this.getProject(db, args[0]);
-        Activity activity = this.getActivity(project, args[1]);
-
+        String projectID = args[0];
+        int activityID = Integer.parseInt(args[1]);
         int numHours = Integer.parseInt(args[2]);
-        if(numHours <= 0) {
-            String output = String.format("The estimated number of work hours has to be bigger than 0. %s received.", numHours);
-            throw new CommandException(output);
-        }
 
-        activity.setEstimatedHours(numHours);
-        this.writeOutput("Estimated number of work hours updated.");
+        this.wrapExceptions(() -> this.application.estimateActivityDuration(projectID, activityID, numHours))
+            .outputOnSuccess(() -> "Estimated number of work hours updated.")
+            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .run();
     }
 
     // Command arguments: String projectID, int activityID, Date start, Date end
     @SuppressWarnings("unused")
-    public void cmdSetActivityInterval(String[] args) throws CommandException {
+    public void cmdSetActivityInterval(String[] args) throws CommandException, ParseException {
         this.assertArgumentsValid(args.length, 4);
+        this.assertStringParseIntDoable(args[1]);
+        this.assertStringParseDateDoable(args[2]);
+        this.assertStringParseDateDoable(args[3]);
 
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = this.getProject(db, args[0]);
-        Activity activity = this.getActivity(project, args[1]);
+        String projectID = args[0];
+        int activityID = Integer.parseInt(args[1]);
+        Date start = DateFormatter.parseDate(args[2]);
+        Date end = DateFormatter.parseDate(args[3]);
 
-        try {
-            Date start = this.weekFormatter.parse(args[2]);
-            Date end = this.weekFormatter.parse(args[3]);
-
-            if(start.compareTo(end) >= 0) {
-                String output = String.format("The given start week, %s, is after the given end week, %s.", args[2], args[3]);
-                throw new CommandException(output);
-            }
-
-            activity.setStartWeek(start);
-            activity.setEndWeek(end);
-
-            this.writeOutput("Start/end weeks updated.");
-        } catch (ParseException e) {
-            String output = String.format("Any week must be given in the format %s. Received %s and %s.", this.weekFormatter.toPattern(), args[2], args[3]);
-            throw new CommandException(output);
-        }
+        this.wrapExceptions(() -> this.application.setActivityInterval(projectID, activityID, start, end))
+            .outputOnSuccess(() -> "Start/end weeks updated.")
+            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .run();
     }
 
     // Command arguments: String projectID, activityID
     @SuppressWarnings("unused")
     public void cmdViewActivity(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
+        this.assertStringParseIntDoable(args[1]);
 
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = this.getProject(db, args[0]);
+        String projectID = args[0];
+        int activityID = Integer.parseInt(args[1]);
 
-        this.assertSignedInEmployeePM(project);
-
-        Activity activity = this.getActivity(project, args[1]);
-
-        String startWeek = null;
-        String endWeek = null;
         try {
-            startWeek = this.weekFormatter.format(activity.getStartWeek());
-            endWeek = this.weekFormatter.format(activity.getEndWeek());
-        } catch (Exception ignored) {}
+            Project project = this.application.getProject(args[0]);
+            this.application.assertSignedInEmployeePM(project);
 
-        int trackedHours = (int) Math.ceil(activity.getTotalTrackedMinutes() / 60.0);
+            Activity activity = this.application.getActivity(project, activityID);
 
-        this.writeOutput("Activity details:\n");
-        this.writeOutput(String.format(" - ID: %s\n", activity.getID()));
-        this.writeOutput(String.format(" - Name: %s\n", activity.getName()));
-        this.writeOutput(String.format(" - Start Week: %s\n", startWeek));
-        this.writeOutput(String.format(" - End Week: %s\n", endWeek));
-        this.writeOutput(String.format(" - Estimated work hours: %s\n", activity.getEstimatedHours()));
-        this.writeOutput(String.format(" - Tracked work hours: %s\n", trackedHours));
+            String startWeek = null;
+            String endWeek = null;
+            try {
+                startWeek = DateFormatter.formatWeek(activity.getStartWeek());
+                endWeek = DateFormatter.formatWeek(activity.getEndWeek());
+            } catch (Exception ignored) {}
 
-        this.writeOutput("\nTracked time:\n");
-        ArrayList<EmployeeActivityIntermediate> collection = new ArrayList<>(activity.getTrackedTime().values());
-        this.writeOutput(Table.make(
+            int trackedHours = (int) Math.ceil(activity.getTotalTrackedMinutes() / 60.0);
+
+            this.writeOutput("Activity details:\n");
+            this.writeOutput(String.format(" - ID: %s\n", activity.getID()));
+            this.writeOutput(String.format(" - Name: %s\n", activity.getName()));
+            this.writeOutput(String.format(" - Start Week: %s\n", startWeek));
+            this.writeOutput(String.format(" - End Week: %s\n", endWeek));
+            this.writeOutput(String.format(" - Estimated work hours: %s\n", activity.getEstimatedHours()));
+            this.writeOutput(String.format(" - Tracked work hours: %s\n", trackedHours));
+
+            this.writeOutput("\nTracked time:\n");
+            ArrayList<EmployeeActivityIntermediate> collection = new ArrayList<>(activity.getTrackedTime().values());
+            this.writeOutput(Table.make(
                 "overview",
                 new String[] {"Employee", "Date", "Minutes"},
                 collection
-        ));
+            ));
+        } catch (IllegalArgumentException e) {
+            throw new CommandException(e.getMessage());
+        }
     }
 
     // Command arguments: String date
@@ -189,9 +172,9 @@ public class ProjectManagerInputContext extends InputContext {
         this.assertArgumentsValid(args.length, 1);
         this.assertStringParseDateDoable(args[0]);
 
-        Date d = this.formatter.parse(args[0]);
+        Date d = DateFormatter.parseDate(args[0]);
 
-        ArrayList<Employee> collection = new ArrayList<>(CompanyDB.getInstance().getEmployees().values());
+        ArrayList<Employee> collection = new ArrayList<>(this.application.getEmployees().values());
         HashMap<String, Object> meta = new HashMap<>();
         meta.put("date", d);
 
@@ -209,23 +192,26 @@ public class ProjectManagerInputContext extends InputContext {
     public void cmdViewProject(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 1);
 
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = this.getProject(db, args[0]);
+        try {
+            Project project = this.application.getProject(args[0]);
 
-        this.assertSignedInEmployeePM(project);
+            this.application.assertSignedInEmployeePM(project);
 
-        this.writeOutput("Project details:\n");
-        this.writeOutput(String.format(" - ID: %s\n", project.getID()));
-        this.writeOutput(String.format(" - Name: %s\n", project.getName()));
-        this.writeOutput(String.format(" - Estimated remaining work: %s work hours\n", project.getEstimatedWorkHoursLeft()));
+            this.writeOutput("Project details:\n");
+            this.writeOutput(String.format(" - ID: %s\n", project.getID()));
+            this.writeOutput(String.format(" - Name: %s\n", project.getName()));
+            this.writeOutput(String.format(" - Estimated remaining work: %s work hours\n", project.getEstimatedWorkHoursLeft()));
 
-        this.writeOutput("\nProject activities:\n");
-        ArrayList<Activity> collection = new ArrayList<>(project.getActivities().values());
-        this.writeOutput(Table.make(
+            this.writeOutput("\nProject activities:\n");
+            ArrayList<Activity> collection = new ArrayList<>(project.getActivities().values());
+            this.writeOutput(Table.make(
                 "overview",
                 new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"},
                 collection
-        ));
+            ));
+        } catch (IllegalArgumentException e) {
+            throw new CommandException(e.getMessage());
+        }
     }
 
     // Command arguments: String employeeID
@@ -233,27 +219,30 @@ public class ProjectManagerInputContext extends InputContext {
     public void cmdViewSchedule(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 1);
 
-        CompanyDB db = CompanyDB.getInstance();
-        Employee employee = this.getEmployee(db, args[0]);
+        try {
+            Employee employee = this.application.getEmployee(args[0]);
 
-        this.writeOutput("Employee details:\n");
-        this.writeOutput(String.format(" - ID: %s\n", employee.getID()));
-        this.writeOutput(String.format(" - Name: %s\n", employee.getName()));
+            this.writeOutput("Employee details:\n");
+            this.writeOutput(String.format(" - ID: %s\n", employee.getID()));
+            this.writeOutput(String.format(" - Name: %s\n", employee.getName()));
 
-        this.writeOutput("\nWorking on the following active activities:\n");
-        ArrayList<Activity> activityCollection = employee.getAllActiveActivities();
-        this.writeOutput(Table.make(
-                "overview",
-                new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"},
-                activityCollection
-        ) + "\n");
+            this.writeOutput("\nWorking on the following active activities:\n");
+            ArrayList<Activity> activityCollection = employee.getAllActiveActivities();
+            this.writeOutput(Table.make(
+                    "overview",
+                    new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"},
+                    activityCollection
+            ) + "\n");
 
-        this.writeOutput("\nPlanned out-of-office activities:\n");
-        ArrayList<OutOfOfficeActivity> OOOCollection = new ArrayList<>(employee.getOOOActivities());
-        this.writeOutput(Table.make(
-                "overview",
-                new String[] {"Type", "Start", "End"},
-                OOOCollection
-        ));
+            this.writeOutput("\nPlanned out-of-office activities:\n");
+            ArrayList<OutOfOfficeActivity> OOOCollection = new ArrayList<>(employee.getOOOActivities());
+            this.writeOutput(Table.make(
+                    "overview",
+                    new String[] {"Type", "Start", "End"},
+                    OOOCollection
+            ));
+        } catch (IllegalArgumentException e) {
+            throw new CommandException(e.getMessage());
+        }
     }
 }

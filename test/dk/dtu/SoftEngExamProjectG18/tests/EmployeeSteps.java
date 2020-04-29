@@ -5,7 +5,7 @@ import dk.dtu.SoftEngExamProjectG18.Context.ProjectManagerInputContext;
 import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;
@@ -41,7 +41,7 @@ public class EmployeeSteps extends BaseSteps {
     public void thereIsAnEmployeeWithInitials(String employeeID) {
         this.db.getEmployees().put(employeeID, new Employee(employeeID, employeeID));
         this.db.setSignedInEmployee(employeeID);
-        this.db.setInputContext(new EmployeeInputContext());
+        this.application.setInputContext(new EmployeeInputContext());
     }
 
     @And("the following employees are given")

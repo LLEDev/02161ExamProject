@@ -1,4 +1,4 @@
-package dk.dtu.SoftEngExamProjectG18.DB;
+package dk.dtu.SoftEngExamProjectG18.Persistence;
 
 import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
@@ -8,32 +8,10 @@ import java.util.HashMap;
 
 public class CompanyDB {
 
-    protected static CompanyDB instance;
-
-    public static CompanyDB initNewInstance() {
-        instance = new CompanyDB();
-        return instance;
-    }
-
-    public static InputContext getContext() {
-        return CompanyDB.getInstance().getInputContext();
-    }
-
-    public static CompanyDB getInstance() {
-        if (instance == null) {
-            return initNewInstance();
-        }
-
-        return instance;
-    }
-
     protected HashMap<String, Employee> employees = new HashMap<>();
-    protected InputContext inputContext;
     protected HashMap<Integer, Integer> nextProjectID = new HashMap<>();
     protected HashMap<String, Project> projects = new HashMap<>();
     protected Employee signedInEmployee;
-
-    protected CompanyDB() {}
 
     public Employee getEmployee(String ID) {
         return this.employees.get(ID);
@@ -41,10 +19,6 @@ public class CompanyDB {
 
     public HashMap<String, Employee> getEmployees() {
         return this.employees;
-    }
-
-    public InputContext getInputContext() {
-        return inputContext;
     }
 
     public int incrementNextProjectID(int year) {
@@ -66,21 +40,20 @@ public class CompanyDB {
         return this.projects;
     }
 
-    public Employee getSignedInEmployee() {
+    public Employee getSignedInEmployee() throws IllegalStateException {
+        if(this.signedInEmployee == null) {
+            throw new IllegalStateException("No employee signed in.");
+        }
+
         return this.signedInEmployee;
     }
 
-    public void setInputContext(InputContext inputContext) {
-        this.inputContext = inputContext;
-    }
-
-    public boolean setSignedInEmployee(String ID) {
-        if(this.employees.containsKey(ID)) {
-            this.signedInEmployee = this.employees.get(ID);
-            return true;
+    public void setSignedInEmployee(String ID) {
+        if(!this.employees.containsKey(ID)) {
+            throw new IllegalArgumentException("Given employee does not exist.");
         }
 
-        return false;
+        this.signedInEmployee = this.employees.get(ID);
     }
 
 }

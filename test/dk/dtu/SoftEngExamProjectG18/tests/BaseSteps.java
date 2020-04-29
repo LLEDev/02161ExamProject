@@ -1,7 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
 import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
-import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.CmdResponse;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
@@ -12,7 +11,6 @@ import java.text.SimpleDateFormat;
 
 abstract public class BaseSteps {
 
-    protected final CompanyDB db = CompanyDB.getInstance();
     protected final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
     protected void callCmd(InputContext context, String method, String[] args) {

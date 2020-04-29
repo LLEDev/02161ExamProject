@@ -1,10 +1,12 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
+import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Context.EmployeeInputContext;
 import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
+import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.Before;
@@ -23,7 +25,8 @@ public class MiscSteps {
 
     @Before // Reset CompanyDB before each scenario
     public void beforeScenario(){
-        CompanyDB.initNewInstance();
+        Application.init(InputContextType.Emp);
+        TestHolder.getInstance().application = Application.getInstance();
     }
 
     @Then("the error message {string} is given")

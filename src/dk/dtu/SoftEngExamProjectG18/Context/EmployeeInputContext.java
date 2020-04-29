@@ -1,13 +1,10 @@
 package dk.dtu.SoftEngExamProjectG18.Context;
 
-import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
-import dk.dtu.SoftEngExamProjectG18.Business.OutOfOfficeActivity;
-import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
+import dk.dtu.SoftEngExamProjectG18.Interfaces.ThrowingFunctionWithoutArgs;
 import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
-import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
+import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.Util.Table;
 
 import java.text.ParseException;
@@ -19,145 +16,98 @@ public class EmployeeInputContext extends InputContext {
         General
      */
 
-    public static final Map<String, String[]> triggers = new HashMap<>() {{
-        putAll(InputContext.getTriggersStatic());
-        put("hours set", new String[]{"hours set {projectID} {activityID} {date} {hours}", "cmdSetHours"});
-        put("hours submit", new String[]{"hours submit {projectID} {activityID} {date} {hours}", "cmdSubmitHours"});
-        put("project activity markDone", new String[]{"project activity markDone {projectID} {activityID}", "cmdMarkActivityAsDone"});
-        put("project create", new String[]{"project create {name} {billable}", "cmdCreateProject"});
-        put("request assistance", new String[]{"request assistance {projectID} {activityID} {employeeID}", "cmdRequestAssistance"});
-        put("request ooo", new String[]{"request ooo {type} {start} {end}", "cmdRequestOutOfOffice"});
-        put("view submissions", new String[]{"view submissions", "cmdViewSubmissions"});
-    }};
-
-    public static Map<String, String[]> getTriggersStatic() {
-        return EmployeeInputContext.triggers;
-    }
+    protected ActionMap triggers = ActionMap.build(super.getTriggers(), new Action[]{
+        new Action("hours set", new String[]{"projectID", "activityID", "date", "hours"}, this::cmdSetHours),
+        new Action("hours submit", new String[]{"projectID", "activityID", "date", "hours"}, this::cmdSubmitHours),
+        new Action("project activity complete", new String[]{"projectID", "activityID"}, this::cmdCompleteActivity),
+        new Action("project create", new String[]{"name", "billable"}, this::cmdCreateProject),
+        new Action("request assistance", new String[]{"projectID", "activityID", "employeeID"}, this::cmdRequestAssistance),
+        new Action("request ooo", new String[]{"type", "start", "end"}, this::cmdRequestOutOfOffice),
+        new Action("view submissions", new String[]{}, this::cmdViewSubmissions),
+    });
 
     public String getSingularContextName() {
         return "an employee";
     }
 
-    public Map<String, String[]> getTriggers() {
-        return EmployeeInputContext.getTriggersStatic();
+    public ActionMap getTriggers() {
+        return this.triggers;
     }
 
     /*
         Command helpers
      */
 
-    // Command arguments: String projectID, int activityID, Date date, int setHours
-    @SuppressWarnings("unused")
-    public void helperSetSubmitHours(String[] args, boolean shouldSet) throws CommandException, ParseException {
+    public void cmdSetSubmitHours(String[] args, boolean shouldSet) throws CommandException, ParseException {
         this.assertArgumentsValid(args.length, 4);
         this.assertStringParseDateDoable(args[2]);
         this.assertStringParseIntDoable(args[3]);
 
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = this.getProject(db, args[0]);
-        Activity activity = this.getActivity(project, args[1]);
+        String projectID = args[0];
+        int activityID = Integer.parseInt(args[1]);
+        Date date = DateFormatter.parseDate(args[2]);
+        int hours = Integer.parseInt(args[3]);
 
-        Employee signedInEmployee = db.getSignedInEmployee();
-        HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
-        EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(signedInEmployee.getID());
+        ThrowingFunctionWithoutArgs tf = shouldSet ?
+            () -> this.application.setHours(projectID, activityID, date, hours) :
+            () -> this.application.submitHours(projectID, activityID, date, hours);
 
-        if(employeeActivityIntermediate == null) {
-            throw new CommandException("You are not associated with one or more of these projects.");
-        }
-
-        int minutes = Integer.parseInt(args[3]) * 60;
-        Date date = this.formatter.parse(args[2]);
-
-        if(shouldSet) {
-            employeeActivityIntermediate.setMinutes(date, minutes);
-            this.writeOutput("Hours set.");
-        } else {
-            employeeActivityIntermediate.addMinutes(date, minutes);
-            this.writeOutput("Hours submitted.");
-        }
+        this.wrapExceptions(tf)
+            .outputOnSuccess(() -> "Hours " + (shouldSet ? "set." : "submitted."))
+            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .run();
     }
 
     /*
-        Commands - warnings relating to use of reflection API are suppressed
+        Commands
      */
 
+    // Command arguments: String projectID, int activityID
+    public void cmdCompleteActivity(String[] args) throws CommandException {
+        this.assertArgumentsValid(args.length, 2);
+
+        this.wrapExceptions(() -> this.application.markActivityDone(args[0], Integer.parseInt(args[1])))
+            .outputOnSuccess(() -> "Activity completed.")
+            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .run();
+    }
+
     // Command arguments: String name, boolean isBillable
-    @SuppressWarnings("unused")
     public void cmdCreateProject(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
-        this.assertValidProjectName(args[0]);
 
         String name = args[0];
         boolean isBillable = Boolean.parseBoolean(args[1]);
 
-        // Project project = new Project(name, isBillable);
-        // this.db.getProjects().put(project.getID(), project);
-
-        this.catchException(() -> this.application.createProject(args[0], isBillable))
-            .writeOnSuccess(() -> "Project created.")
-            .writeOnFailure(ce -> String.format("Project not created due to error: %s.", ce.getMessage()));
-    }
-
-    // Command arguments: String projectID, int activityID
-    @SuppressWarnings("unused")
-    public void cmdMarkActivityAsDone(String[] args) throws CommandException {
-        this.assertArgumentsValid(args.length, 2);
-
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = this.getProject(db, args[0]);
-        Activity activity = this.getActivity(project, args[1]);
-
-        activity.setDone(true);
-        this.writeOutput("Activity completed.");
+        this.wrapExceptions(() -> this.application.createProject(name, isBillable))
+            .outputOnSuccess(() -> "Project created.")
+            .outputOnError(e -> String.format("Project not created due to error: %s.", e.getMessage()))
+            .run();
     }
 
     // Command arguments: String projectID, int activityID, String employeeID
-    @SuppressWarnings("unused")
     public void cmdRequestAssistance(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 3);
 
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = this.getProject(db, args[0]);
-        Activity activity = this.getActivity(project, args[1]);
-        Employee employee = this.getEmployee(db, args[2]);
+        String projectID = args[0];
+        int activityID = Integer.parseInt(args[0]);
+        String employeeID = args[2];
 
-        Employee signedInEmployee = db.getSignedInEmployee();
-        HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> signedInEmployeeActivities
-                = signedInEmployee.getActivities();
-        HashMap<Integer, EmployeeActivityIntermediate> signedEmployeeProjectActivities =
-                signedInEmployeeActivities.get(project.getID());
-
-        if(signedEmployeeProjectActivities == null) {
-            String output = String.format("You are not allowed to work with the given project, %s.", args[0]);
-            throw new CommandException(output);
-        }
-
-        boolean signedInEmployeeIsNotAttachedToActivity = !signedEmployeeProjectActivities.containsKey(activity.getID());
-
-        if(signedInEmployeeIsNotAttachedToActivity) {
-            String output = String.format("You are not allowed to work with the given activity, %s.", args[1]);
-            throw new CommandException(output);
-        }
-
-        this.assertAvailableActivities(employee);
-
-        employee.getActivities().put(project.getID(), signedInEmployeeActivities.get(project.getID()));
-        this.writeOutput("Assistance requested.");
+        this.wrapExceptions(() -> this.application.requestAssistance(projectID, activityID, employeeID))
+            .outputOnSuccess(() -> "Assistance requested.")
+            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .run();
     }
 
     // Command arguments: OOOActivityType type, Date start, Date end
-    @SuppressWarnings("unused")
     public void cmdRequestOutOfOffice(String[] args) throws CommandException, ParseException {
         this.assertArgumentsValid(args.length, 3);
         this.assertStringParseDateDoable(args[1]);
         this.assertStringParseDateDoable(args[2]);
 
-        CompanyDB db = CompanyDB.getInstance();
-        Employee signedInEmployee = db.getSignedInEmployee();
-
         OOOActivityType type = null;
-        for(OOOActivityType OOOType : OOOActivityType.values()) {
-            if(args[0].toLowerCase().equals(OOOType.toString().toLowerCase())) {
+        for (OOOActivityType OOOType : OOOActivityType.values()) {
+            if (args[0].toLowerCase().equals(OOOType.toString().toLowerCase())) {
                 type = OOOType;
                 break;
             }
@@ -166,51 +116,52 @@ public class EmployeeInputContext extends InputContext {
         if(type == null) {
             String optionDelimiter = ", ";
             String options = Arrays.stream(OOOActivityType.values())
-                    .map(t -> optionDelimiter + t.toString().toLowerCase())
-                    .reduce("", String::concat)
-                    .substring(optionDelimiter.length());
+                .map(t -> optionDelimiter + t.toString().toLowerCase())
+                .reduce("", String::concat)
+                .substring(optionDelimiter.length());
 
             String output = String.format(
-                    "Please specify a valid out-of-office activity type. Valid options are: %s. Received: %s.",
-                    options,
-                    args[0]
+                "Please specify a valid out-of-office activity type. Valid options are: %s. Received: %s.",
+                options,
+                args[0]
             );
             throw new CommandException(output);
         }
 
-        Date start = this.formatter.parse(args[1]);
-        Date end = this.formatter.parse(args[2]);
+        final OOOActivityType finalType = type;
 
-        signedInEmployee.getOOOActivities().add(new OutOfOfficeActivity(type, start, end));
-        this.writeOutput("Out-of-office activity requested.");
+        Date start = DateFormatter.parseDate(args[1]);
+        Date end = DateFormatter.parseDate(args[2]);
+
+        this.wrapExceptions(() -> this.application.requestOutOfOffice(finalType, start, end))
+            .outputOnSuccess(() -> "Out-of-office activity requested.")
+            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .run();
     }
 
     // Command arguments: String projectID, int activityID, Date date, int setHours
-    @SuppressWarnings("unused")
     public void cmdSetHours(String[] args) throws CommandException, ParseException {
-        this.helperSetSubmitHours(args, true);
+        this.cmdSetSubmitHours(args, true);
     }
 
     // Command arguments: String projectID, int activityID, Date date, int addedHours
-    @SuppressWarnings("unused")
     public void cmdSubmitHours(String[] args) throws CommandException, ParseException {
-        this.helperSetSubmitHours(args, false);
+        this.cmdSetSubmitHours(args, false);
     }
 
-    // Command arguments:
-    @SuppressWarnings("unused")
+    // Command arguments: none
     public void cmdViewSubmissions(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 0);
 
-        Employee signedInEmployee = CompanyDB.getInstance().getSignedInEmployee();
+        Employee signedInEmployee = this.application.getSignedInEmployee();
 
         ArrayList<Employee> employeeList = new ArrayList<>();
         employeeList.add(signedInEmployee);
 
         this.writeOutput(Table.make(
-                "submissions",
-                new String[] {"Project ID", "Activity ID", "Tracked hours"},
-                employeeList
+            "submissions",
+            new String[]{"Project ID", "Activity ID", "Tracked hours"},
+            employeeList
         ));
     }
 

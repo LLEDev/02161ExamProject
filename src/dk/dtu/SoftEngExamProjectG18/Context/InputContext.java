@@ -1,18 +1,13 @@
 package dk.dtu.SoftEngExamProjectG18.Context;
 
-import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
-import dk.dtu.SoftEngExamProjectG18.Business.Employee;
-import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.DB.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.CommandExceptionReason;
 import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.Interfaces.ThrowingFunctionWithoutArgs;
+import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
 
 abstract public class InputContext {
 
@@ -22,30 +17,6 @@ abstract public class InputContext {
 
     abstract public String getSingularContextName();
 
-    abstract public Map<String, String[]> getTriggers();
-
-    /*
-        Map of shared commands
-     */
-
-    // TODO: Add "switch" command
-    public static final Map<String, String[]> triggers = new HashMap<>() {{
-        put("project assign pm", new String[]{"project assign PM {projectID} {PMID}", "cmdAssignPM"});
-    }};
-
-    /*
-        Misc. fields
-     */
-
-    protected Application application = Application.getInstance();
-    protected SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-    protected SimpleDateFormat weekFormatter = new SimpleDateFormat("yyyy-ww");
-    protected String output = "";
-
-    /*
-        Static getters
-     */
-
     public static InputContext getContext(InputContextType ict) {
         if (ict == InputContextType.PM) {
             return new ProjectManagerInputContext();
@@ -54,38 +25,13 @@ abstract public class InputContext {
         return new EmployeeInputContext();
     }
 
-    public static Map<String, String[]> getTriggersStatic() {
-        return triggers;
-    }
+    protected Application application = Application.getInstance();
+    protected String output = "";
+    protected ActionMap triggers = ActionMap.build(new Action[]{
+        new Action("project assign pm", new String[]{"projectID", "PMID"}, this::cmdAssignPM),
+        new Action("switch context", new String[]{"contextType"}, this::cmdSwitchContext),
+    });
 
-    /*
-        Output methods
-     */
-
-    public String getOutput() {
-        return this.output;
-    }
-
-    public void resetOutput() {
-        this.output = "";
-    }
-
-    public void writeOutput(String s) {
-        this.output += s;
-    }
-
-    /*
-        Utils
-     */
-
-    public boolean isNull(Object obj) {
-        return obj == null;
-    }
-
-
-    /*
-        Command specific utils
-     */
 
     public void assertArgumentsValid(int argsLength, int requiredLength) throws CommandException {
         if(argsLength != requiredLength) {
@@ -93,30 +39,11 @@ abstract public class InputContext {
         }
     }
 
-    public void assertAvailableActivities(Employee employee) throws CommandException {
-        if (employee.getNumOpenActivities() > 0) {
-            return;
-        }
-
-        String output = String.format(
-                "The employee %s has no room for any new activities at the moment.",
-                employee.getID()
-        );
-        throw new CommandException(output);
-    }
-
-    public void assertSignedInEmployeePM(Project project) throws CommandException {
-        CompanyDB db = CompanyDB.getInstance();
-        if (db.getSignedInEmployee() != project.getPM()) {
-            throw new CommandException("Project manager role required.");
-        }
-    }
-
     public void assertStringParseDateDoable(String possibleDate) throws CommandException {
         try {
-            this.formatter.parse(possibleDate);
+            DateFormatter.parseDate(possibleDate);
         } catch (ParseException e) {
-            String output = String.format("Any date must be given in the format %s. Received %s.", this.formatter.toPattern(), possibleDate);
+            String output = String.format("Any date must be given in the format %s. Received %s.", DateFormatter.toDatePattern(), possibleDate);
             throw new CommandException(output);
         }
     }
@@ -130,48 +57,24 @@ abstract public class InputContext {
         }
     }
 
-    public void assertValidProjectName(String name) throws CommandException {
-        if(name.length() == 0) {
-            throw new CommandException(String.format("The given project name, %s, is not valid.", name));
-        }
+    public String getOutput() {
+        return this.output;
     }
 
-    public Activity getActivity(Project project, String activityID) throws CommandException {
-        assertStringParseIntDoable(activityID);
-
-        int intActivityID = Integer.parseInt(activityID);
-        Activity activity = project.getActivity(intActivityID);
-
-        if (isNull(activity)) {
-            String eMsg = String.format(
-                    "The given activity, %s, does not exist within project, %s.",
-                    activityID,
-                    project.getID()
-            );
-            throw new CommandException(eMsg);
-        }
-
-        return activity;
+    public ActionMap getTriggers() {
+        return this.triggers;
     }
 
-    public Employee getEmployee(CompanyDB db, String employeeID) throws CommandException {
-        Employee employee = db.getEmployee(employeeID);
-
-        if (isNull(employee)) {
-            throw new CommandException(String.format("The given employee, %s, does not exist.", employeeID));
-        }
-
-        return employee;
+    public void resetOutput() {
+        this.output = "";
     }
 
-    public Project getProject(CompanyDB db, String projectID) throws CommandException {
-        Project project = db.getProject(projectID);
+    public ExceptionWrapper wrapExceptions(ThrowingFunctionWithoutArgs tf) {
+        return new ExceptionWrapper(tf);
+    }
 
-        if (isNull(project)) {
-            throw new CommandException(String.format("The given project, %s, does not exist.", projectID));
-        }
-
-        return project;
+    public void writeOutput(String s) {
+        this.output += s;
     }
 
      /*
@@ -179,21 +82,29 @@ abstract public class InputContext {
       */
 
     // String projectID, String employeeID
-    @SuppressWarnings("unused")
     public void cmdAssignPM(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 2);
 
-        CompanyDB db = CompanyDB.getInstance();
-        Project project = this.getProject(db, args[0]);
-        Employee employee = this.getEmployee(db, args[1]);
+        String projectID = args[0];
+        String employeeID = args[1];
 
-        boolean hasAssignedPM = project.assignPM(employee);
+        this.wrapExceptions(() -> this.application.assignPM(projectID, employeeID))
+            .outputOnSuccess(() -> "Project manager assigned.")
+            .outputOnError(Exception::getMessage)
+            .run();
 
-        if (hasAssignedPM) {
-            this.writeOutput("Employee assigned as PM.");
-            return;
-        }
-        throw new CommandException("Project manager role required.");
+    }
+
+    // String inputContext
+    public void cmdSwitchContext(String[] args) throws CommandException {
+        assertArgumentsValid(args.length, 1);
+
+        String context = args[0];
+
+        this.wrapExceptions(() -> Application.init(context))
+            .outputOnSuccess(() -> "Context switched.")
+            .outputOnError(Exception::getMessage)
+            .run();
     }
 
 }
