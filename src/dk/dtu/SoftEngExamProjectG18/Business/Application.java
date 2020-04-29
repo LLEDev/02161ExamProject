@@ -153,6 +153,18 @@ public class Application {
      * Actions
      */
 
+    public void addEmployee(String ID, String name) {
+        Employee employee = new Employee(ID, name);
+
+        this.db.getEmployees().put(employee.getID(), employee);
+    }
+
+    public void addEmployee(String ID, String name, int weeklyActivityCap) {
+        Employee employee = new Employee(ID, name, weeklyActivityCap);
+
+        this.db.getEmployees().put(employee.getID(), employee);
+    }
+
     public void assignEmployeeToActivity(String employeeID, String projectID, int activityID) throws IllegalArgumentException {
         Project project = this.getProject(projectID);
         this.assertSignedInEmployeePM(project);
@@ -268,6 +280,10 @@ public class Application {
 
         activity.setStartWeek(start);
         activity.setEndWeek(end);
+    }
+
+    public void setContext(InputContext ic) {
+        this.context = ic;
     }
 
     public void setHours(String projectID, int activityID, Date date, int setHours) throws IllegalArgumentException {
