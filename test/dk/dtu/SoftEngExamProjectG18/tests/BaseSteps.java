@@ -14,13 +14,16 @@ abstract public class BaseSteps {
 
     protected void callCmd(InputContext context, ThrowingFunction<String[]> tf, String[] args) {
         AtomicReference<Exception> atomicException = new AtomicReference<>();
-        String response = null;
+        CommandException commandException = null;
+        String response;
 
         Consumer<Exception> exceptionHook = atomicException::set;
         context.addCommandExceptionHook(exceptionHook);
 
         try {
             tf.apply(args);
+        } catch (CommandException ce) {
+            commandException = ce;
         } catch (Exception e) {
             handleNonCommandException(e);
             return;
@@ -28,13 +31,15 @@ abstract public class BaseSteps {
 
         context.removeCommandExceptionHook(exceptionHook);
 
-        Exception exception = atomicException.get();
-        if(exception != null && !(exception instanceof CommandException)) {
-            handleNonCommandException(exception);
-            return;
-        }
+        if(commandException == null) {
+            Exception exception = atomicException.get();
+            if (exception != null && !(exception instanceof CommandException)) {
+                handleNonCommandException(exception);
+                return;
+            }
 
-        CommandException commandException = (CommandException) exception;
+            commandException = (CommandException) exception;
+        }
 
         response = context.getOutput();
         context.resetOutput();
