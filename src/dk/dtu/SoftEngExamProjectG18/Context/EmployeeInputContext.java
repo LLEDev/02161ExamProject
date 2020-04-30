@@ -20,7 +20,6 @@ public class EmployeeInputContext extends InputContext {
     protected ActionMap triggers = ActionMap.build(super.getTriggers(), new Action[]{
         new Action("hours set", new String[]{"projectID", "activityID", "date", "hours"}, this::cmdSetHours),
         new Action("hours submit", new String[]{"projectID", "activityID", "date", "hours"}, this::cmdSubmitHours),
-        new Action("project activity complete", new String[]{"projectID", "activityID"}, this::cmdCompleteActivity),
         new Action("project create", new String[]{"name", "billable"}, this::cmdCreateProject),
         new Action("request assistance", new String[]{"projectID", "activityID", "employeeID"}, this::cmdRequestAssistance),
         new Action("request ooo", new String[]{"type", "start", "end"}, this::cmdRequestOutOfOffice),
@@ -62,16 +61,6 @@ public class EmployeeInputContext extends InputContext {
     /*
         Commands
      */
-
-    // Command arguments: String projectID, int activityID
-    public void cmdCompleteActivity(String[] args) throws CommandException {
-        this.assertArgumentsValid(args.length, 2);
-
-        this.wrapExceptions(() -> Application.getInstance().finishActivity(args[0], Integer.parseInt(args[1])))
-            .outputOnSuccess(() -> "Activity completed.")
-            .outputOnError(e -> "An error occurred: " + e.getMessage())
-            .run();
-    }
 
     // Command arguments: String name, boolean isBillable
     public void cmdCreateProject(String[] args) throws CommandException {
