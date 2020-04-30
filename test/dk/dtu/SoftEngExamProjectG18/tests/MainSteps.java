@@ -40,7 +40,7 @@ public class MainSteps {
     protected static PrintStream outSource = new PrintStream(outputTo);
 
     @When("a user boots the application with the following arguments")
-    public void aUserBootsTheApplicationWithTheFollowingArguments(List<String> args) throws Exception {
+    public void aUserBootsTheApplicationWithTheFollowingArguments(List<String> args) {
         Main.setInSource(inSource);
         Main.setOutSource(outSource);
         Main.main(args.toArray(String[]::new));

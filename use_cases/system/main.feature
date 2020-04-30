@@ -37,7 +37,7 @@ Feature: Run Main application
         When a user boots the application with the following arguments
             | ABCD |
             | PM |
-        Then "This employee is not registered in the system" is a part of the output
+        Then "Given employee does not exist" is a part of the output
         And "Welcome, Hans Hansen" is not a part of the output
         Then the output will be reset
 
