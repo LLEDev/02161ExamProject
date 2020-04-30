@@ -7,6 +7,7 @@ import dk.dtu.SoftEngExamProjectG18.Context.ProjectManagerInputContext;
 import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
+import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -128,15 +129,15 @@ public class ProjectSteps extends BaseSteps {
         this.callCmd(ic, ic::cmdFinishActivity, new String[]{ testHolder.getProject().getID(), id });
     }
 
-    @Given("the activity with ID {string} has an estimated duration of {string} weeks and registered {string} hours spent")
-    public void theActivityWithIDHasAnEstimatedDurationOfWeeksAndRegisteredHoursSpent(String id, String weeks, String hours) {
+    @Given("the activity with ID {string} has an estimated duration of {string} weeks and registered {string} hours spent on date {string}")
+    public void theActivityWithIDHasAnEstimatedDurationOfWeeksAndRegisteredHoursSpentOnDate(String id, String weeks, String hours, String date) throws ParseException {
         Application application = Application.getInstance();
         TestHolder testHolder = TestHolder.getInstance();
 
         Project project = testHolder.getProject();
         Activity activity = project.getActivity(Integer.parseInt(id));
 
-        Date today = new Date();
+        Date today = DateFormatter.parseDate(date);
         Date newDate = new Date(today.getTime());
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(newDate);
