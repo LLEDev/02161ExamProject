@@ -41,6 +41,8 @@ public class Project implements Extractable<Project> {
         if(name.length() == 0) {
             throw new IllegalArgumentException(String.format("The given project name, %s, is not valid.", name));
         }
+
+        this.name = name;
     }
 
     public Project(int nextID, String name) throws IllegalArgumentException {
