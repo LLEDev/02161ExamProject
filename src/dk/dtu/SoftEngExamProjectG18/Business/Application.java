@@ -1,11 +1,10 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
-import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
-import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
-import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
-import dk.dtu.SoftEngExamProjectG18.Exceptions.AccessDeniedException;
+import dk.dtu.SoftEngExamProjectG18.Input.InputContext;
+import dk.dtu.SoftEngExamProjectG18.Input.Enums.InputContextType;
+import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
+import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
-import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
 import java.util.*;
 import java.util.stream.Collectors;

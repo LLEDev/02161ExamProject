@@ -1,13 +1,13 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
-import dk.dtu.SoftEngExamProjectG18.Context.EmployeeInputContext;
-import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
-import dk.dtu.SoftEngExamProjectG18.Context.ProjectManagerInputContext;
+import dk.dtu.SoftEngExamProjectG18.Input.EmployeeInputContext;
+import dk.dtu.SoftEngExamProjectG18.Input.InputContext;
+import dk.dtu.SoftEngExamProjectG18.Input.ProjectManagerInputContext;
 import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
-import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.Business.EmployeeActivityIntermediate;
+import dk.dtu.SoftEngExamProjectG18.General.Util.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;

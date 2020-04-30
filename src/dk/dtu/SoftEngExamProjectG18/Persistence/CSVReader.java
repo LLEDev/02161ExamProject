@@ -4,8 +4,8 @@ import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
-import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
+import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
+import dk.dtu.SoftEngExamProjectG18.Business.EmployeeActivityIntermediate;
 
 import java.io.BufferedReader;
 import java.io.IOException;

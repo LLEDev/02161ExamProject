@@ -1,7 +1,7 @@
 package dk.dtu.SoftEngExamProjectG18.tests.Util;
 
-import dk.dtu.SoftEngExamProjectG18.Enum.CommandExceptionReason;
-import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.Input.Enums.CommandExceptionReason;
+import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
 
 public class CmdResponse {
 

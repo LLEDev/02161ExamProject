@@ -1,8 +1,7 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
-import dk.dtu.SoftEngExamProjectG18.Interfaces.Extractable;
-import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
-import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractable;
+import dk.dtu.SoftEngExamProjectG18.General.Util.DateFormatter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

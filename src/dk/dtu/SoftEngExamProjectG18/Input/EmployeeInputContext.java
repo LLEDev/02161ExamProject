@@ -1,12 +1,12 @@
-package dk.dtu.SoftEngExamProjectG18.Context;
+package dk.dtu.SoftEngExamProjectG18.Input;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
-import dk.dtu.SoftEngExamProjectG18.Interfaces.ThrowingFunctionWithoutArgs;
-import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
-import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
-import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
-import dk.dtu.SoftEngExamProjectG18.Util.Table;
+import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
+import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
+import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.General.Util.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Util.Table;
 
 import java.text.ParseException;
 import java.util.*;

@@ -1,9 +1,9 @@
-package dk.dtu.SoftEngExamProjectG18.Context;
+package dk.dtu.SoftEngExamProjectG18.Input;
 
-import dk.dtu.SoftEngExamProjectG18.Exceptions.AccessDeniedException;
-import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
-import dk.dtu.SoftEngExamProjectG18.Interfaces.ThrowingFunctionWithoutArgs;
-import dk.dtu.SoftEngExamProjectG18.Interfaces.ZeroArgumentFunction;
+import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
+import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
+import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ZeroArgumentFunction;
 
 import java.util.ArrayList;
 import java.util.Arrays;

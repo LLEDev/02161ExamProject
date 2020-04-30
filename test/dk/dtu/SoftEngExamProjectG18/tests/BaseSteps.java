@@ -1,8 +1,8 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
-import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
-import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
-import dk.dtu.SoftEngExamProjectG18.Interfaces.ThrowingFunction;
+import dk.dtu.SoftEngExamProjectG18.Input.InputContext;
+import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunction;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.CmdResponse;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import org.junit.Assert;

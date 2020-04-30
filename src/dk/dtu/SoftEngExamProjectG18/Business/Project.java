@@ -1,7 +1,7 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
-import dk.dtu.SoftEngExamProjectG18.Exceptions.AccessDeniedException;
-import dk.dtu.SoftEngExamProjectG18.Interfaces.Extractable;
+import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
+import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractable;
 
 import java.util.*;
 

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
-import dk.dtu.SoftEngExamProjectG18.Interfaces.Extractable;
+import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
+import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractable;
 
 public class OutOfOfficeActivity implements Extractable<OutOfOfficeActivity> {
 

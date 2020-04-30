@@ -1,12 +1,12 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
-import dk.dtu.SoftEngExamProjectG18.Context.EmployeeInputContext;
-import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
+import dk.dtu.SoftEngExamProjectG18.Input.EmployeeInputContext;
+import dk.dtu.SoftEngExamProjectG18.Input.InputContext;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
-import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.Input.Enums.InputContextType;
+import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;

@@ -1,11 +1,11 @@
-package dk.dtu.SoftEngExamProjectG18.Context;
+package dk.dtu.SoftEngExamProjectG18.Input;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
-import dk.dtu.SoftEngExamProjectG18.Enum.CommandExceptionReason;
-import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
-import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
-import dk.dtu.SoftEngExamProjectG18.Interfaces.ThrowingFunctionWithoutArgs;
-import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.Input.Enums.CommandExceptionReason;
+import dk.dtu.SoftEngExamProjectG18.Input.Enums.InputContextType;
+import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
+import dk.dtu.SoftEngExamProjectG18.General.Util.DateFormatter;
 
 import java.text.ParseException;
 import java.util.ArrayList;

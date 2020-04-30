@@ -1,4 +1,4 @@
-package dk.dtu.SoftEngExamProjectG18.Exceptions;
+package dk.dtu.SoftEngExamProjectG18.Business.Exceptions;
 
 public class AccessDeniedException extends Exception {
 

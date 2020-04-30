@@ -1,6 +1,6 @@
-package dk.dtu.SoftEngExamProjectG18.Util;
+package dk.dtu.SoftEngExamProjectG18.General.Util;
 
-import dk.dtu.SoftEngExamProjectG18.Interfaces.Extractable;
+import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractable;
 
 import java.util.ArrayList;
 import java.util.HashMap;

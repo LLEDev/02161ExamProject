@@ -1,8 +1,6 @@
-package dk.dtu.SoftEngExamProjectG18.Context;
+package dk.dtu.SoftEngExamProjectG18.Input;
 
-import dk.dtu.SoftEngExamProjectG18.Interfaces.ThrowingFunction;
-
-import java.util.ArrayList;
+import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunction;
 
 public class Action {
 

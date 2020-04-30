@@ -1,6 +1,5 @@
 package dk.dtu.SoftEngExamProjectG18.Persistence;
 
-import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
 

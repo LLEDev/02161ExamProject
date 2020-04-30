@@ -1,4 +1,4 @@
-package dk.dtu.SoftEngExamProjectG18.Interfaces;
+package dk.dtu.SoftEngExamProjectG18.General.Interfaces;
 
 @FunctionalInterface
 public interface ThrowingFunction<T> {

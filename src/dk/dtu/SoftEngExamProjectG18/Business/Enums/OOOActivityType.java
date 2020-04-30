@@ -1,4 +1,4 @@
-package dk.dtu.SoftEngExamProjectG18.Enum;
+package dk.dtu.SoftEngExamProjectG18.Business.Enums;
 
 public enum OOOActivityType {
     Vacation,

@@ -1,4 +1,4 @@
-package dk.dtu.SoftEngExamProjectG18.Util;
+package dk.dtu.SoftEngExamProjectG18.General.Util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

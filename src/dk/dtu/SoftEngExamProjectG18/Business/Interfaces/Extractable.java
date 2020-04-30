@@ -1,4 +1,4 @@
-package dk.dtu.SoftEngExamProjectG18.Interfaces;
+package dk.dtu.SoftEngExamProjectG18.Business.Interfaces;
 
 import java.util.ArrayList;
 import java.util.HashMap;
