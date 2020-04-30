@@ -1,9 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
-import dk.dtu.SoftEngExamProjectG18.Input.EmployeeInputContext;
-import dk.dtu.SoftEngExamProjectG18.Input.InputContext;
-import dk.dtu.SoftEngExamProjectG18.Input.ProjectManagerInputContext;
 import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
 import dk.dtu.SoftEngExamProjectG18.Business.EmployeeActivityIntermediate;
@@ -23,7 +20,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class ProjectSteps extends BaseSteps {
+public class ProjectSteps extends StepsBase {
 
     /*
         Create project(s) methods
@@ -31,10 +28,9 @@ public class ProjectSteps extends BaseSteps {
 
     @Given("that there is a project with name {string}")
     public void thatThereIsAProjectWithName(String name) {
-        Application application = Application.getInstance();
-        TestHolder testHolder = TestHolder.getInstance();
-
-        testHolder.setProject(application.createProject(name, true));
+        TestHolder.getInstance().setProject(
+            Application.getInstance().createProject(name, true)
+        );
     }
 
     @Given("there are projects with names")
@@ -46,6 +42,7 @@ public class ProjectSteps extends BaseSteps {
         }
     }
 
+    // TODO: Refactor
     @And("there is an activity with ID {string}")
     public void thereIsAnActivityWithID(String id) {
         TestHolder testHolder = TestHolder.getInstance();
@@ -60,6 +57,7 @@ public class ProjectSteps extends BaseSteps {
         project.getActivities().put(ID, activity);
     }
 
+    // TODO: Refactor
     @And("the project has the following activities")
     public void theProjectHasTheFollowingActivities(List<List<String>> activities) throws ParseException {
         TestHolder th = TestHolder.getInstance();
@@ -90,10 +88,7 @@ public class ProjectSteps extends BaseSteps {
 
     @When("the employee creates a project with name {string}")
     public void theEmployeeCreatesAProjectWithName(String name) {
-        Application application = Application.getInstance();
-        EmployeeInputContext input = (EmployeeInputContext) application.getContext();
-        String[] projectArguments = new String[] {name, "false"};
-        this.callCmd(input, input::cmdCreateProject, projectArguments);
+        this.wrap(() -> Application.getInstance().createProject(name, true));
     }
 
     /*
@@ -102,33 +97,28 @@ public class ProjectSteps extends BaseSteps {
 
     @When("the employee adds an activity with name {string} to the project")
     public void theEmployeeAddsAnActivityWithNameToTheProject(String name) {
-        TestHolder testHolder = TestHolder.getInstance();
-        ProjectManagerInputContext ic = new ProjectManagerInputContext();
-        this.callCmd(ic, ic::cmdCreateActivity, new String[]{ testHolder.getProject().getID(), name });
+        String projectID = TestHolder.getInstance().getProject().getID();
+        this.wrap(() -> Application.getInstance().createActivity(projectID, name));
     }
 
     @When("the actor assigns the employee with initials {string} as the project manager of the project")
     public void theActorAssignsTheEmployeeWithInitialsAsTheProjectManagerOfTheProject(String initials) {
-        Application application = Application.getInstance();
-        TestHolder testHolder = TestHolder.getInstance();
-        InputContext input = application.getContext();
-        this.callCmd(input, input::cmdAssignPM, new String[]{ testHolder.getProject().getID(), initials });
+        String projectID = TestHolder.getInstance().getProject().getID();
+        this.wrap(() -> Application.getInstance().assignPM(projectID, initials));
     }
 
     @And("the project does not have a project manager")
     public void theProjectDoesNotHaveAProjectManager() {
-        TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.getProject();
-        project.setPM(null);
+        TestHolder.getInstance().getProject().setPM(null);
     }
 
     @When("the employee finishes the activity with ID {string} in the project")
-    public void theEmployeeFinishesTheActivityWithIDInTheProject(String id) {
-        TestHolder testHolder = TestHolder.getInstance();
-        ProjectManagerInputContext ic = new ProjectManagerInputContext();
-        this.callCmd(ic, ic::cmdFinishActivity, new String[]{ testHolder.getProject().getID(), id });
+    public void theEmployeeFinishesTheActivityWithIDInTheProject(String activityID) {
+        String projectID = TestHolder.getInstance().getProject().getID();
+        this.wrap(() -> Application.getInstance().finishActivity(projectID, Integer.parseInt(activityID)));
     }
 
+    // TODO: Refactor
     @Given("the activity with ID {string} has an estimated duration of {string} weeks and registered {string} hours spent on date {string}")
     public void theActivityWithIDHasAnEstimatedDurationOfWeeksAndRegisteredHoursSpentOnDate(String id, String weeks, String hours, String date) throws ParseException {
         Application application = Application.getInstance();
@@ -160,31 +150,24 @@ public class ProjectSteps extends BaseSteps {
 
     @Then("the activity with ID {string} is marked as finished in the project")
     public void theActivityWithIDIsMarkedAsFinishedInTheProject(String id) {
-        TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.getProject();
-        Activity activity = project.getActivity(Integer.parseInt(id));
-        assertTrue(activity.isDone());
+        Project project = TestHolder.getInstance().getProject();
+        assertTrue(project.getActivity(Integer.parseInt(id)).isDone());
     }
 
     @Then("there is a project with ID {string} and name {string}")
     public void thereIsAProjectWithIDAndName(String id, String name) {
-        Application application = Application.getInstance();
-        Project project = application.getProject(id);
-        assertEquals(project.getName(), name);
+        assertEquals(Application.getInstance().getProject(id).getName(), name);
     }
 
     @Then("the project contains an activity with ID {string}")
     public void theProjectContainsAnActivityWithID(String id) {
-        TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.getProject();
-        Activity activity = project.getActivity(Integer.parseInt(id));
-        assertNotNull(activity);
+        Project project = TestHolder.getInstance().getProject();
+        assertNotNull(project.getActivity(Integer.parseInt(id)));
     }
 
     @Then("the project has a project manager with initials {string}")
     public void theProjectHasAProjectManagerWithInitials(String initials) {
-        TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.getProject();
+        Project project = TestHolder.getInstance().getProject();
         assertNotNull(project.getPM());
         assertEquals(project.getPM().getID(), initials);
     }

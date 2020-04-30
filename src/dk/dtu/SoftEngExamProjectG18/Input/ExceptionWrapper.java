@@ -1,5 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.Input;
 
+import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.General.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
@@ -17,20 +18,18 @@ public class ExceptionWrapper {
         IllegalArgumentException.class,
     };
 
-    protected ArrayList<Consumer<Exception>> exceptionHooks;
-    protected InputContext context;
+    protected ArrayList<Consumer<Exception>> exceptionHooks = new ArrayList<>();
     protected ArrayList<Function<CommandException, String>> onErrorOutputs = new ArrayList<>();
     protected ArrayList<ZeroArgumentFunction<String>> onSuccessOutputs = new ArrayList<>();
     protected ThrowingFunctionWithoutArgs tf;
 
-    public ExceptionWrapper(
-        InputContext context,
-        ThrowingFunctionWithoutArgs tf,
-        ArrayList<Consumer<Exception>> exceptionHooks
-    ) {
-        this.exceptionHooks = exceptionHooks;
-        this.context = context;
+    public ExceptionWrapper(ThrowingFunctionWithoutArgs tf) {
         this.tf = tf;
+    }
+
+    public ExceptionWrapper(ThrowingFunctionWithoutArgs tf, ArrayList<Consumer<Exception>> exceptionHooks) {
+        this(tf);
+        this.exceptionHooks = exceptionHooks;
     }
 
     public ExceptionWrapper outputOnError(Function<CommandException, String> callable) {
@@ -46,13 +45,15 @@ public class ExceptionWrapper {
     }
 
     public void run() {
+        InputContext context = Application.getInstance().getContext();
+
         try {
             this.tf.apply();
-            this.onSuccessOutputs.forEach(consumer -> this.context.writeOutput(consumer.apply()));
+            this.onSuccessOutputs.forEach(consumer -> context.writeOutput(consumer.apply()));
         } catch (Exception e) {
             if(Arrays.asList(CHECKED_EXCEPTIONS).contains(e.getClass())) {
                 CommandException ce = new CommandException(e.getMessage());
-                this.onErrorOutputs.forEach(consumer -> this.context.writeOutput(consumer.apply(ce)));
+                this.onErrorOutputs.forEach(consumer -> context.writeOutput(consumer.apply(ce)));
                 this.exceptionHooks.forEach(consumer -> consumer.accept(ce));
             } else {
                 this.exceptionHooks.forEach(consumer -> consumer.accept(e));

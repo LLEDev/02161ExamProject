@@ -80,7 +80,7 @@ abstract public class InputContext {
     }
 
     public ExceptionWrapper wrapExceptions(ThrowingFunctionWithoutArgs tf) {
-        return new ExceptionWrapper(this, tf, this.onExceptionHooks);
+        return new ExceptionWrapper(tf, this.onExceptionHooks);
     }
 
     public void writeOutput(String s) {

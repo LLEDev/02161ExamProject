@@ -68,13 +68,14 @@ public class Application {
      * CRUD Actions
      */
 
-    public Activity createActivity(String projectID, String activityID) throws AccessDeniedException {
+    public Activity createActivity(String projectID, String name) throws AccessDeniedException {
         Project project = this.getProject(projectID);
         project.assertPM(this.db.getSignedInEmployee());
 
-        return new Activity(activityID, project);
+        return new Activity(name, project);
     }
 
+    // TODO: Access control?
     public Employee createEmployee(String ID, String name) {
         Employee employee = new Employee(ID, name);
 
@@ -83,6 +84,7 @@ public class Application {
         return employee;
     }
 
+    // TODO: Access control?
     public Employee createEmployee(String ID, String name, int weeklyActivityCap) {
         Employee employee = new Employee(ID, name, weeklyActivityCap);
 
@@ -91,6 +93,7 @@ public class Application {
         return employee;
     }
 
+    // TODO: Access control?
     public Project createProject(String name, boolean isBillable) throws IllegalArgumentException {
         int year = (new GregorianCalendar()).get(Calendar.YEAR);
         int nextID = this.db.incrementNextProjectID(year);
@@ -101,6 +104,7 @@ public class Application {
         return project;
     }
 
+    // TODO: Access control?
     public Project createProject(String name, Date createdAt, boolean isBillable, Employee PM, boolean setupActivity) throws IllegalArgumentException {
         int year = (new GregorianCalendar()).get(Calendar.YEAR);
         int nextID = this.db.incrementNextProjectID(year);
