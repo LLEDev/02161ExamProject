@@ -6,18 +6,28 @@ import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
-import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Application {
 
     protected static Application instance;
 
     public static void init(String context) throws IllegalArgumentException {
-        InputContextType ic = InputContextType.valueOf(context);
+        for(InputContextType ict : InputContextType.values()) {
+            if(context.equalsIgnoreCase(ict.toString())) {
+                init(ict);
+                return;
+            }
+        }
 
-        init(ic);
+        throw new IllegalArgumentException(
+            String.format(
+                "Given context type is not valid. Valid values are: %s.",
+                Arrays.stream(InputContextType.values()).map(Enum::toString).collect(Collectors.joining(", "))
+            )
+        );
     }
 
     public static void init(InputContextType contextType) throws IllegalArgumentException {
@@ -38,6 +48,18 @@ public class Application {
 
     protected InputContext context;
     protected CompanyDB db = new CompanyDB();
+
+    /*
+     * Protected methods
+     */
+
+    protected CompanyDB getDB() {
+        return this.db;
+    }
+
+    protected void setDB(CompanyDB db) {
+        this.db = db;
+    }
 
     public Application(InputContextType ict) {
         this.context = InputContext.getContext(ict);
@@ -226,5 +248,11 @@ public class Application {
 
     public void submitHours(String projectID, int activityID, Date date, int addedHours) throws AccessDeniedException {
         this.helperSetSubmitHours(projectID, activityID, date, addedHours, false);
+    }
+
+    public void switchContext(String newContext) throws IllegalArgumentException {
+        CompanyDB db = this.getDB(); // Save earlier DB
+        Application.init(newContext);
+        Application.getInstance().setDB(db);
     }
 }

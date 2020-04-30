@@ -13,7 +13,6 @@ import java.util.*;
 
 public class Main {
 
-    protected static Application application = null;
     protected static InputStream inputSource = System.in;
     protected static PrintStream outSource = System.out;
 
@@ -98,7 +97,7 @@ public class Main {
     }
 
     protected static void runAction(Action action, ArrayList<String> args) {
-        InputContext inputContext = application.getContext();
+        InputContext inputContext = Application.getInstance().getContext();
 
         try {
             action.run(args.toArray(String[]::new));
@@ -114,7 +113,6 @@ public class Main {
         for(InputContextType type : InputContextType.values()) {
             if(context.equalsIgnoreCase(type.toString())) {
                 Application.init(type);
-                application = Application.getInstance();
                 return true;
             }
         }
@@ -125,7 +123,7 @@ public class Main {
 
     protected static boolean signIn(String ID) {
         try {
-            application.setSignedInEmployee(ID);
+            Application.getInstance().setSignedInEmployee(ID);
             return true;
         } catch (IllegalArgumentException e) {
             outSource.println("Error: " + e.getMessage());
@@ -164,7 +162,7 @@ public class Main {
 
     protected static void help() {
         ArrayList<String> usages = new ArrayList<>();
-        for(Action action : application.getContext().getTriggers().values()) {
+        for(Action action : Application.getInstance().getContext().getTriggers().values()) {
             usages.add(action.getFullSignature());
         }
 
@@ -198,6 +196,8 @@ public class Main {
             return;
         }
 
+        Application application = Application.getInstance();
+
         outSource.println("Welcome, " + application.getSignedInEmployee().getName() + ". You are now signed in as (and acting as) " + application.getContext().getSingularContextName() + ".");
         outSource.println("Type 'help' to view available commands within this context.");
         outSource.println("Multi word arguments can be passed using \"quotes\". Dates are parsed/presented using format yyyy-MM-dd.");
@@ -223,7 +223,7 @@ public class Main {
             inputVariants.add(inputVariants.get(inputVariants.size() - 1) + " " + input[i]);
         }
 
-        InputContext inputContext = application.getContext();
+        InputContext inputContext = Application.getInstance().getContext();
 
         for(int i = 0; i < inputVariants.size(); i++) {
             String variant = inputVariants.get(i).toLowerCase();

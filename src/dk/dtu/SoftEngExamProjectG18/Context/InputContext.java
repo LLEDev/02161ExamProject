@@ -111,7 +111,7 @@ abstract public class InputContext {
 
         String context = args[0];
 
-        this.wrapExceptions(() -> Application.init(context))
+        this.wrapExceptions(() -> Application.getInstance().switchContext(context))
             .outputOnSuccess(() -> "Context switched.")
             .outputOnError(Exception::getMessage)
             .run();
