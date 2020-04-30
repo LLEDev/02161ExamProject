@@ -3,7 +3,6 @@ package dk.dtu.SoftEngExamProjectG18.Input;
 import dk.dtu.SoftEngExamProjectG18.Business.*;
 import dk.dtu.SoftEngExamProjectG18.General.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
-import dk.dtu.SoftEngExamProjectG18.Business.EmployeeActivityIntermediate;
 import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.General.Table;
 
