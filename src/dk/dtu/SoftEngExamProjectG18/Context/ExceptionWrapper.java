@@ -1,28 +1,45 @@
 package dk.dtu.SoftEngExamProjectG18.Context;
 
+import dk.dtu.SoftEngExamProjectG18.Exceptions.AccessDeniedException;
+import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Interfaces.ThrowingFunctionWithoutArgs;
+import dk.dtu.SoftEngExamProjectG18.Interfaces.ZeroArgumentFunction;
 
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
+import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ExceptionWrapper {
 
-    protected ArrayList<Function<Exception, String>> onErrorOutputs = new ArrayList<>();
-    protected ArrayList<Callable<String>> onSuccessOutputs = new ArrayList<>();
+    protected static final Class[] CHECKED_EXCEPTIONS = new Class[] {
+        AccessDeniedException.class,
+        IllegalArgumentException.class,
+    };
+
+    protected ArrayList<Consumer<Exception>> exceptionHooks;
+    protected InputContext context;
+    protected ArrayList<Function<CommandException, String>> onErrorOutputs = new ArrayList<>();
+    protected ArrayList<ZeroArgumentFunction<String>> onSuccessOutputs = new ArrayList<>();
     protected ThrowingFunctionWithoutArgs tf;
 
-    public ExceptionWrapper(ThrowingFunctionWithoutArgs tf) {
+    public ExceptionWrapper(
+        InputContext context,
+        ThrowingFunctionWithoutArgs tf,
+        ArrayList<Consumer<Exception>> exceptionHooks
+    ) {
+        this.exceptionHooks = exceptionHooks;
+        this.context = context;
         this.tf = tf;
     }
 
-    public ExceptionWrapper outputOnError(Function<Exception, String> callable) {
+    public ExceptionWrapper outputOnError(Function<CommandException, String> callable) {
         this.onErrorOutputs.add(callable);
 
         return this;
     }
 
-    public ExceptionWrapper outputOnSuccess(Callable<String> callable) {
+    public ExceptionWrapper outputOnSuccess(ZeroArgumentFunction<String> callable) {
         this.onSuccessOutputs.add(callable);
 
         return this;
@@ -30,9 +47,16 @@ public class ExceptionWrapper {
 
     public void run() {
         try {
-
-        } catch(Exception e) {
-
+            this.tf.apply();
+            this.onSuccessOutputs.forEach(consumer -> this.context.writeOutput(consumer.apply()));
+        } catch (Exception e) {
+            if(Arrays.asList(CHECKED_EXCEPTIONS).contains(e.getClass())) {
+                CommandException ce = new CommandException(e.getMessage());
+                this.onErrorOutputs.forEach(consumer -> this.context.writeOutput(consumer.apply(ce)));
+                this.exceptionHooks.forEach(consumer -> consumer.accept(ce));
+            } else {
+                this.exceptionHooks.forEach(consumer -> consumer.accept(e));
+            }
         }
     }
 

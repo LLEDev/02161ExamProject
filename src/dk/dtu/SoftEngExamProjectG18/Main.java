@@ -3,15 +3,12 @@ package dk.dtu.SoftEngExamProjectG18;
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Context.Action;
 import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
-import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.CommandExceptionReason;
 import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
-import dk.dtu.SoftEngExamProjectG18.Util.CSVReader;
+import dk.dtu.SoftEngExamProjectG18.Persistence.CSVReader;
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
 
 public class Main {
@@ -100,7 +97,7 @@ public class Main {
         return false;
     }
 
-    protected static void runAction(Action action, ArrayList<String> args) throws Exception {
+    protected static void runAction(Action action, ArrayList<String> args) {
         InputContext inputContext = application.getContext();
 
         try {
@@ -113,23 +110,27 @@ public class Main {
         inputContext.resetOutput();
     }
 
-    protected static void setupContext(InputContextType ict) {
-        Application.init(ict);
-        application = Application.getInstance();
-    }
-
-    protected static boolean signIn(String ID, String context) {
+    protected static boolean setupContext(String context) {
         for(InputContextType type : InputContextType.values()) {
             if(context.equalsIgnoreCase(type.toString())) {
-                setupContext(type);
-                application.setSignedInEmployee(ID);
-
-                break;
+                Application.init(type);
+                application = Application.getInstance();
+                return true;
             }
         }
 
         outSource.println("This context is not available.");
         return false;
+    }
+
+    protected static boolean signIn(String ID) {
+        try {
+            application.setSignedInEmployee(ID);
+            return true;
+        } catch (IllegalArgumentException e) {
+            outSource.println("Error: " + e.getMessage());
+            return false;
+        }
     }
 
     protected static String[] splitInput(String input) {
@@ -187,15 +188,13 @@ public class Main {
         Main
      */
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         if(args.length < 2) {
             outSource.println("Usage: java -jar 02161ExamProject {Employee Initials} {Context=Emp/PM)} [Data folder/N]");
             return;
         }
 
-        boolean dataLoad = args.length >= 3 ? loadData(args[2]) : loadData("");
-
-        if(!dataLoad || !signIn(args[0], args[1])) {
+        if(!setupContext(args[1]) || !(args.length >= 3 ? loadData(args[2]) : loadData("")) || !signIn(args[0])) {
             return;
         }
 
@@ -212,7 +211,7 @@ public class Main {
         } catch(IllegalStateException ignored) {} // Thrown when quitting
     }
 
-    public static void redirectInput(String[] input) throws Exception {
+    public static void redirectInput(String[] input) {
         if(input.length == 0 || redirectBasicInput(input)) {
             return;
         }

@@ -8,6 +8,8 @@ import dk.dtu.SoftEngExamProjectG18.Interfaces.ThrowingFunctionWithoutArgs;
 import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 abstract public class InputContext {
 
@@ -25,12 +27,17 @@ abstract public class InputContext {
         return new EmployeeInputContext();
     }
 
-    protected Application application = Application.getInstance();
+    protected Application application;
+    public ArrayList<Consumer<Exception>> onExceptionHooks = new ArrayList<>();
     protected String output = "";
     protected ActionMap triggers = ActionMap.build(new Action[]{
         new Action("project assign pm", new String[]{"projectID", "PMID"}, this::cmdAssignPM),
         new Action("switch context", new String[]{"contextType"}, this::cmdSwitchContext),
     });
+
+    public void init() {
+         this.application = Application.getInstance();
+    }
 
 
     public void assertArgumentsValid(int argsLength, int requiredLength) throws CommandException {
@@ -65,12 +72,20 @@ abstract public class InputContext {
         return this.triggers;
     }
 
+    public void addCommandExceptionHook(Consumer<Exception> hook) {
+        this.onExceptionHooks.add(hook);
+    }
+
+    public void removeCommandExceptionHook(Consumer<Exception> hook) {
+        this.onExceptionHooks.remove(hook);
+    }
+
     public void resetOutput() {
         this.output = "";
     }
 
     public ExceptionWrapper wrapExceptions(ThrowingFunctionWithoutArgs tf) {
-        return new ExceptionWrapper(tf);
+        return new ExceptionWrapper(this, tf, this.onExceptionHooks);
     }
 
     public void writeOutput(String s) {

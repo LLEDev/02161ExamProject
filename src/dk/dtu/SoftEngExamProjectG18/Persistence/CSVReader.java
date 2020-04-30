@@ -1,9 +1,9 @@
-package dk.dtu.SoftEngExamProjectG18.Util;
+package dk.dtu.SoftEngExamProjectG18.Persistence;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Activity;
+import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 
@@ -95,8 +95,7 @@ public class CSVReader {
     }
 
     public static void readEmployees(Reader fileReader) {
-        /*
-        CompanyDB db = CompanyDB.getInstance();
+        Application application = Application.getInstance();
         ArrayList<HashMap<String, String>> employees = readFile(fileReader);
 
         for(HashMap<String, String> employee : employees) {
@@ -109,14 +108,14 @@ public class CSVReader {
             String name = employee.getOrDefault("Name", "");
             int cap = getInt(employee, "WeeklyActivityCap", 10);
 
-            db.getEmployees().put(ID, new Employee(ID, name, cap));
+            try {
+                application.createEmployee(ID, name, cap);
+            } catch (IllegalArgumentException ignored) {} // Ignore broken entries
         }
-        */
     }
 
     public static void readProjects(Reader fileReader) {
-        /*
-        CompanyDB db = CompanyDB.getInstance();
+        Application application = Application.getInstance();
         ArrayList<HashMap<String, String>> projects = readFile(fileReader);
 
         for(HashMap<String, String> project : projects) {
@@ -128,52 +127,51 @@ public class CSVReader {
             }
 
             boolean isBillable = getBoolean(project, "IsBillable", true);
-            Employee PM = db.getEmployee(project.getOrDefault("PM", null));
 
-            Project p = new Project(name, createdAt, isBillable, PM, false);
-            db.getProjects().put(p.getID(), p);
+            try {
+                Employee PM = application.getEmployee(project.getOrDefault("PM", null));
+                application.createProject(name, createdAt, isBillable, PM, false);
+            } catch (IllegalArgumentException ignored) {} // Ignore broken entries
         }
-        */
     }
 
     public static void readActivities(Reader fileReader) {
-        /*
-        CompanyDB db = CompanyDB.getInstance();
+        Application application = Application.getInstance();
         ArrayList<HashMap<String, String>> activities = readFile(fileReader);
 
         for(HashMap<String, String> activity : activities) {
             String projectID = activity.get("Project ID");
             String name = activity.get("Name");
 
-            Project project = db.getProject(projectID);
-            if(project == null) {
-                continue;
-            }
+            try {
+                Project project = application.getProject(projectID);
+                if (project == null) {
+                    continue;
+                }
 
-            Activity activityInstance = new Activity(name, project);
+                Activity activityInstance = new Activity(name, project);
 
-            Date start = getDateFromYearWeek(activity, "StartWeek");
-            Date end = getDateFromYearWeek(activity, "EndWeek");
-            if(start != null && end != null) {
-                activityInstance.setStartWeek(start);
-                activityInstance.setEndWeek(end);
-            }
+                Date start = getDateFromYearWeek(activity, "StartWeek");
+                Date end = getDateFromYearWeek(activity, "EndWeek");
+                if (start != null && end != null) {
+                    activityInstance.setStartWeek(start);
+                    activityInstance.setEndWeek(end);
+                }
 
-            activityInstance.setDone(getBoolean(activity, "IsDone", false));
+                activityInstance.setDone(getBoolean(activity, "IsDone", false));
+            } catch (IllegalArgumentException ignored) {} // Ignore broken entries
         }
-        */
     }
 
     public static void readOOOActivities(Reader fileReader) {
-        /*
-        CompanyDB db = CompanyDB.getInstance();
+        Application application = Application.getInstance();
         ArrayList<HashMap<String, String>> OOOActivities = readFile(fileReader);
 
         for (HashMap<String, String> entry : OOOActivities) {
             String employeeID = entry.get("Employee ID");
             String typeID = entry.get("Type");
 
-            Employee employee = db.getEmployee(employeeID);
+            Employee employee = application.getEmployee(employeeID);
             OOOActivityType type = getOOOActivityType(typeID);
             Date start = getDate(entry, "Start");
             Date end = getDate(entry, "End");
@@ -184,44 +182,43 @@ public class CSVReader {
 
             employee.addOOOActivity(type, start, end);
         }
-        */
     }
 
     public static void readWorkHours(Reader fileReader) {
-        /*
-        CompanyDB db = CompanyDB.getInstance();
+        Application application = Application.getInstance();
         ArrayList<HashMap<String, String>> workHours = readFile(fileReader);
 
         for (HashMap<String, String> entry : workHours) {
             String employeeID = entry.get("Employee ID"), projectID = entry.get("Project ID");
             int activityID = getInt(entry, "Activity ID", 0);
 
-            Employee employee = db.getEmployee(employeeID);
-            Project project = db.getProject(projectID);
+            try {
+                Employee employee = application.getEmployee(employeeID);
+                Project project = application.getProject(projectID);
 
-            if (employee == null || project == null) {
-                continue;
-            }
+                if (employee == null || project == null) {
+                    continue;
+                }
 
-            Activity activity = project.getActivity(activityID);
+                Activity activity = project.getActivity(activityID);
 
-            Date date = getDate(entry, "Date");
-            int minutes = getInt(entry, "Minutes", 0);
+                Date date = getDate(entry, "Date");
+                int minutes = getInt(entry, "Minutes", 0);
 
-            if (date == null || minutes < 0) {
-                continue;
-            }
+                if (date == null || minutes < 0) {
+                    continue;
+                }
 
-            HashMap<Integer, EmployeeActivityIntermediate> alreadyTrackedActivities = employee.getActivities().get(project.getID());
+                HashMap<Integer, EmployeeActivityIntermediate> alreadyTrackedActivities = employee.getActivities().get(project.getID());
 
-            EmployeeActivityIntermediate eai;
-            if(alreadyTrackedActivities != null && alreadyTrackedActivities.containsKey(activity.getID())) {
-                eai = alreadyTrackedActivities.get(activity.getID());
-            } else {
-                eai = new EmployeeActivityIntermediate(employee, activity);
-            }
-            eai.setMinutes(date, minutes);
+                EmployeeActivityIntermediate eai;
+                if (alreadyTrackedActivities != null && alreadyTrackedActivities.containsKey(activity.getID())) {
+                    eai = alreadyTrackedActivities.get(activity.getID());
+                } else {
+                    eai = new EmployeeActivityIntermediate(employee, activity);
+                }
+                eai.setMinutes(date, minutes);
+            } catch (IllegalArgumentException ignored) {} // Ignore broken entries
         }
-        */
     }
 }

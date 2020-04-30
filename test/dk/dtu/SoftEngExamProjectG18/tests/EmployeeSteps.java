@@ -1,12 +1,13 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
+import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Context.EmployeeInputContext;
 import dk.dtu.SoftEngExamProjectG18.Context.ProjectManagerInputContext;
 import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
+import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -28,20 +29,22 @@ public class EmployeeSteps extends BaseSteps {
     }
 
     @Given("the employee is the project manager for the project")
-    public void theEmployeeIsTheProjectManagerForTheProject() throws Exception {
-        this.theEmployeeWithInitialsIsTheProjectManagerOfTheProject(this.db.getSignedInEmployee().getID());
+    public void theEmployeeIsTheProjectManagerForTheProject() {
+        this.theEmployeeWithInitialsIsTheProjectManagerOfTheProject(Application.getInstance().getSignedInEmployee().getID());
     }
 
     @Given("the employee is assigned to the activity with ID {string}")
     public void theEmployeeIsAssignedToTheActivityWithID(String id) {
-        this.theEmployeeWithInitialsIsAssignedToTheActivityWithID(this.db.getSignedInEmployee().getID(), id);
+        this.theEmployeeWithInitialsIsAssignedToTheActivityWithID(Application.getInstance().getSignedInEmployee().getID(), id);
     }
 
     @And("there is an employee with initials {string}")
     public void thereIsAnEmployeeWithInitials(String employeeID) {
-        this.db.getEmployees().put(employeeID, new Employee(employeeID, employeeID));
-        this.db.setSignedInEmployee(employeeID);
-        this.application.setInputContext(new EmployeeInputContext());
+        Application application = Application.getInstance();
+
+        application.createEmployee(employeeID, employeeID);
+        application.setSignedInEmployee(employeeID);
+        application.setContext(new EmployeeInputContext());
     }
 
     @And("the following employees are given")
@@ -52,44 +55,46 @@ public class EmployeeSteps extends BaseSteps {
     }
 
     @And("the employee with initials {string} is the project manager of the project")
-    public void theEmployeeWithInitialsIsTheProjectManagerOfTheProject(String employeeID) throws Exception {
+    public void theEmployeeWithInitialsIsTheProjectManagerOfTheProject(String employeeID) {
+        Application application = Application.getInstance();
         TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.project;
-        Employee employee = this.db.getEmployee(employeeID);
-        EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
+
+        Project project = testHolder.getProject();
+        Employee employee = application.getEmployee(employeeID);
+        EmployeeInputContext input = (EmployeeInputContext) application.getContext();
 
         String[] args = {project.getID(),employeeID};
-        this.callCmd(input, "cmdAssignPM", args);
+        this.callCmd(input, input::cmdAssignPM, args);
         Assert.assertEquals(project.getPM(), employee);
     }
 
     @And("the employee with initials {string} is the actor")
     public void theEmployeeWithInitialsIsTheActor(String employeeID) {
-        this.db.setSignedInEmployee(employeeID);
-        Assert.assertEquals(this.db.getSignedInEmployee().getID(), employeeID);
+        Application application = Application.getInstance();
+
+        application.setSignedInEmployee(employeeID);
+        Assert.assertEquals(application.getSignedInEmployee().getID(), employeeID);
     }
 
     @And("the employee with initials {string} is assigned to the the activity with ID {string}")
-    public void theEmployeeWithInitialsIsAssignedToTheTheActivityWithID(String arg0, String arg1) {
+    public void theEmployeeWithInitialsIsAssignedToTheTheActivityWithID(String employeeID, String activityID) {
+        Application application = Application.getInstance();
         TestHolder testHolder = TestHolder.getInstance();
-        Employee employee = this.db.getEmployee(arg0);
-        Project project = testHolder.project;
-        Activity activity = project.getActivity(1);
 
-        EmployeeActivityIntermediate intermediate = new EmployeeActivityIntermediate(employee, activity);
+        Employee employee = application.getEmployee(employeeID);
+        Project project = testHolder.getProject();
+        Activity activity = project.getActivity(Integer.parseInt(activityID));
 
-        HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<>();
-        args.put(activity.getID(),intermediate);
-        employee.getActivities().put(project.getID(),args);
-        this.db.getEmployees().put(arg0,employee);
+        new EmployeeActivityIntermediate(employee, activity);
     }
 
     @And("the employee is attached to all activities in the projects")
     public void theEmployeeIsAttachedToAllActivitiesInTheProjects(List<String> projects) throws Exception {
-        Employee signedInEmployee = this.db.getSignedInEmployee();
+        Application application = Application.getInstance();
+        Employee signedInEmployee = application.getSignedInEmployee();
 
         for(String projectID : projects) {
-            Project project = this.db.getProject(projectID);
+            Project project = application.getProject(projectID);
 
             if(project == null) {
                 throw new Exception("Project with ID " + projectID + " does not exist.");
@@ -109,30 +114,30 @@ public class EmployeeSteps extends BaseSteps {
 
     @And("the employee with initials {string} is assigned to the activity with ID {string}")
     public void theEmployeeWithInitialsIsAssignedToTheActivityWithID(String employeeID, String activityID) {
+        Application application = Application.getInstance();
         TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.project;
+
+        Project project = testHolder.getProject();
         Activity activity = project.getActivity(Integer.parseInt(activityID));
 
-        Employee employee = this.db.getEmployee(employeeID);
-        EmployeeActivityIntermediate intermediate = new EmployeeActivityIntermediate(employee, activity);
+        Employee employee = application.getEmployee(employeeID);
 
-        HashMap<Integer, EmployeeActivityIntermediate> args = new HashMap<>();
-        args.put(activity.getID(), intermediate);
-        employee.getActivities().put(project.getID(), args);
+        new EmployeeActivityIntermediate(employee, activity);
     }
 
     @And("the employee has the following work minutes")
     public void theEmployeeHasTheFollowingWorkMinutes(List<List<String>> workMinutes) throws Exception {
-        Employee employee = this.db.getSignedInEmployee();
+        Application application = Application.getInstance();
+        Employee employee = application.getSignedInEmployee();
 
         for(List<String> entry : workMinutes) {
             if(entry.size() != 4) {
                 throw new Exception("WorkMinutes entry has the wrong dimensions");
             }
 
-            Project project = this.db.getProject(entry.get(0));
+            Project project = application.getProject(entry.get(0));
             Activity activity = project.getActivity(Integer.parseInt(entry.get(1)));
-            Date date = this.formatter.parse(entry.get(2));
+            Date date = DateFormatter.parseDate(entry.get(2));
             int minutes = Integer.parseInt(entry.get(3));
 
             Assert.assertNotNull(project);
@@ -151,55 +156,63 @@ public class EmployeeSteps extends BaseSteps {
     @When("the actor adds the employee with initials {string} to the activity with ID {string}")
     public void theActorAddsTheEmployeeWithInitialsToTheActivityWithID(String employeeID, String activityID) {
         TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.project;
+        Project project = testHolder.getProject();
 
         String[] args = {employeeID, project.getID(), activityID};
-        this.callCmd(new ProjectManagerInputContext(), "cmdAssignEmployeeToActivity", args);
+        ProjectManagerInputContext ic = new ProjectManagerInputContext();
+        this.callCmd(ic, ic::cmdAssignEmployeeToActivity, args);
     }
 
     @When("the employee requests assistance from {string} on activity with ID {string} in the project")
     public void theEmployeeRequestsAssistanceFromOnActivityWithIDInTheProject(String otherEmployeeID, String activityID) {
-        EmployeeInputContext context = (EmployeeInputContext) CompanyDB.getContext();
-        Project project = TestHolder.getInstance().project;
+        Application application = Application.getInstance();
+        EmployeeInputContext context = (EmployeeInputContext) application.getContext();
+        Project project = TestHolder.getInstance().getProject();
 
-        this.callCmd(context, "cmdRequestAssistance", new String[] {project.getID(), activityID, otherEmployeeID});
+        this.callCmd(context, context::cmdRequestAssistance, new String[] {project.getID(), activityID, otherEmployeeID});
     }
 
     @When("the employee requests a view of the project")
     public void theEmployeeRequestsAViewOfTheProject() {
-        String projectID = TestHolder.getInstance().project.getID();
-        this.callCmd(new ProjectManagerInputContext(), "cmdViewProject", new String[]{projectID});
+        String projectID = TestHolder.getInstance().getProject().getID();
+        ProjectManagerInputContext ic = new ProjectManagerInputContext();
+        this.callCmd(ic, ic::cmdViewProject, new String[]{projectID});
     }
 
     @When("the employee requests a view of activity {string}")
     public void theEmployeeRequestsAViewOfActivity(String activityID) {
-        String projectID = TestHolder.getInstance().project.getID();
-        this.callCmd(new ProjectManagerInputContext(), "cmdViewActivity", new String[]{projectID, activityID});
+        String projectID = TestHolder.getInstance().getProject().getID();
+        ProjectManagerInputContext ic = new ProjectManagerInputContext();
+        this.callCmd(ic, ic::cmdViewActivity, new String[]{projectID, activityID});
     }
 
     @When("the employee requests a view of available employees at the date {string}")
     public void theEmployeeRequestsAViewOfAvailableEmployeesAtTheDate(String date) {
-        this.callCmd(new ProjectManagerInputContext(), "cmdViewAvailability", new String[]{date});
+        ProjectManagerInputContext ic = new ProjectManagerInputContext();
+        this.callCmd(ic, ic::cmdViewAvailability, new String[]{date});
     }
 
     @When("the employee requests a view of the schedule of the employee with ID {string}")
     public void theEmployeeRequestsAViewOfTheScheduleOfTheEmployeeWithID(String employee) {
-        this.callCmd(new ProjectManagerInputContext(), "cmdViewSchedule", new String[]{employee});
+        ProjectManagerInputContext ic = new ProjectManagerInputContext();
+        this.callCmd(ic, ic::cmdViewSchedule, new String[]{employee});
     }
 
     @When("the employee submits the work minutes")
-    public void theEmployeeSubmitsTheWorkMinutes(List<List<String>> minutes) throws Exception {
-        EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
+    public void theEmployeeSubmitsTheWorkMinutes(List<List<String>> minutes) {
+        Application application = Application.getInstance();
+        EmployeeInputContext input = (EmployeeInputContext) application.getContext();
 
         for (List<String> submission : minutes) {
-            String[] args = {submission.get(0), submission.get(1), this.formatter.format(new Date()), submission.get(2)};
-            this.callCmd(input, "cmdSubmitHours", args);
+            String[] args = {submission.get(0), submission.get(1), DateFormatter.formatDate(new Date()), submission.get(2)};
+            this.callCmd(input, input::cmdSubmitHours, args);
         }
     }
 
     @When("the employee requests the following OOO activities")
     public void theEmployeeRequestsTheFollowingOOOActivities(List<List<String>> activities) throws Exception {
-        EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
+        Application application = Application.getInstance();
+        EmployeeInputContext input = (EmployeeInputContext) application.getContext();
 
         for(List<String> activity : activities) {
             if(activity.size() != 3) {
@@ -207,7 +220,7 @@ public class EmployeeSteps extends BaseSteps {
             }
 
             String[] args = {activity.get(0), activity.get(1), activity.get(2)};
-            this.callCmd(input, "cmdRequestOutOfOffice", args);
+            this.callCmd(input, input::cmdRequestOutOfOffice, args);
         }
     }
 
@@ -217,8 +230,9 @@ public class EmployeeSteps extends BaseSteps {
 
     @Then("the employee with initials {string} has been assigned to the activity with ID {string}")
     public void theEmployeeWithInitialsHasBeenAssignedToTheActivityWithID(String employeeID, String activityIDString) {
-        Employee otherEmployee = this.db.getEmployee(employeeID);
-        Project project = TestHolder.getInstance().project;
+        Application application = Application.getInstance();
+        Employee otherEmployee = application.getEmployee(employeeID);
+        Project project = TestHolder.getInstance().getProject();
 
         HashMap<Integer, EmployeeActivityIntermediate> otherEmployeeIntermediates =
                 otherEmployee.getActivities().get(project.getID());
@@ -228,7 +242,8 @@ public class EmployeeSteps extends BaseSteps {
 
     @And("the employee with initials {string} has not reached the activity cap")
     public void theEmployeeWithInitialsHasNotReachedTheActivityCap(String arg0) {
-        Employee employee = this.db.getEmployee(arg0);
+        Application application = Application.getInstance();
+        Employee employee = application.getEmployee(arg0);
         Assert.assertTrue(employee.getNumOpenActivities() > 0);
     }
 }

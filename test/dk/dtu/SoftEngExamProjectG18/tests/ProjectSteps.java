@@ -1,5 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
+import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Context.EmployeeInputContext;
 import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
 import dk.dtu.SoftEngExamProjectG18.Context.ProjectManagerInputContext;
@@ -29,24 +30,25 @@ public class ProjectSteps extends BaseSteps {
 
     @Given("that there is a project with name {string}")
     public void thatThereIsAProjectWithName(String name) {
-        Project project = new Project(name);
+        Application application = Application.getInstance();
         TestHolder testHolder = TestHolder.getInstance();
-        testHolder.project = project;
-        this.db.getProjects().put(project.getID(), project);
+
+        testHolder.setProject(application.createProject(name, true));
     }
 
     @Given("there are projects with names")
     public void thereAreProjectsWithNames(List<String> projects) {
+        Application application = Application.getInstance();
+
         for (String name : projects) {
-            Project project = new Project(name);
-            this.db.getProjects().put(project.getID(), project);
+            application.createProject(name, true);
         }
     }
 
     @And("there is an activity with ID {string}")
     public void thereIsAnActivityWithID(String id) {
         TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.project;
+        Project project = testHolder.getProject();
         int ID = Integer.parseInt(id);
 
         if(project.getActivities().containsKey(ID)) {
@@ -60,7 +62,7 @@ public class ProjectSteps extends BaseSteps {
     @And("the project has the following activities")
     public void theProjectHasTheFollowingActivities(List<List<String>> activities) throws ParseException {
         TestHolder th = TestHolder.getInstance();
-        Project project = th.project;
+        Project project = th.getProject();
         Assert.assertNotNull(project);
 
         project.clearActivities();
@@ -86,10 +88,11 @@ public class ProjectSteps extends BaseSteps {
     }
 
     @When("the employee creates a project with name {string}")
-    public void theEmployeeCreatesAProjectWithName(String name) throws Exception {
-        EmployeeInputContext input = (EmployeeInputContext) this.db.getInputContext();
+    public void theEmployeeCreatesAProjectWithName(String name) {
+        Application application = Application.getInstance();
+        EmployeeInputContext input = (EmployeeInputContext) application.getContext();
         String[] projectArguments = new String[] {name, "false"};
-        this.callCmd(input, "cmdCreateProject", projectArguments);
+        this.callCmd(input, input::cmdCreateProject, projectArguments);
     }
 
     /*
@@ -97,35 +100,40 @@ public class ProjectSteps extends BaseSteps {
      */
 
     @When("the employee adds an activity with name {string} to the project")
-    public void theEmployeeAddsAnActivityWithNameToTheProject(String name) throws Exception {
+    public void theEmployeeAddsAnActivityWithNameToTheProject(String name) {
         TestHolder testHolder = TestHolder.getInstance();
-        this.callCmd(new ProjectManagerInputContext(), "cmdCreateActivity", new String[]{ testHolder.project.getID(), name });
+        ProjectManagerInputContext ic = new ProjectManagerInputContext();
+        this.callCmd(ic, ic::cmdCreateActivity, new String[]{ testHolder.getProject().getID(), name });
     }
 
     @When("the actor assigns the employee with initials {string} as the project manager of the project")
-    public void theActorAssignsTheEmployeeWithInitialsAsTheProjectManagerOfTheProject(String initials) throws Exception {
+    public void theActorAssignsTheEmployeeWithInitialsAsTheProjectManagerOfTheProject(String initials) {
+        Application application = Application.getInstance();
         TestHolder testHolder = TestHolder.getInstance();
-        InputContext input = this.db.getInputContext();
-        this.callCmd(input, "cmdAssignPM", new String[]{ testHolder.project.getID(), initials });
+        InputContext input = application.getContext();
+        this.callCmd(input, input::cmdAssignPM, new String[]{ testHolder.getProject().getID(), initials });
     }
 
     @And("the project does not have a project manager")
     public void theProjectDoesNotHaveAProjectManager() {
         TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.project;
+        Project project = testHolder.getProject();
         project.setPM(null);
     }
 
     @When("the employee finishes the activity with ID {string} in the project")
-    public void theEmployeeFinishesTheActivityWithIDInTheProject(String id) throws Exception {
+    public void theEmployeeFinishesTheActivityWithIDInTheProject(String id) {
         TestHolder testHolder = TestHolder.getInstance();
-        this.callCmd(new ProjectManagerInputContext(), "cmdFinishActivity", new String[]{ testHolder.project.getID(), id });
+        ProjectManagerInputContext ic = new ProjectManagerInputContext();
+        this.callCmd(ic, ic::cmdFinishActivity, new String[]{ testHolder.getProject().getID(), id });
     }
 
     @Given("the activity with ID {string} has an estimated duration of {string} weeks and registered {string} hours spent")
     public void theActivityWithIDHasAnEstimatedDurationOfWeeksAndRegisteredHoursSpent(String id, String weeks, String hours) {
+        Application application = Application.getInstance();
         TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.project;
+
+        Project project = testHolder.getProject();
         Activity activity = project.getActivity(Integer.parseInt(id));
 
         Date today = new Date();
@@ -139,7 +147,7 @@ public class ProjectSteps extends BaseSteps {
         activity.setEndWeek(newDate);
 
         HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
-        EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(this.db.getSignedInEmployee().getID());
+        EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(application.getSignedInEmployee().getID());
 
         employeeActivityIntermediate.addMinutes(today, Integer.parseInt(hours) * 60);
     }
@@ -152,42 +160,42 @@ public class ProjectSteps extends BaseSteps {
     @Then("the activity with ID {string} is marked as finished in the project")
     public void theActivityWithIDIsMarkedAsFinishedInTheProject(String id) {
         TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.project;
+        Project project = testHolder.getProject();
         Activity activity = project.getActivity(Integer.parseInt(id));
         assertTrue(activity.isDone());
     }
 
     @Then("there is a project with ID {string} and name {string}")
     public void thereIsAProjectWithIDAndName(String id, String name) {
-        Project project = this.db.getProject(id);
+        Application application = Application.getInstance();
+        Project project = application.getProject(id);
         assertEquals(project.getName(), name);
     }
 
     @Then("the project contains an activity with ID {string}")
     public void theProjectContainsAnActivityWithID(String id) {
         TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.project;
+        Project project = testHolder.getProject();
         Activity activity = project.getActivity(Integer.parseInt(id));
-        // TODO: Uncomment next line when input context is updated in set pm step
-//        assertNotNull(activity);
+        assertNotNull(activity);
     }
 
     @Then("the project has a project manager with initials {string}")
     public void theProjectHasAProjectManagerWithInitials(String initials) {
         TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.project;
+        Project project = testHolder.getProject();
         assertNotNull(project.getPM());
         assertEquals(project.getPM().getID(), initials);
     }
 
     @Then("these activities with overall durations are found")
     public void theseActivitiesWithOverallDurationsAreFound(List<List<String>> durations) {
+        Application application = Application.getInstance();
+
         for (List duration : durations) {
-            Project project = this.db.getProject((String) duration.get(0));
+            Project project = application.getProject((String) duration.get(0));
         }
 
-        // TODO: Waiting for:
-        //  What is up with the ids for projects? is it 000001 or 1?
-        //  Assignment of employee to activity (bulk)
+        // TODO
     }
 }

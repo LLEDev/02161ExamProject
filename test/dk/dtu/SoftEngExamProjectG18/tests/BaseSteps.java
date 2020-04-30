@@ -2,41 +2,49 @@ package dk.dtu.SoftEngExamProjectG18.tests;
 
 import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.Interfaces.ThrowingFunction;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.CmdResponse;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
+import org.junit.Assert;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 abstract public class BaseSteps {
 
-    protected final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-    protected void callCmd(InputContext context, String method, String[] args) {
-        CommandException cmdException = null;
+    protected void callCmd(InputContext context, ThrowingFunction<String[]> consumer, String[] args) {
+        AtomicReference<Exception> atomicException = new AtomicReference<>();
         String response = null;
 
+        Consumer<Exception> exceptionHook = atomicException::set;
+        context.addCommandExceptionHook(exceptionHook);
+
         try {
-            Method m = context.getClass().getMethod(method, String[].class);
-            m.invoke(context, (Object) args);
-        } catch (InvocationTargetException ite) {
-            if(ite.getTargetException() instanceof CommandException) {
-                cmdException = (CommandException) ite.getTargetException();
-            } else {
-                response = "An internal error occurred.";
-            }
+            consumer.apply(args);
         } catch (Exception e) {
-            response = "An internal error occurred.";
+            handleNonCommandException(e);
+            return;
         }
 
-        if(response == null) {
-            response = context.getOutput();
+        context.removeCommandExceptionHook(exceptionHook);
+
+        Exception exception = atomicException.get();
+        if(exception != null && !(exception instanceof CommandException)) {
+            handleNonCommandException(exception);
+            return;
         }
 
+        CommandException commandException = (CommandException) exception;
+
+        response = context.getOutput();
         context.resetOutput();
 
-        TestHolder.getInstance().response = new CmdResponse(response, cmdException);
+        TestHolder.getInstance().setResponse(new CmdResponse(response, commandException));
+    }
+
+    protected void handleNonCommandException(Exception e) {
+        e.printStackTrace();
+        Assert.fail("A non-expected exception was thrown.");
     }
 
 }

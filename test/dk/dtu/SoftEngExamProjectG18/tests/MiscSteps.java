@@ -25,7 +25,6 @@ public class MiscSteps {
     @Before // Reset CompanyDB before each scenario
     public void beforeScenario(){
         Application.init(InputContextType.Emp);
-        TestHolder.getInstance().setApplication(Application.getInstance());
     }
 
     @Then("the error message {string} is given")
@@ -87,7 +86,7 @@ public class MiscSteps {
 
     @When("the InputContext assertions are tested with invalid values, CommandExceptions are thrown")
     public void theInputContextAssertionsAreTestedWithInvalidValuesCommandExceptionsAreThrown() {
-        InputContext context = TestHolder.getInstance().getApplication().getContext();
+        InputContext context = Application.getInstance().getContext();
 
         Class<CommandException> e = CommandException.class;
         Assert.assertThrows(e, () -> context.assertArgumentsValid(2, 1));
@@ -98,10 +97,10 @@ public class MiscSteps {
 
     @When("the Application assertions are tested with invalid values, IllegalArgumentExceptions are thrown")
     public void theApplicationAssertionsAreTestedWithInvalidValuesIllegalArgumentExceptionsAreThrown() {
-        Application application = TestHolder.getInstance().getApplication();
+        Application application = Application.getInstance();
         String employeeID = "AA";
 
-        application.addEmployee(employeeID, employeeID);
+        application.createEmployee(employeeID, employeeID);
         application.setSignedInEmployee(employeeID);
         application.setContext(new EmployeeInputContext());
 

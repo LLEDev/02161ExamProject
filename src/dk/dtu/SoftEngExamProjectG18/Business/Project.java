@@ -1,8 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
 import dk.dtu.SoftEngExamProjectG18.Exceptions.AccessDeniedException;
-import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
-import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Interfaces.Extractable;
 
 import java.util.*;
@@ -10,7 +8,7 @@ import java.util.*;
 public class Project implements Extractable<Project> {
 
     protected HashMap<Integer, Activity> activities = new HashMap<>();
-    protected Calendar createdAt = null;
+    protected Calendar createdAt = new GregorianCalendar();
     protected int ID;
     protected boolean isBillable = true;
     protected String name;

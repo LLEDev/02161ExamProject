@@ -4,12 +4,10 @@ import dk.dtu.SoftEngExamProjectG18.Context.InputContext;
 import dk.dtu.SoftEngExamProjectG18.Enum.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.AccessDeniedException;
-import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
 
-import java.text.ParseException;
 import java.util.*;
 
 public class Application {
@@ -28,6 +26,7 @@ public class Application {
         }
 
         instance = new Application(contextType);
+        instance.init();
     }
 
     public static Application getInstance() {
@@ -43,6 +42,10 @@ public class Application {
 
     public Application(InputContextType ict) {
         this.context = InputContext.getContext(ict);
+    }
+
+    public void init() {
+        this.context.init();
     }
 
     /*
@@ -153,18 +156,6 @@ public class Application {
      * Actions
      */
 
-    public void addEmployee(String ID, String name) {
-        Employee employee = new Employee(ID, name);
-
-        this.db.getEmployees().put(employee.getID(), employee);
-    }
-
-    public void addEmployee(String ID, String name, int weeklyActivityCap) {
-        Employee employee = new Employee(ID, name, weeklyActivityCap);
-
-        this.db.getEmployees().put(employee.getID(), employee);
-    }
-
     public void assignEmployeeToActivity(String employeeID, String projectID, int activityID) throws IllegalArgumentException {
         Project project = this.getProject(projectID);
         this.assertSignedInEmployeePM(project);
@@ -184,20 +175,48 @@ public class Application {
         project.assignPM(employee, signedInEmployee);
     }
 
-    public void createActivity(String projectID, String activityID) throws IllegalArgumentException {
+    public Activity createActivity(String projectID, String activityID) throws IllegalArgumentException {
         Project project = this.getProject(projectID);
 
         this.assertSignedInEmployeePM(project);
 
-        new Activity(activityID, project);
+        return new Activity(activityID, project);
     }
 
-    public void createProject(String name, boolean isBillable) throws IllegalArgumentException {
+    public Employee createEmployee(String ID, String name) {
+        Employee employee = new Employee(ID, name);
+
+        this.db.getEmployees().put(employee.getID(), employee);
+
+        return employee;
+    }
+
+    public Employee createEmployee(String ID, String name, int weeklyActivityCap) {
+        Employee employee = new Employee(ID, name, weeklyActivityCap);
+
+        this.db.getEmployees().put(employee.getID(), employee);
+
+        return employee;
+    }
+
+    public Project createProject(String name, boolean isBillable) throws IllegalArgumentException {
         int year = (new GregorianCalendar()).get(Calendar.YEAR);
         int nextID = this.db.incrementNextProjectID(year);
 
         Project project = new Project(nextID, name, isBillable);
         this.db.getProjects().put(project.getID(), project);
+
+        return project;
+    }
+
+    public Project createProject(String name, Date createdAt, boolean isBillable, Employee PM, boolean setupActivity) throws IllegalArgumentException {
+        int year = (new GregorianCalendar()).get(Calendar.YEAR);
+        int nextID = this.db.incrementNextProjectID(year);
+
+        Project project = new Project(nextID, name, createdAt, isBillable, PM, setupActivity);
+        this.db.getProjects().put(project.getID(), project);
+
+        return project;
     }
 
     public void estimateActivityDuration(String projectID, int activityID, int numHours) throws IllegalArgumentException {
@@ -219,10 +238,6 @@ public class Application {
 
         Activity activity = this.getActivity(project, activityID);
         activity.setDone(true);
-    }
-
-    public boolean isSignedInEmployeePM(String projectID) {
-        return this.db.getSignedInEmployee().equals(this.getProject(projectID).getPM());
     }
 
     public void markActivityDone(String projectID, int activityID) throws IllegalArgumentException {

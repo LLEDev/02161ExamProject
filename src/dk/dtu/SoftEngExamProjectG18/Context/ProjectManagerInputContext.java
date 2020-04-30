@@ -4,7 +4,6 @@ import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.OutOfOfficeActivity;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
@@ -44,7 +43,6 @@ public class ProjectManagerInputContext extends InputContext {
      */
 
     // Command arguments: String employeeID, String projectID, int activityID
-    @SuppressWarnings("unused")
     public void cmdAssignEmployeeToActivity(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 3);
         this.assertStringParseIntDoable(args[2]);
@@ -60,7 +58,6 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     // Command arguments: String projectID, String activityName
-    @SuppressWarnings("unused")
     public void cmdCreateActivity(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
 
@@ -74,7 +71,6 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     // Command arguments: String projectID, String activityID
-    @SuppressWarnings("unused")
     public void cmdFinishActivity(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
 
@@ -88,7 +84,6 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     // Command arguments: String projectID, int activityID, int numHours
-    @SuppressWarnings("unused")
     public void cmdSetActivityEstimatedDuration(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 3);
         this.assertStringParseIntDoable(args[2]);
@@ -104,7 +99,6 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     // Command arguments: String projectID, int activityID, Date start, Date end
-    @SuppressWarnings("unused")
     public void cmdSetActivityInterval(String[] args) throws CommandException, ParseException {
         this.assertArgumentsValid(args.length, 4);
         this.assertStringParseIntDoable(args[1]);
@@ -123,7 +117,6 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     // Command arguments: String projectID, activityID
-    @SuppressWarnings("unused")
     public void cmdViewActivity(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
         this.assertStringParseIntDoable(args[1]);
@@ -132,7 +125,7 @@ public class ProjectManagerInputContext extends InputContext {
         int activityID = Integer.parseInt(args[1]);
 
         try {
-            Project project = this.application.getProject(args[0]);
+            Project project = this.application.getProject(projectID);
             this.application.assertSignedInEmployeePM(project);
 
             Activity activity = this.application.getActivity(project, activityID);
@@ -167,7 +160,6 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     // Command arguments: String date
-    @SuppressWarnings("unused")
     public void cmdViewAvailability(String[] args) throws CommandException, ParseException {
         this.assertArgumentsValid(args.length, 1);
         this.assertStringParseDateDoable(args[0]);
@@ -188,7 +180,6 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     // Command arguments: String projectID
-    @SuppressWarnings("unused")
     public void cmdViewProject(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 1);
 
@@ -215,7 +206,6 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     // Command arguments: String employeeID
-    @SuppressWarnings("unused")
     public void cmdViewSchedule(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 1);
 
