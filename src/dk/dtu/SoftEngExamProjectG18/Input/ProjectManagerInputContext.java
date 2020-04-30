@@ -4,8 +4,8 @@ import dk.dtu.SoftEngExamProjectG18.Business.*;
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Business.EmployeeActivityIntermediate;
-import dk.dtu.SoftEngExamProjectG18.General.Util.DateFormatter;
-import dk.dtu.SoftEngExamProjectG18.General.Util.Table;
+import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Table;
 
 import java.text.ParseException;
 import java.util.*;

@@ -5,8 +5,8 @@ import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
-import dk.dtu.SoftEngExamProjectG18.General.Util.DateFormatter;
-import dk.dtu.SoftEngExamProjectG18.General.Util.Table;
+import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Table;
 
 import java.text.ParseException;
 import java.util.*;

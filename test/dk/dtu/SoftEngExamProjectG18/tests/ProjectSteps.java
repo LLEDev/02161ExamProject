@@ -7,7 +7,7 @@ import dk.dtu.SoftEngExamProjectG18.Input.ProjectManagerInputContext;
 import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
 import dk.dtu.SoftEngExamProjectG18.Business.EmployeeActivityIntermediate;
-import dk.dtu.SoftEngExamProjectG18.General.Util.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;

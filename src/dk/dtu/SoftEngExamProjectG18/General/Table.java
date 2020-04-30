@@ -1,4 +1,4 @@
-package dk.dtu.SoftEngExamProjectG18.General.Util;
+package dk.dtu.SoftEngExamProjectG18.General;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractable;
 

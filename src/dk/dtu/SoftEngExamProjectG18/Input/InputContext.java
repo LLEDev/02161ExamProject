@@ -5,7 +5,7 @@ import dk.dtu.SoftEngExamProjectG18.Input.Enums.CommandExceptionReason;
 import dk.dtu.SoftEngExamProjectG18.Input.Enums.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
-import dk.dtu.SoftEngExamProjectG18.General.Util.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 
 import java.text.ParseException;
 import java.util.ArrayList;
