@@ -3,7 +3,7 @@ package dk.dtu.SoftEngExamProjectG18.Business;
 import dk.dtu.SoftEngExamProjectG18.Input.InputContext;
 import dk.dtu.SoftEngExamProjectG18.Input.Enums.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
-import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
+import dk.dtu.SoftEngExamProjectG18.General.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 
 import java.util.*;
