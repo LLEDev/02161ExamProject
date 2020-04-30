@@ -27,17 +27,12 @@ abstract public class InputContext {
         return new EmployeeInputContext();
     }
 
-    protected Application application;
     public ArrayList<Consumer<Exception>> onExceptionHooks = new ArrayList<>();
     protected String output = "";
     protected ActionMap triggers = ActionMap.build(new Action[]{
         new Action("project assign pm", new String[]{"projectID", "PMID"}, this::cmdAssignPM),
         new Action("switch context", new String[]{"contextType"}, this::cmdSwitchContext),
     });
-
-    public void init() {
-         this.application = Application.getInstance();
-    }
 
 
     public void assertArgumentsValid(int argsLength, int requiredLength) throws CommandException {

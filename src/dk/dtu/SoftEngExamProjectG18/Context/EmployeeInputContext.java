@@ -154,7 +154,7 @@ public class EmployeeInputContext extends InputContext {
     public void cmdViewSubmissions(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 0);
 
-        Employee signedInEmployee = this.application.getSignedInEmployee();
+        Employee signedInEmployee = Application.getInstance().getSignedInEmployee();
 
         ArrayList<Employee> employeeList = new ArrayList<>();
         employeeList.add(signedInEmployee);

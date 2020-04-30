@@ -118,14 +118,16 @@ public class ProjectManagerInputContext extends InputContext {
         this.assertArgumentsValid(args.length, 2);
         this.assertStringParseIntDoable(args[1]);
 
+        Application application = Application.getInstance();
+
         String projectID = args[0];
         int activityID = Integer.parseInt(args[1]);
 
         try {
-            Project project = this.application.getProject(projectID);
-            this.application.assertSignedInEmployeePM(project);
+            Project project = application.getProject(projectID);
+            application.assertSignedInEmployeePM(project);
 
-            Activity activity = this.application.getActivity(project, activityID);
+            Activity activity = application.getActivity(project, activityID);
 
             String startWeek = null;
             String endWeek = null;
@@ -163,7 +165,7 @@ public class ProjectManagerInputContext extends InputContext {
 
         Date d = DateFormatter.parseDate(args[0]);
 
-        ArrayList<Employee> collection = new ArrayList<>(this.application.getEmployees().values());
+        ArrayList<Employee> collection = new ArrayList<>(Application.getInstance().getEmployees().values());
         HashMap<String, Object> meta = new HashMap<>();
         meta.put("date", d);
 
@@ -180,10 +182,12 @@ public class ProjectManagerInputContext extends InputContext {
     public void cmdViewProject(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 1);
 
-        try {
-            Project project = this.application.getProject(args[0]);
+        Application application = Application.getInstance();
 
-            this.application.assertSignedInEmployeePM(project);
+        try {
+            Project project = application.getProject(args[0]);
+
+            application.assertSignedInEmployeePM(project);
 
             this.writeOutput("Project details:\n");
             this.writeOutput(String.format(" - ID: %s\n", project.getID()));
@@ -206,8 +210,10 @@ public class ProjectManagerInputContext extends InputContext {
     public void cmdViewSchedule(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 1);
 
+        Application application = Application.getInstance();
+
         try {
-            Employee employee = this.application.getEmployee(args[0]);
+            Employee employee = application.getEmployee(args[0]);
 
             this.writeOutput("Employee details:\n");
             this.writeOutput(String.format(" - ID: %s\n", employee.getID()));

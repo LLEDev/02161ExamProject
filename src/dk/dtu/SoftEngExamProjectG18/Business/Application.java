@@ -26,7 +26,6 @@ public class Application {
         }
 
         instance = new Application(contextType);
-        instance.init();
     }
 
     public static Application getInstance() {
@@ -42,10 +41,6 @@ public class Application {
 
     public Application(InputContextType ict) {
         this.context = InputContext.getContext(ict);
-    }
-
-    public void init() {
-        this.context.init();
     }
 
     /*
