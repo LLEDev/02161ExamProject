@@ -193,10 +193,11 @@ public class ProjectSteps extends BaseSteps {
     public void theseActivitiesWithOverallDurationsAreFound(List<List<String>> durations) {
         Application application = Application.getInstance();
 
-        for (List duration : durations) {
-            Project project = application.getProject((String) duration.get(0));
+        for (List<String> duration : durations) {
+            Project project = application.getProject(duration.get(0));
+            Activity activity = project.getActivity(Integer.parseInt(duration.get(1)));
+            double hours = activity.getTotalTrackedMinutes() / 60.0;
+            Assert.assertEquals(Double.parseDouble(duration.get(2)), hours, 1e-15);
         }
-
-        // TODO
     }
 }
