@@ -2,6 +2,7 @@ package dk.dtu.SoftEngExamProjectG18.Business;
 
 import dk.dtu.SoftEngExamProjectG18.Interfaces.Extractable;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
+import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +23,21 @@ public class Activity implements Extractable<Activity> {
 
     // EmployeeID --> EmployeeActivityIntermediate
     protected HashMap<String, EmployeeActivityIntermediate> trackedTime = new HashMap<>();
+
+    protected void assertStartEndValid(Date start, Date end) {
+        if(start == null || end == null) {
+            return;
+        }
+
+        if(start.compareTo(end) >= 0) {
+            String output = String.format(
+                "The given start week, %s, is after the given end week, %s.",
+                DateFormatter.formatDate(start),
+                DateFormatter.formatDate(end)
+            );
+            throw new IllegalArgumentException(output);
+        }
+    }
 
     public Activity(String name, Project project) {
         this.ID = project.incrementNextActivityID();
@@ -72,14 +88,21 @@ public class Activity implements Extractable<Activity> {
     }
 
     public void setEndWeek(Date endWeek) {
+        this.assertStartEndValid(this.startWeek, endWeek);
         this.endWeek = endWeek;
     }
 
-    public void setEstimatedHours(int estimatedHours) {
+    public void setEstimatedHours(int estimatedHours) throws IllegalArgumentException {
+        if(estimatedHours <= 0) {
+            String output = String.format("The estimated number of work hours has to be bigger than 0. %s received.", estimatedHours);
+            throw new IllegalArgumentException(output);
+        }
+
         this.estimatedHours = estimatedHours;
     }
 
     public void setStartWeek(Date startWeek) {
+        this.assertStartEndValid(startWeek, this.endWeek);
         this.startWeek = startWeek;
     }
 

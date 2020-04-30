@@ -76,6 +76,12 @@ public class Project implements Extractable<Project> {
         }
     }
 
+    public void assertPM(Employee employee) throws AccessDeniedException {
+        if(this.getPM() == null || !this.getPM().equals(employee)) {
+            throw new AccessDeniedException("Project manager role required.");
+        }
+    }
+
     public void assignPM(Employee newPM, Employee signedInEmployee) throws AccessDeniedException {
         if (this.PM == null) {
             this.PM = newPM;
@@ -99,11 +105,16 @@ public class Project implements Extractable<Project> {
         return this.nextActivityID - 1;
     }
 
-    public boolean isPM(Employee employee) {
-        return this.getPM() != null && this.getPM().equals(employee);
-    }
-
     public Activity getActivity(int ID) {
+        if (!this.activities.containsKey(ID)) {
+            String eMsg = String.format(
+                "The given activity, %s, does not exist within project, %s.",
+                ID,
+                this.getID()
+            );
+            throw new IllegalArgumentException(eMsg);
+        }
+
         return this.activities.get(ID);
     }
 

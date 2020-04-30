@@ -1,6 +1,7 @@
 package dk.dtu.SoftEngExamProjectG18.Context;
 
 import dk.dtu.SoftEngExamProjectG18.Business.*;
+import dk.dtu.SoftEngExamProjectG18.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
@@ -125,9 +126,9 @@ public class ProjectManagerInputContext extends InputContext {
 
         try {
             Project project = application.getProject(projectID);
-            application.assertSignedInEmployeePM(project);
+            project.assertPM(application.getSignedInEmployee());
 
-            Activity activity = application.getActivity(project, activityID);
+            Activity activity = project.getActivity(activityID);
 
             String startWeek = null;
             String endWeek = null;
@@ -153,7 +154,7 @@ public class ProjectManagerInputContext extends InputContext {
                 new String[] {"Employee", "Date", "Minutes"},
                 collection
             ));
-        } catch (IllegalArgumentException e) {
+        } catch (AccessDeniedException e) {
             throw new CommandException(e.getMessage());
         }
     }
@@ -187,7 +188,7 @@ public class ProjectManagerInputContext extends InputContext {
         try {
             Project project = application.getProject(args[0]);
 
-            application.assertSignedInEmployeePM(project);
+            project.assertPM(application.getSignedInEmployee());
 
             this.writeOutput("Project details:\n");
             this.writeOutput(String.format(" - ID: %s\n", project.getID()));
@@ -201,7 +202,7 @@ public class ProjectManagerInputContext extends InputContext {
                 new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"},
                 collection
             ));
-        } catch (IllegalArgumentException e) {
+        } catch (AccessDeniedException e) {
             throw new CommandException(e.getMessage());
         }
     }

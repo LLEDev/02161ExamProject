@@ -161,6 +161,7 @@ public class EmployeeSteps extends BaseSteps {
         String[] args = {employeeID, project.getID(), activityID};
         ProjectManagerInputContext ic = new ProjectManagerInputContext();
         this.callCmd(ic, ic::cmdAssignEmployeeToActivity, args);
+        System.out.println(TestHolder.getInstance().getResponse().getResponse());
     }
 
     @When("the employee requests assistance from {string} on activity with ID {string} in the project")
@@ -244,6 +245,6 @@ public class EmployeeSteps extends BaseSteps {
     public void theEmployeeWithInitialsHasNotReachedTheActivityCap(String arg0) {
         Application application = Application.getInstance();
         Employee employee = application.getEmployee(arg0);
-        Assert.assertTrue(employee.getNumOpenActivities() > 0);
+        employee.assertOpenActivities();
     }
 }

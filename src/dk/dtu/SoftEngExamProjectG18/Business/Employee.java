@@ -30,6 +30,16 @@ public class Employee implements Extractable<Employee> {
         this.OOOActivities.add(new OutOfOfficeActivity(type, start, end));
     }
 
+    public void assertOpenActivities() throws IllegalArgumentException {
+        if (this.getNumOpenActivities() == 0) {
+            String output = String.format(
+                "The employee %s has no room for any new activities at the moment.",
+                this.getID()
+            );
+            throw new IllegalArgumentException(output);
+        }
+    }
+
     public boolean isOutOfOffice(Date date) {
         for (OutOfOfficeActivity OOOActivity : this.OOOActivities) {
             if (OOOActivity.start.compareTo(date) > 0 || OOOActivity.end.compareTo(date) < 0) {

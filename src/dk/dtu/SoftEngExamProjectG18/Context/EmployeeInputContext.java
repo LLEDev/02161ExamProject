@@ -67,7 +67,7 @@ public class EmployeeInputContext extends InputContext {
     public void cmdCompleteActivity(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
 
-        this.wrapExceptions(() -> Application.getInstance().markActivityDone(args[0], Integer.parseInt(args[1])))
+        this.wrapExceptions(() -> Application.getInstance().finishActivity(args[0], Integer.parseInt(args[1])))
             .outputOnSuccess(() -> "Activity completed.")
             .outputOnError(e -> "An error occurred: " + e.getMessage())
             .run();

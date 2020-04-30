@@ -109,9 +109,6 @@ public class MiscSteps {
         Project project = new Project(1, "Project");
 
         Class<IllegalArgumentException> e = IllegalArgumentException.class;
-        Assert.assertThrows(e, () -> application.assertAvailableActivities(employee));
-        Assert.assertThrows(e, () -> application.assertSignedInEmployeePM(project));
-        Assert.assertThrows(e, () -> application.getActivity(project, 3));
         Assert.assertThrows(e, () -> application.getEmployee("NOT-AN-EMPLOYEE"));
         Assert.assertThrows(e, () -> application.getProject("NOT-A-PROJECT"));
     }

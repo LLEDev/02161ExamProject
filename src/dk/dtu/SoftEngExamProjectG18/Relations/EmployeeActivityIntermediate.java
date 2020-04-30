@@ -3,12 +3,29 @@ package dk.dtu.SoftEngExamProjectG18.Relations;
 import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
+import dk.dtu.SoftEngExamProjectG18.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Interfaces.Extractable;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class EmployeeActivityIntermediate implements Extractable<EmployeeActivityIntermediate> {
+
+    public static EmployeeActivityIntermediate initAssociation(Employee employee, Activity activity) throws AccessDeniedException {
+        employee.assertOpenActivities();
+        return new EmployeeActivityIntermediate(employee, activity);
+    }
+
+    public static EmployeeActivityIntermediate getAssociation(Employee employee, Activity activity) throws AccessDeniedException {
+        HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
+        EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(employee.getID());
+
+        if(employeeActivityIntermediate == null) {
+            throw new AccessDeniedException("You are not associated with one or more of these projects.");
+        }
+
+        return employeeActivityIntermediate;
+    }
 
     protected SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 

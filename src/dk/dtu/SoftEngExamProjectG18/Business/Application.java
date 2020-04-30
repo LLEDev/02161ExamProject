@@ -37,143 +37,19 @@ public class Application {
     }
 
     protected InputContext context;
-    public CompanyDB db = new CompanyDB();
+    protected CompanyDB db = new CompanyDB();
 
     public Application(InputContextType ict) {
         this.context = InputContext.getContext(ict);
     }
 
     /*
-        Assertions
+     * CRUD Actions
      */
 
-    public void assertAvailableActivities(Employee employee) throws IllegalArgumentException {
-        if (employee.getNumOpenActivities() > 0) {
-            return;
-        }
-
-        String output = String.format(
-                "The employee %s has no room for any new activities at the moment.",
-                employee.getID()
-        );
-        throw new IllegalArgumentException(output);
-    }
-
-    public void assertSignedInEmployeePM(Project project) throws IllegalArgumentException {
-        if (!project.isPM(this.db.getSignedInEmployee())) {
-            throw new IllegalArgumentException("Project manager role required.");
-        }
-    }
-
-    /*
-        Getters
-     */
-
-    public Activity getActivity(Project project, int activityID) throws IllegalArgumentException {
-        Activity activity = project.getActivity(activityID);
-
-        if (activity == null) {
-            String eMsg = String.format(
-                    "The given activity, %s, does not exist within project, %s.",
-                    activityID,
-                    project.getID()
-            );
-            throw new IllegalArgumentException(eMsg);
-        }
-
-        return activity;
-    }
-
-    public InputContext getContext() {
-        return this.context;
-    }
-
-    public Employee getEmployee(String employeeID) throws IllegalArgumentException {
-        Employee employee = db.getEmployee(employeeID);
-
-        if (employee == null) {
-            throw new IllegalArgumentException(String.format("The given employee, %s, does not exist.", employeeID));
-        }
-
-        return employee;
-    }
-
-    public HashMap<String, Employee> getEmployees() {
-        return this.db.getEmployees();
-    }
-
-    public Project getProject(String projectID) throws IllegalArgumentException {
-        Project project = db.getProject(projectID);
-
-        if (project == null) {
-            throw new IllegalArgumentException(String.format("The given project, %s, does not exist.", projectID));
-        }
-
-        return project;
-    }
-
-    public HashMap<String, Project> getProjects() {
-        return this.db.getProjects();
-    }
-
-    public Employee getSignedInEmployee() {
-        return this.db.getSignedInEmployee();
-    }
-
-    /*
-     * Action helpers
-     */
-
-    protected void helperSetSubmitHours(String projectID, int activityID, Date date, double hours, boolean shouldSet) throws IllegalArgumentException {
+    public Activity createActivity(String projectID, String activityID) throws AccessDeniedException {
         Project project = this.getProject(projectID);
-        Activity activity = this.getActivity(project, activityID);
-
-        // Find the right intermediate
-        Employee signedInEmployee = db.getSignedInEmployee();
-        HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
-        EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(signedInEmployee.getID());
-
-        if(employeeActivityIntermediate == null) {
-            throw new IllegalArgumentException("You are not associated with one or more of these projects.");
-        }
-
-        // Set the minutes
-        int minutes = (int) (hours * 60.0);
-
-        if(shouldSet) {
-            employeeActivityIntermediate.setMinutes(date, minutes);
-        } else {
-            employeeActivityIntermediate.addMinutes(date, minutes);
-        }
-    }
-
-    /*
-     * Actions
-     */
-
-    public void assignEmployeeToActivity(String employeeID, String projectID, int activityID) throws IllegalArgumentException {
-        Project project = this.getProject(projectID);
-        this.assertSignedInEmployeePM(project);
-
-        Activity activity = this.getActivity(project, activityID);
-        Employee employee = this.getEmployee(employeeID);
-        this.assertAvailableActivities(employee);
-
-        new EmployeeActivityIntermediate(employee, activity);
-    }
-
-    public void assignPM(String projectID, String employeeID) throws AccessDeniedException, IllegalArgumentException {
-        Project project = this.getProject(projectID);
-        Employee employee = this.getEmployee(employeeID);
-        Employee signedInEmployee = this.db.getSignedInEmployee();
-
-        project.assignPM(employee, signedInEmployee);
-    }
-
-    public Activity createActivity(String projectID, String activityID) throws IllegalArgumentException {
-        Project project = this.getProject(projectID);
-
-        this.assertSignedInEmployeePM(project);
+        project.assertPM(this.db.getSignedInEmployee());
 
         return new Activity(activityID, project);
     }
@@ -214,36 +90,101 @@ public class Application {
         return project;
     }
 
-    public void estimateActivityDuration(String projectID, int activityID, int numHours) throws IllegalArgumentException {
-        Project project = this.getProject(projectID);
-        Activity activity = this.getActivity(project, activityID);
+    public InputContext getContext() {
+        return this.context;
+    }
 
-        if(numHours <= 0) {
-            String output = String.format("The estimated number of work hours has to be bigger than 0. %s received.", numHours);
-            throw new IllegalArgumentException(output);
+    public Employee getEmployee(String employeeID) throws IllegalArgumentException {
+        Employee employee = db.getEmployee(employeeID);
+
+        if (employee == null) {
+            throw new IllegalArgumentException(String.format("The given employee, %s, does not exist.", employeeID));
         }
 
-        activity.setEstimatedHours(numHours);
+        return employee;
     }
 
-    public void finishActivity(String projectID, int activityID) {
+    public HashMap<String, Employee> getEmployees() {
+        return this.db.getEmployees();
+    }
+
+    public Project getProject(String projectID) throws IllegalArgumentException {
         Project project = db.getProject(projectID);
 
-        this.assertSignedInEmployeePM(project);
+        if (project == null) {
+            throw new IllegalArgumentException(String.format("The given project, %s, does not exist.", projectID));
+        }
 
-        Activity activity = this.getActivity(project, activityID);
-        activity.setDone(true);
+        return project;
     }
 
-    public void markActivityDone(String projectID, int activityID) throws IllegalArgumentException {
+    public HashMap<String, Project> getProjects() {
+        return this.db.getProjects();
+    }
+
+    public Employee getSignedInEmployee() {
+        return this.db.getSignedInEmployee();
+    }
+
+    public void setContext(InputContext ic) {
+        this.context = ic;
+    }
+
+    public void setSignedInEmployee(String employeeID) {
+        this.db.setSignedInEmployee(employeeID);
+    }
+
+    /*
+     * Action helpers
+     */
+
+    protected void helperSetSubmitHours(String projectID, int activityID, Date date, double hours, boolean shouldSet) throws AccessDeniedException {
         Project project = this.getProject(projectID);
-        Activity activity = this.getActivity(project, activityID);
-        activity.setDone(true);
+        Activity activity = project.getActivity(activityID);
+        Employee signedInEmployee = this.db.getSignedInEmployee();
+
+        EmployeeActivityIntermediate employeeActivityIntermediate = EmployeeActivityIntermediate.getAssociation(signedInEmployee, activity);
+
+        int minutes = (int) (hours * 60.0);
+        if(shouldSet) {
+            employeeActivityIntermediate.setMinutes(date, minutes);
+        } else {
+            employeeActivityIntermediate.addMinutes(date, minutes);
+        }
+    }
+
+    /*
+     * Other actions
+     */
+
+    public void assignEmployeeToActivity(String employeeID, String projectID, int activityID) throws AccessDeniedException {
+        Project project = this.getProject(projectID);
+        project.assertPM(this.db.getSignedInEmployee());
+
+        Activity activity = project.getActivity(activityID);
+        Employee employee = this.getEmployee(employeeID);
+
+        EmployeeActivityIntermediate.initAssociation(employee, activity);
+    }
+
+    public void assignPM(String projectID, String employeeID) throws AccessDeniedException, IllegalArgumentException {
+        this.getProject(projectID).assignPM(this.getEmployee(employeeID), this.db.getSignedInEmployee());
+    }
+
+    public void estimateActivityDuration(String projectID, int activityID, int numHours) throws IllegalArgumentException {
+        Project project = this.getProject(projectID);
+        project.getActivity(activityID).setEstimatedHours(numHours);
+    }
+
+    public void finishActivity(String projectID, int activityID) throws AccessDeniedException {
+        Project project = this.db.getProject(projectID);
+        project.assertPM(this.db.getSignedInEmployee());
+        project.getActivity(activityID).setDone(true);
     }
 
     public void requestAssistance(String projectID, int activityID, String employeeID) throws AccessDeniedException, IllegalArgumentException {
         Project project = this.getProject(projectID);
-        Activity activity = this.getActivity(project, activityID);
+        Activity activity = project.getActivity(activityID);
         Employee employee = this.getEmployee(employeeID);
 
         Employee signedInEmployee = db.getSignedInEmployee();
@@ -264,47 +205,26 @@ public class Application {
             throw new AccessDeniedException(output);
         }
 
-        this.assertAvailableActivities(employee);
-
+        employee.assertOpenActivities();
         employee.getActivities().put(project.getID(), signedInEmployeeActivities.get(project.getID()));
     }
 
     public void requestOutOfOffice(OOOActivityType type, Date start, Date end) throws IllegalArgumentException {
         Employee signedInEmployee = this.db.getSignedInEmployee();
-
-        signedInEmployee.getOOOActivities().add(new OutOfOfficeActivity(type, start, end));
+        signedInEmployee.addOOOActivity(type, start, end);
     }
 
     public void setActivityInterval(String projectID, int activityID, Date start, Date end) throws IllegalArgumentException {
-        if(start.compareTo(end) >= 0) {
-            String output = String.format(
-                "The given start week, %s, is after the given end week, %s.",
-                DateFormatter.formatDate(start),
-                DateFormatter.formatDate(end)
-            );
-            throw new IllegalArgumentException(output);
-        }
-
-        Project project = this.getProject(projectID);
-        Activity activity = this.getActivity(project, activityID);
-
+        Activity activity = this.getProject(projectID).getActivity(activityID);
         activity.setStartWeek(start);
         activity.setEndWeek(end);
     }
 
-    public void setContext(InputContext ic) {
-        this.context = ic;
-    }
-
-    public void setHours(String projectID, int activityID, Date date, int setHours) throws IllegalArgumentException {
+    public void setHours(String projectID, int activityID, Date date, int setHours) throws AccessDeniedException {
         this.helperSetSubmitHours(projectID, activityID, date, setHours, true);
     }
 
-    public void setSignedInEmployee(String employeeID) {
-        this.db.setSignedInEmployee(employeeID);
-    }
-
-    public void submitHours(String projectID, int activityID, Date date, int addedHours) throws IllegalArgumentException {
+    public void submitHours(String projectID, int activityID, Date date, int addedHours) throws AccessDeniedException {
         this.helperSetSubmitHours(projectID, activityID, date, addedHours, false);
     }
 }
