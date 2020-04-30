@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 abstract public class BaseSteps {
 
-    protected void callCmd(InputContext context, ThrowingFunction<String[]> consumer, String[] args) {
+    protected void callCmd(InputContext context, ThrowingFunction<String[]> tf, String[] args) {
         AtomicReference<Exception> atomicException = new AtomicReference<>();
         String response = null;
 
@@ -20,7 +20,7 @@ abstract public class BaseSteps {
         context.addCommandExceptionHook(exceptionHook);
 
         try {
-            consumer.apply(args);
+            tf.apply(args);
         } catch (Exception e) {
             handleNonCommandException(e);
             return;

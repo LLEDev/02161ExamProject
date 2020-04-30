@@ -1,9 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.Context;
 
-import dk.dtu.SoftEngExamProjectG18.Business.Activity;
-import dk.dtu.SoftEngExamProjectG18.Business.Employee;
-import dk.dtu.SoftEngExamProjectG18.Business.OutOfOfficeActivity;
-import dk.dtu.SoftEngExamProjectG18.Business.Project;
+import dk.dtu.SoftEngExamProjectG18.Business.*;
 import dk.dtu.SoftEngExamProjectG18.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.Relations.EmployeeActivityIntermediate;
 import dk.dtu.SoftEngExamProjectG18.Util.DateFormatter;
@@ -51,7 +48,7 @@ public class ProjectManagerInputContext extends InputContext {
         String projectID = args[1];
         int activityID = Integer.parseInt(args[2]);
 
-        this.wrapExceptions(() -> this.application.assignEmployeeToActivity(employeeID, projectID, activityID))
+        this.wrapExceptions(() -> Application.getInstance().assignEmployeeToActivity(employeeID, projectID, activityID))
             .outputOnSuccess(() -> "Employee added to activity.")
             .outputOnError(e -> "An error occurred: " + e.getMessage())
             .run();
@@ -64,7 +61,7 @@ public class ProjectManagerInputContext extends InputContext {
         String projectID = args[0];
         String activityName = args[1];
 
-        this.wrapExceptions(() -> this.application.createActivity(projectID, activityName))
+        this.wrapExceptions(() -> Application.getInstance().createActivity(projectID, activityName))
             .outputOnSuccess(() -> "Activity created.")
             .outputOnError(e -> "An error occurred: " + e.getMessage())
             .run();
@@ -77,7 +74,7 @@ public class ProjectManagerInputContext extends InputContext {
         String projectID = args[0];
         int activityID = Integer.parseInt(args[1]);
 
-        this.wrapExceptions(() -> this.application.finishActivity(projectID, activityID))
+        this.wrapExceptions(() -> Application.getInstance().finishActivity(projectID, activityID))
             .outputOnSuccess(() -> "Activity finished.")
             .outputOnError(e -> "An error occurred: " + e.getMessage())
             .run();
@@ -92,7 +89,7 @@ public class ProjectManagerInputContext extends InputContext {
         int activityID = Integer.parseInt(args[1]);
         int numHours = Integer.parseInt(args[2]);
 
-        this.wrapExceptions(() -> this.application.estimateActivityDuration(projectID, activityID, numHours))
+        this.wrapExceptions(() -> Application.getInstance().estimateActivityDuration(projectID, activityID, numHours))
             .outputOnSuccess(() -> "Estimated number of work hours updated.")
             .outputOnError(e -> "An error occurred: " + e.getMessage())
             .run();
@@ -110,7 +107,7 @@ public class ProjectManagerInputContext extends InputContext {
         Date start = DateFormatter.parseDate(args[2]);
         Date end = DateFormatter.parseDate(args[3]);
 
-        this.wrapExceptions(() -> this.application.setActivityInterval(projectID, activityID, start, end))
+        this.wrapExceptions(() -> Application.getInstance().setActivityInterval(projectID, activityID, start, end))
             .outputOnSuccess(() -> "Start/end weeks updated.")
             .outputOnError(e -> "An error occurred: " + e.getMessage())
             .run();

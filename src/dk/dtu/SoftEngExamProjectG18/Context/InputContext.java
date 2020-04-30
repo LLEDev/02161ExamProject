@@ -103,7 +103,7 @@ abstract public class InputContext {
         String projectID = args[0];
         String employeeID = args[1];
 
-        this.wrapExceptions(() -> this.application.assignPM(projectID, employeeID))
+        this.wrapExceptions(() -> Application.getInstance().assignPM(projectID, employeeID))
             .outputOnSuccess(() -> "Project manager assigned.")
             .outputOnError(Exception::getMessage)
             .run();

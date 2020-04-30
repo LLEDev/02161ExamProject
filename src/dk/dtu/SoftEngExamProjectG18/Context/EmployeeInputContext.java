@@ -1,5 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.Context;
 
+import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Interfaces.ThrowingFunctionWithoutArgs;
 import dk.dtu.SoftEngExamProjectG18.Enum.OOOActivityType;
@@ -49,8 +50,8 @@ public class EmployeeInputContext extends InputContext {
         int hours = Integer.parseInt(args[3]);
 
         ThrowingFunctionWithoutArgs tf = shouldSet ?
-            () -> this.application.setHours(projectID, activityID, date, hours) :
-            () -> this.application.submitHours(projectID, activityID, date, hours);
+            () -> Application.getInstance().setHours(projectID, activityID, date, hours) :
+            () -> Application.getInstance().submitHours(projectID, activityID, date, hours);
 
         this.wrapExceptions(tf)
             .outputOnSuccess(() -> "Hours " + (shouldSet ? "set." : "submitted."))
@@ -66,7 +67,7 @@ public class EmployeeInputContext extends InputContext {
     public void cmdCompleteActivity(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
 
-        this.wrapExceptions(() -> this.application.markActivityDone(args[0], Integer.parseInt(args[1])))
+        this.wrapExceptions(() -> Application.getInstance().markActivityDone(args[0], Integer.parseInt(args[1])))
             .outputOnSuccess(() -> "Activity completed.")
             .outputOnError(e -> "An error occurred: " + e.getMessage())
             .run();
@@ -79,7 +80,7 @@ public class EmployeeInputContext extends InputContext {
         String name = args[0];
         boolean isBillable = Boolean.parseBoolean(args[1]);
 
-        this.wrapExceptions(() -> this.application.createProject(name, isBillable))
+        this.wrapExceptions(() -> Application.getInstance().createProject(name, isBillable))
             .outputOnSuccess(() -> "Project created.")
             .outputOnError(e -> String.format("Project not created due to error: %s.", e.getMessage()))
             .run();
@@ -90,10 +91,10 @@ public class EmployeeInputContext extends InputContext {
         this.assertArgumentsValid(args.length, 3);
 
         String projectID = args[0];
-        int activityID = Integer.parseInt(args[0]);
+        int activityID = Integer.parseInt(args[1]);
         String employeeID = args[2];
 
-        this.wrapExceptions(() -> this.application.requestAssistance(projectID, activityID, employeeID))
+        this.wrapExceptions(() -> Application.getInstance().requestAssistance(projectID, activityID, employeeID))
             .outputOnSuccess(() -> "Assistance requested.")
             .outputOnError(e -> "An error occurred: " + e.getMessage())
             .run();
@@ -133,7 +134,7 @@ public class EmployeeInputContext extends InputContext {
         Date start = DateFormatter.parseDate(args[1]);
         Date end = DateFormatter.parseDate(args[2]);
 
-        this.wrapExceptions(() -> this.application.requestOutOfOffice(finalType, start, end))
+        this.wrapExceptions(() -> Application.getInstance().requestOutOfOffice(finalType, start, end))
             .outputOnSuccess(() -> "Out-of-office activity requested.")
             .outputOnError(e -> "An error occurred: " + e.getMessage())
             .run();
