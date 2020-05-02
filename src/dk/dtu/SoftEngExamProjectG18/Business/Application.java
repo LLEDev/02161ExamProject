@@ -215,15 +215,15 @@ public class Application {
         Employee signedInEmployee = db.getSignedInEmployee();
         HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> signedInEmployeeActivities
             = signedInEmployee.getActivities();
-        HashMap<Integer, EmployeeActivityIntermediate> signedEmployeeProjectActivities =
+        HashMap<Integer, EmployeeActivityIntermediate> signedInEmployeeProjectActivities =
             signedInEmployeeActivities.get(project.getID());
 
-        if (signedEmployeeProjectActivities == null) {
+        if (signedInEmployeeProjectActivities == null) {
             String output = String.format("You are not allowed to work with the given project, %s.", projectID);
             throw new AccessDeniedException(output);
         }
 
-        boolean signedInEmployeeIsNotAttachedToActivity = !signedEmployeeProjectActivities.containsKey(activity.getID());
+        boolean signedInEmployeeIsNotAttachedToActivity = !signedInEmployeeProjectActivities.containsKey(activity.getID());
 
         if (signedInEmployeeIsNotAttachedToActivity) {
             String output = String.format("You are not allowed to work with the given activity, %s.", activityID);
