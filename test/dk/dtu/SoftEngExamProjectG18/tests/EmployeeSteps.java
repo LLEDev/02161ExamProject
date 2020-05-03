@@ -198,6 +198,11 @@ public class EmployeeSteps extends StepsBase {
         }
     }
 
+    @When("the employee switches to context {string}")
+    public void theEmployeeSwitchesToContext(String context) {
+        this.wrap(() -> Application.getInstance().switchContext(context));
+    }
+
     /*
         Then (or and) methods (assertions)
      */
@@ -219,5 +224,10 @@ public class EmployeeSteps extends StepsBase {
         Application application = Application.getInstance();
         Employee employee = application.getEmployee(arg0);
         employee.assertOpenActivities();
+    }
+
+    @Then("the current context is {string}")
+    public void theCurrentContextIs(String context) {
+        Assert.assertEquals(Application.getInstance().getContext().getClass().getSimpleName(), context);
     }
 }
