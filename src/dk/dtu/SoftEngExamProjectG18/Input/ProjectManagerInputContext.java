@@ -99,13 +99,13 @@ public class ProjectManagerInputContext extends InputContext {
     public void cmdSetActivityInterval(String[] args) throws CommandException, ParseException {
         this.assertArgumentsValid(args.length, 4);
         this.assertStringParseIntDoable(args[1]);
-        this.assertStringParseDateDoable(args[2]);
-        this.assertStringParseDateDoable(args[3]);
+        this.assertStringParseWeekDoable(args[2]);
+        this.assertStringParseWeekDoable(args[3]);
 
         String projectID = args[0];
         int activityID = Integer.parseInt(args[1]);
-        Date start = DateFormatter.parseDate(args[2]);
-        Date end = DateFormatter.parseDate(args[3]);
+        Date start = DateFormatter.parseWeek(args[2]);
+        Date end = DateFormatter.parseWeek(args[3]);
 
         this.wrapExceptions(() -> Application.getInstance().setActivityInterval(projectID, activityID, start, end))
             .outputOnSuccess(() -> "Start/end weeks updated.")

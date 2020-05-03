@@ -1,11 +1,9 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
-import dk.dtu.SoftEngExamProjectG18.Business.Application;
+import dk.dtu.SoftEngExamProjectG18.Business.*;
+import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
+import dk.dtu.SoftEngExamProjectG18.General.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Input.EmployeeInputContext;
-import dk.dtu.SoftEngExamProjectG18.Business.Activity;
-import dk.dtu.SoftEngExamProjectG18.Business.Employee;
-import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.Business.EmployeeActivityIntermediate;
 import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;
@@ -16,6 +14,7 @@ import org.junit.Assert;
 
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EmployeeSteps extends StepsBase {
 
@@ -71,9 +70,8 @@ public class EmployeeSteps extends StepsBase {
         application.setSignedInEmployee(employeeID);
     }
 
-    // TODO: Refactor
     @And("the employee is attached to all activities in the projects")
-    public void theEmployeeIsAttachedToAllActivitiesInTheProjects(List<String> projects) {
+    public void theEmployeeIsAttachedToAllActivitiesInTheProjects(List<String> projects) throws AccessDeniedException {
         Application application = Application.getInstance();
         Employee signedInEmployee = application.getSignedInEmployee();
 
@@ -81,13 +79,15 @@ public class EmployeeSteps extends StepsBase {
             Project project = application.getProject(projectID);
             Assert.assertNotNull(project);
 
-            HashMap<Integer, EmployeeActivityIntermediate> employeeProjectActivities = signedInEmployee.getActivities().get(project.getID());
+            // Get employees' activity associations related to project
+            HashMap<Integer, EmployeeActivityIntermediate> ePA = signedInEmployee.getActivities().get(project.getID());
 
             for(Activity activity : project.getActivities().values()) {
-                if(employeeProjectActivities == null || !employeeProjectActivities.containsKey(activity.getID())) {
-                    new EmployeeActivityIntermediate(signedInEmployee, activity);
+                if(ePA == null || !ePA.containsKey(activity.getID())) {
+                    EmployeeActivityIntermediate.initAssociation(signedInEmployee, activity);
                 }
 
+                // Make sure employee now have association to activity
                 Assert.assertTrue(signedInEmployee.getActivities().get(project.getID()).containsKey(activity.getID()));
             }
         }
@@ -104,9 +104,8 @@ public class EmployeeSteps extends StepsBase {
         this.wrap(() -> EmployeeActivityIntermediate.initAssociation(employee, activity));
     }
 
-    // TODO: Refactor
     @And("the employee has the following work minutes")
-    public void theEmployeeHasTheFollowingWorkMinutes(List<List<String>> workMinutes) throws ParseException {
+    public void theEmployeeHasTheFollowingWorkMinutes(List<List<String>> workMinutes) throws ParseException, AccessDeniedException {
         Application application = Application.getInstance();
         Employee employee = application.getSignedInEmployee();
 
@@ -122,9 +121,16 @@ public class EmployeeSteps extends StepsBase {
             Assert.assertNotNull(activity);
             Assert.assertNotNull(date);
 
-            EmployeeActivityIntermediate eai = new EmployeeActivityIntermediate(employee, activity);
+            EmployeeActivityIntermediate eai = EmployeeActivityIntermediate.initAssociation(employee, activity);
             eai.setMinutes(date, minutes);
         }
+    }
+
+    @And("the employee has the following work minutes today")
+    public void theEmployeeHasTheFollowingWorkMinutesToday(List<List<String>> workMinutes) throws ParseException, AccessDeniedException {
+        final String today = DateFormatter.formatDate(new Date());
+        List<List<String>> newWorkMinutes = workMinutes.stream().peek(l -> l.add(2, today)).collect(Collectors.toList());
+        this.theEmployeeHasTheFollowingWorkMinutes(newWorkMinutes);
     }
 
     /*
@@ -155,6 +161,41 @@ public class EmployeeSteps extends StepsBase {
                 otherEmployeeID
             )
         );
+    }
+
+    @When("the employee submits the work minutes")
+    public void theEmployeeSubmitsTheWorkMinutes(List<List<String>> minutes) throws AccessDeniedException, IllegalArgumentException {
+        Application application = Application.getInstance();
+
+        for (List<String> submission : minutes) {
+            if(submission.size() != 3) {
+                throw new IllegalArgumentException("Invalid submission entry given.");
+            }
+
+            this.wrap(() -> application.submitHours(
+                submission.get(0),
+                Integer.parseInt(submission.get(1)),
+                new Date(),
+                Integer.parseInt(submission.get(2))
+            ));
+        }
+    }
+
+    @When("the employee requests the following OOO activities")
+    public void theEmployeeRequestsTheFollowingOOOActivities(List<List<String>> activities) throws Exception {
+        Application application = Application.getInstance();
+
+        for(List<String> activity : activities) {
+            if(activity.size() != 3) {
+                throw new Exception("Invalid OOO activity entry given.");
+            }
+
+            this.wrap(() -> application.requestOutOfOffice(
+                OOOActivityType.valueOf(activity.get(0)),
+                DateFormatter.parseDate(activity.get(1)),
+                DateFormatter.parseDate(activity.get(2))
+            ));
+        }
     }
 
     /*

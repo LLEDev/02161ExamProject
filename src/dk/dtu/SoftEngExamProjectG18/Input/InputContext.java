@@ -29,6 +29,7 @@ abstract public class InputContext {
 
     public ArrayList<Consumer<Exception>> onExceptionHooks = new ArrayList<>();
     protected String output = "";
+    protected boolean sandbox = false; // true when testing UI (i.e. not running business logic)
     protected ActionMap triggers = ActionMap.build(new Action[]{
         new Action("project assign pm", new String[]{"projectID", "PMID"}, this::cmdAssignPM),
         new Action("switch context", new String[]{"contextType"}, this::cmdSwitchContext),
@@ -50,6 +51,15 @@ abstract public class InputContext {
         }
     }
 
+    public void assertStringParseWeekDoable(String possibleDate) throws CommandException {
+        try {
+            DateFormatter.parseWeek(possibleDate);
+        } catch (ParseException e) {
+            String output = String.format("Any week must be given in the format %s. Received %s.", DateFormatter.toWeekPattern(), possibleDate);
+            throw new CommandException(output);
+        }
+    }
+
     public void assertStringParseIntDoable(String possibleInt) throws CommandException {
         try {
             Integer.parseInt(possibleInt);
@@ -61,6 +71,10 @@ abstract public class InputContext {
 
     public String getOutput() {
         return this.output;
+    }
+
+    public boolean getSandbox() {
+        return this.sandbox;
     }
 
     public ActionMap getTriggers() {
@@ -79,8 +93,12 @@ abstract public class InputContext {
         this.output = "";
     }
 
+    public void setSandbox(boolean sandbox) {
+        this.sandbox = sandbox;
+    }
+
     public ExceptionWrapper wrapExceptions(ThrowingFunctionWithoutArgs tf) {
-        return new ExceptionWrapper(tf, this.onExceptionHooks);
+        return new ExceptionWrapper(tf, this.onExceptionHooks, this.getSandbox());
     }
 
     public void writeOutput(String s) {

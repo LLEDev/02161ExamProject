@@ -21,15 +21,17 @@ public class ExceptionWrapper {
     protected ArrayList<Consumer<Exception>> exceptionHooks = new ArrayList<>();
     protected ArrayList<Function<CommandException, String>> onErrorOutputs = new ArrayList<>();
     protected ArrayList<ZeroArgumentFunction<String>> onSuccessOutputs = new ArrayList<>();
+    protected boolean sandbox = false;
     protected ThrowingFunctionWithoutArgs tf;
 
     public ExceptionWrapper(ThrowingFunctionWithoutArgs tf) {
         this.tf = tf;
     }
 
-    public ExceptionWrapper(ThrowingFunctionWithoutArgs tf, ArrayList<Consumer<Exception>> exceptionHooks) {
+    public ExceptionWrapper(ThrowingFunctionWithoutArgs tf, ArrayList<Consumer<Exception>> exceptionHooks, boolean sandbox) {
         this(tf);
         this.exceptionHooks = exceptionHooks;
+        this.sandbox = sandbox;
     }
 
     public ExceptionWrapper outputOnError(Function<CommandException, String> callable) {
@@ -45,19 +47,28 @@ public class ExceptionWrapper {
     }
 
     public void run() {
+        // Do not run business logic if testing UI
+        if(this.sandbox) {
+            return;
+        }
+
         InputContext context = Application.getInstance().getContext();
 
         try {
             this.tf.apply();
             this.onSuccessOutputs.forEach(consumer -> context.writeOutput(consumer.apply()));
         } catch (Exception e) {
+            CommandException ce = null;
+
             if(Arrays.asList(CHECKED_EXCEPTIONS).contains(e.getClass())) {
-                CommandException ce = new CommandException(e.getMessage());
-                this.onErrorOutputs.forEach(consumer -> context.writeOutput(consumer.apply(ce)));
-                this.exceptionHooks.forEach(consumer -> consumer.accept(ce));
-            } else {
-                this.exceptionHooks.forEach(consumer -> consumer.accept(e));
+                ce = new CommandException(e.getMessage());
+
+                final CommandException fce = ce;
+                this.onErrorOutputs.forEach(consumer -> context.writeOutput(consumer.apply(fce)));
             }
+
+            final Exception fe = ce == null ? e : ce;
+            this.exceptionHooks.forEach(consumer -> consumer.accept(fe));
         }
     }
 

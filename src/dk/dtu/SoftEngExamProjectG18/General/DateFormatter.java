@@ -9,22 +9,6 @@ public class DateFormatter {
     protected static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     protected static SimpleDateFormat weekFormatter = new SimpleDateFormat("yyyy-ww");
 
-    public static boolean canParseDate(String str) {
-        try {
-            parseDate(str);
-            return true;
-        } catch(ParseException ignored) {}
-        return false;
-    }
-
-    public static boolean canParseWeek(String str) {
-        try {
-            parseWeek(str);
-            return true;
-        } catch(ParseException ignored) {}
-        return false;
-    }
-
     public static String formatDate(Date d) {
         return dateFormatter.format(d);
     }

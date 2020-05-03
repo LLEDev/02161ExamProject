@@ -6,13 +6,11 @@ Feature: Finish activity
         Given that there is a project with name "Test Project"
         And there is an employee
         And the employee is the project manager for the project
-        And there is an activity with ID "1"
         When the employee finishes the activity with ID "1" in the project
         Then the activity with ID "1" is marked as finished in the project
 
     Scenario: Employee who is not a project manager adds an activity to a project
         Given that there is a project with name "Test Project"
         And there is an employee
-        And there is an activity with ID "1"
         When the employee finishes the activity with ID "1" in the project
         Then the error message "Project manager role required." is given
