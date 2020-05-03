@@ -28,3 +28,14 @@ Feature: Submit daily work hours
         When the employee submits the work minutes
             | 2020-000001 | 1 | 90 |
         Then the error message "You are not associated with one or more of these projects." is given
+
+    Scenario: An employee submits work hours under 0
+        Given there are projects with names
+            | Test Project |
+        And there is an employee
+        And the employee is attached to all activities in the projects
+            | 2020-000001 |
+        When the employee submits the work minutes
+            | 2020-000001 | 1 | -90 |
+        Then these activities with overall durations are found
+            | 2020-000001 | 1 | -90 |
