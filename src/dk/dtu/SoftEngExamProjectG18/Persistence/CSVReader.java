@@ -6,6 +6,7 @@ import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Business.EmployeeActivityIntermediate;
+import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,8 +17,6 @@ import java.util.*;
 
 public class CSVReader {
 
-    protected static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
     protected static boolean getBoolean(HashMap<String, String> entry, String property, boolean def) {
         String val = entry.get(property);
         return val != null ? Boolean.parseBoolean(val) : def;
@@ -25,7 +24,7 @@ public class CSVReader {
 
     protected static Date getDate(HashMap<String, String> entry, String property) {
         try {
-            return formatter.parse(entry.get(property));
+            return DateFormatter.parseDate(entry.get(property));
         } catch (ParseException ignored) {}
         return null;
     }
@@ -38,30 +37,16 @@ public class CSVReader {
     }
 
     protected static Date getDateFromYearWeek(HashMap<String, String> entry, String property) {
-        String[] weekString = entry.getOrDefault(property, "").split("-");
-
-        if(weekString.length != 2) {
-            return null;
-        }
-
         try {
-            int year = Integer.parseInt(weekString[0]);
-            int week = Integer.parseInt(weekString[1]);
-
-            Calendar c = new GregorianCalendar();
-            c.set(Calendar.YEAR, year);
-            c.set(Calendar.WEEK_OF_YEAR, week);
-
-            return c.getTime();
-        } catch (NumberFormatException ignored) {}
-
+            return DateFormatter.parseWeek(entry.getOrDefault(property, ""));
+        } catch (ParseException ignored) {}
         return null;
     }
 
     protected static OOOActivityType getOOOActivityType(String input) {
         try {
             return OOOActivityType.valueOf(input);
-        } catch (Exception ignored) {}
+        } catch (IllegalArgumentException ignored) {}
 
         return null;
     }
@@ -145,10 +130,6 @@ public class CSVReader {
 
             try {
                 Project project = application.getProject(projectID);
-                if (project == null) {
-                    continue;
-                }
-
                 Activity activityInstance = new Activity(name, project);
 
                 Date start = getDateFromYearWeek(activity, "StartWeek");
@@ -171,16 +152,14 @@ public class CSVReader {
             String employeeID = entry.get("Employee ID");
             String typeID = entry.get("Type");
 
-            Employee employee = application.getEmployee(employeeID);
-            OOOActivityType type = getOOOActivityType(typeID);
-            Date start = getDate(entry, "Start");
-            Date end = getDate(entry, "End");
+            try {
+                Employee employee = application.getEmployee(employeeID);
+                OOOActivityType type = getOOOActivityType(typeID);
+                Date start = getDate(entry, "Start");
+                Date end = getDate(entry, "End");
 
-            if(employee == null || type == null || start == null || end == null) {
-                continue;
-            }
-
-            employee.addOOOActivity(type, start, end);
+                employee.addOOOActivity(type, start, end);
+            } catch (IllegalArgumentException ignored) {} // Ignore broken entries
         }
     }
 
@@ -196,18 +175,10 @@ public class CSVReader {
                 Employee employee = application.getEmployee(employeeID);
                 Project project = application.getProject(projectID);
 
-                if (employee == null || project == null) {
-                    continue;
-                }
-
                 Activity activity = project.getActivity(activityID);
 
                 Date date = getDate(entry, "Date");
                 int minutes = getInt(entry, "Minutes", 0);
-
-                if (date == null || minutes < 0) {
-                    continue;
-                }
 
                 HashMap<Integer, EmployeeActivityIntermediate> alreadyTrackedActivities = employee.getActivities().get(project.getID());
 

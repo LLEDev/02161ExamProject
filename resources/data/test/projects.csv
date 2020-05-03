@@ -2,5 +2,5 @@ CreatedAt, Name, IsBillable, PM
 2020-01-01, Test Project 1, true, HH
 2020-01-02, Test Project 2, true, -
 2020-01-03, Test Project 3, true, -
-2020-01-NaN, Test Project 4, false, -
+--, Test Project 4, false, -
 2020-01-03-04, Test Project 5, false, -
