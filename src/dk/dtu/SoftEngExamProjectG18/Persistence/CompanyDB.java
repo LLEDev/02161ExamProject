@@ -4,6 +4,7 @@ import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 public class CompanyDB {
 
@@ -11,6 +12,14 @@ public class CompanyDB {
     protected HashMap<Integer, Integer> nextProjectID = new HashMap<>();
     protected HashMap<String, Project> projects = new HashMap<>();
     protected Employee signedInEmployee;
+
+    protected <X extends Throwable> void assertOrThrow(Supplier<? extends X> exceptionSupplier, boolean statement) throws X {
+        X throwable = exceptionSupplier.get();
+
+        if(!statement) {
+            throw throwable;
+        }
+    }
 
     public Employee getEmployee(String ID) {
         return this.employees.get(ID);
@@ -40,17 +49,19 @@ public class CompanyDB {
     }
 
     public Employee getSignedInEmployee() throws IllegalStateException {
-        if(this.signedInEmployee == null) {
-            throw new IllegalStateException("No employee signed in.");
-        }
+        this.assertOrThrow(
+            () -> new IllegalStateException("No employee signed in."),
+            this.signedInEmployee != null
+        );
 
         return this.signedInEmployee;
     }
 
     public void setSignedInEmployee(String ID) {
-        if(!this.employees.containsKey(ID)) {
-            throw new IllegalArgumentException("Given employee does not exist.");
-        }
+        this.assertOrThrow(
+            () -> new IllegalArgumentException("Given employee does not exist."),
+            this.employees.containsKey(ID)
+        );
 
         this.signedInEmployee = this.employees.get(ID);
     }

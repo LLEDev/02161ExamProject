@@ -5,6 +5,7 @@ import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
 import dk.dtu.SoftEngExamProjectG18.Business.EmployeeActivityIntermediate;
 import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -42,38 +43,24 @@ public class ProjectSteps extends StepsBase {
         }
     }
 
-    // TODO: Refactor
-    @And("there is an activity with ID {string}")
-    public void thereIsAnActivityWithID(String id) {
-        TestHolder testHolder = TestHolder.getInstance();
-        Project project = testHolder.getProject();
-        int ID = Integer.parseInt(id);
-
-        if(project.getActivities().containsKey(ID)) {
-            return;
-        }
-
-        Activity activity = new Activity("Test Activity", project);
-        project.getActivities().put(ID, activity);
-    }
-
-    // TODO: Refactor
     @And("the project has the following activities")
-    public void theProjectHasTheFollowingActivities(List<List<String>> activities) throws ParseException {
+    public void theProjectHasTheFollowingActivities(List<List<String>> activities) throws ParseException, AccessDeniedException {
         TestHolder th = TestHolder.getInstance();
+        SimpleDateFormat weekFormatter = new SimpleDateFormat("yyyy-ww");
+
         Project project = th.getProject();
         Assert.assertNotNull(project);
 
+        // Remove auto-created activities
         project.clearActivities();
 
-        SimpleDateFormat weekFormatter = new SimpleDateFormat("yyyy-ww");
+        // Create all given activities
         for(List<String> activityString : activities) {
             if(activityString.size() == 0) {
                 continue;
             }
 
             Activity activity = new Activity(activityString.get(0), project);
-
             for(int i = 1; i < activityString.size(); i++) {
                 String cell = activityString.get(i);
 
@@ -118,29 +105,26 @@ public class ProjectSteps extends StepsBase {
         this.wrap(() -> Application.getInstance().finishActivity(projectID, Integer.parseInt(activityID)));
     }
 
-    // TODO: Refactor
     @Given("the activity with ID {string} has an estimated duration of {string} weeks and registered {string} hours spent on date {string}")
-    public void theActivityWithIDHasAnEstimatedDurationOfWeeksAndRegisteredHoursSpentOnDate(String id, String weeks, String hours, String date) throws ParseException {
+    public void theActivityWithIDHasAnEstimatedDurationOfWeeksAndRegisteredHoursSpentOnDate(String id, String weeks, String hours, String date) throws ParseException, AccessDeniedException {
         Application application = Application.getInstance();
         TestHolder testHolder = TestHolder.getInstance();
 
         Project project = testHolder.getProject();
         Activity activity = project.getActivity(Integer.parseInt(id));
 
-        Date today = DateFormatter.parseDate(date);
-        Date newDate = new Date(today.getTime());
+        // Create dates
+        Date today = DateFormatter.parseDate(date), newDate = new Date(today.getTime());
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(newDate);
         calendar.add(Calendar.DATE, Integer.parseInt(weeks) * 7);
         newDate.setTime(calendar.getTime().getTime());
 
+        // Set start/end weeks
         activity.setStartWeek(today);
         activity.setEndWeek(newDate);
 
-        HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
-        EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(application.getSignedInEmployee().getID());
-
-        employeeActivityIntermediate.addMinutes(today, Integer.parseInt(hours) * 60);
+        application.submitHours(project.getID(), activity.getID(), today, Integer.parseInt(hours));
     }
 
 
