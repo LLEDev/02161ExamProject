@@ -107,6 +107,11 @@ Feature: Test all "view X" commands
             | Illness | 2020-04-15 | 2020-04-18 |
             | Education | 2020-04-10 | 2020-04-14 |
 
+    Scenario: A project manager views a schedule of a non-existing employee
+        Given there is an employee
+        When the employee requests a view of the schedule of the employee with ID "CC"
+        Then a CommandException is thrown
+
     Scenario: An employee request a view of daily submissions
         Given that there is a project with name "Test project"
         And the project has the following activities
