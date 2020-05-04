@@ -39,6 +39,7 @@ public class Employee implements Extractable<Employee> {
         }
     }
 
+//    TODO: Do we need this - it's not used anywhere...
     public boolean isOutOfOffice(Date date) {
         for (OutOfOfficeActivity OOOActivity : this.OOOActivities) {
             if (OOOActivity.start.compareTo(date) > 0 || OOOActivity.end.compareTo(date) < 0) {
