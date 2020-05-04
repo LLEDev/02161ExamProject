@@ -227,6 +227,14 @@ public class EmployeeSteps extends StepsBase {
         employee.assertOpenActivities();
     }
 
+    @And("the employee with initials {string} has reached the activity cap")
+    public void theEmployeeWithInitialsHasReachedTheActivityCap(String arg0) {
+        Application application = Application.getInstance();
+        Employee employee = application.getEmployee(arg0);
+
+        employee.setWeeklyActivityCap(0);
+    }
+
     @Then("the current context is {string}")
     public void theCurrentContextIs(String context) {
         Assert.assertEquals(Application.getInstance().getContext().getClass().getSimpleName(), context);
