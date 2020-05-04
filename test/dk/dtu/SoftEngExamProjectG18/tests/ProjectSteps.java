@@ -167,4 +167,32 @@ public class ProjectSteps extends StepsBase {
             Assert.assertEquals(Double.parseDouble(duration.get(2)), hours, 1e-15);
         }
     }
+
+    @Then("the activity with ID {string} has an estimated duration of {string} hours")
+    public void theActivityWithIDHasAnEstimatedDurationOfHours(String activityID, String hours) {
+        TestHolder th = TestHolder.getInstance();
+
+        Project project = th.getProject();
+        Assert.assertNotNull(project);
+
+        Activity activity = project.getActivity(Integer.parseInt(activityID));
+
+        int estimatedHours = activity.getEstimatedHours();
+        Assert.assertEquals(estimatedHours,Integer.parseInt(hours));
+
+    }
+
+    @Then("the activity with ID {string} has the start date {string} and the end date {string}")
+    public void theActivityWithIDHasTheStartDateAndTheEndDate(String activityID, String start, String end) throws ParseException {
+        TestHolder th = TestHolder.getInstance();
+
+        Project project = th.getProject();
+        Assert.assertNotNull(project);
+
+        Activity activity = project.getActivity(Integer.parseInt(activityID));
+
+        Assert.assertEquals(activity.getStartWeek(),DateFormatter.parseDate(start));
+        Assert.assertEquals(activity.getEndWeek(),DateFormatter.parseDate(end));
+
+    }
 }

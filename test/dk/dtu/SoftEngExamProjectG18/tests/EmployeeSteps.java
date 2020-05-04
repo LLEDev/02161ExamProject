@@ -13,6 +13,7 @@ import io.cucumber.java.en.When;
 import org.junit.Assert;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -229,5 +230,61 @@ public class EmployeeSteps extends StepsBase {
     @Then("the current context is {string}")
     public void theCurrentContextIs(String context) {
         Assert.assertEquals(Application.getInstance().getContext().getClass().getSimpleName(), context);
+    }
+
+    @When("the employee sets the work hours {string} in the activity with ID {string}.")
+    public void theEmployeeSetsTheWorkHoursInTheActivityWithID(String workHours, String activityID) {
+        TestHolder th = TestHolder.getInstance();
+
+        Project project = th.getProject();
+        Assert.assertNotNull(project);
+
+        Application application = Application.getInstance();
+
+        this.wrap(() -> application.setHours(
+                project.getID(),
+                Integer.parseInt(activityID),
+                new Date(),
+                Integer.parseInt(workHours)
+        ));
+
+
+    }
+
+    @When("the employee estimates the duration to {string} hours for the activity with ID {string}")
+    public void theEmployeeEstimatesTheDurationToHoursForTheActivityWithID(String hours, String activityID) {
+        TestHolder th = TestHolder.getInstance();
+
+        Project project = th.getProject();
+        Assert.assertNotNull(project);
+
+        Application application = Application.getInstance();
+
+        this.wrap(() -> application.estimateActivityDuration(
+                project.getID(),
+                Integer.parseInt(activityID),
+                Integer.parseInt(hours)
+        ));
+
+    }
+
+    @When("the employee sets the start date {string} and the end date {string} of the activity with ID {string}")
+    public void theEmployeeSetsTheStartDateAndTheEndDateOfTheActivityWithID(String start, String end, String activityID) throws ParseException {
+        TestHolder th = TestHolder.getInstance();
+
+        Project project = th.getProject();
+        Assert.assertNotNull(project);
+
+        Application application = Application.getInstance();
+
+        Date today = DateFormatter.parseDate(start);
+
+        this.wrap(() -> application.setActivityInterval(
+                project.getID(),
+                Integer.parseInt(activityID),
+                DateFormatter.parseDate(start),
+                DateFormatter.parseDate(end)
+        ));
+
     }
 }
