@@ -69,9 +69,7 @@ public class Project {
 
         this.setupCreatedAt(createdAt);
 
-        if(setupActivity) { // Do not setup activity if data is imported through CSVReader
-            this.setupActivity(null);
-        }
+        if(setupActivity) {this.setupActivity(null);} // Do not setup activity if data is imported through CSVReader
     }
 
     public void assertPM(Employee employee) throws AccessDeniedException {
