@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 public class DateFormatter {
 
     protected static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-    protected static SimpleDateFormat weekFormatter = new SimpleDateFormat("yyyy-ww");
+    protected static SimpleDateFormat weekFormatter = new SimpleDateFormat("YYYY-ww");
 
     public static String formatDate(Date d) throws IllegalArgumentException {
         Assertions.assertOrThrow(

@@ -96,11 +96,11 @@ Feature: Test all "view X" commands
         When the employee requests a view of the schedule of the employee with ID "BB"
         Then the following table is presented
             | ID | Name | Start week | End week | Estimated work hours (in total) | Tracked work hours (in total) |
-            | 2 | Second Activity | 2019-01 | 2020-52 | 200 | 1 |
-            | 1 | First Activity | 2019-01 | 2020-52 | 200 | 1 |
-            | 4 | Fourth Activity | 2019-01 | 2020-52 | 200 | 1 |
-            | 3 | Third Activity | 2019-01 | 2020-52 | 200 | 1 |
-            | 5 | Fifth Activity | 2019-01 | 2020-52 | 200 | 1 |
+            | 2 | Second Activity | 2020-01 | 2020-52 | 200 | 1 |
+            | 1 | First Activity | 2020-01 | 2020-52 | 200 | 1 |
+            | 4 | Fourth Activity | 2020-01 | 2020-52 | 200 | 1 |
+            | 3 | Third Activity | 2020-01 | 2020-52 | 200 | 1 |
+            | 5 | Fifth Activity | 2020-01 | 2020-52 | 200 | 1 |
         And the following table is presented
             | Type | Start | End |
             | Vacation | 2020-04-01 | 2020-04-14 |

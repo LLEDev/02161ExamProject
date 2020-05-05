@@ -272,8 +272,6 @@ public class EmployeeSteps extends StepsBase {
 
         Application application = Application.getInstance();
 
-        Date today = DateFormatter.parseDate(start);
-
         this.wrap(() -> application.setActivityInterval(
                 project.getID(),
                 Integer.parseInt(activityID),

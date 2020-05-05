@@ -36,7 +36,7 @@ Feature: Estimate and set interval for activities
         And there is an employee
         And the employee is the project manager for the project
         When the employee sets the start date "2020-05-04" and the end date "2020-05-03" of the activity with ID "1"
-        Then the error message "The given start week, 2020-05-04, is after the given end week, 2020-05-03." is given
+        Then the error message "The given start week, 2020-19, is after the given end week, 2020-18." is given
 
     Scenario: An employee sets the end date after the start date of an activity
         Given that there is a project with name "Test project"

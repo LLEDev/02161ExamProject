@@ -31,8 +31,8 @@ public class Activity implements Extractable<Activity> {
         if(start.compareTo(end) >= 0) {
             String output = String.format(
                 "The given start week, %s, is after the given end week, %s.",
-                DateFormatter.formatDate(start),
-                DateFormatter.formatDate(end)
+                DateFormatter.formatWeek(start),
+                DateFormatter.formatWeek(end)
             );
             throw new IllegalArgumentException(output);
         }
@@ -86,7 +86,7 @@ public class Activity implements Extractable<Activity> {
         this.isDone = done;
     }
 
-    public void setEndWeek(Date endWeek) {
+    public void setEndWeek(Date endWeek) throws IllegalArgumentException {
         this.assertStartEndValid(this.startWeek, endWeek);
         this.endWeek = endWeek;
     }
@@ -100,7 +100,7 @@ public class Activity implements Extractable<Activity> {
         this.estimatedHours = estimatedHours;
     }
 
-    public void setStartWeek(Date startWeek) {
+    public void setStartWeek(Date startWeek) throws IllegalArgumentException {
         this.assertStartEndValid(startWeek, this.endWeek);
         this.startWeek = startWeek;
     }
