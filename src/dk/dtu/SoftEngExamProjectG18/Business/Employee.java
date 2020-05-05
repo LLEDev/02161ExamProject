@@ -88,65 +88,57 @@ public class Employee implements Extractable<Employee> {
         Table extraction methods
      */
 
+    protected boolean isEmployeeAvailable(Employee employee, Date date) {
+        return employee.getOOOActivities()
+            .stream()
+            .noneMatch(OOOActivity -> {
+                return OOOActivity.getStart().compareTo(date) <= 0 && OOOActivity.getEnd().compareTo(date) >= 0;
+            });
+    }
+
     @Override
     public ArrayList<HashMap<String, String>> extract(String context, HashMap<String, Object> metaData, ArrayList<? extends Extractable<?>> collection) {
         if(context.equals("availability") && metaData.containsKey("date") && metaData.get("date") instanceof Date) {
             return this.extractAvailability((Date) metaData.get("date"), collection);
         }
 
-        if(context.equals("submissions") && collection.size() == 1 && collection.get(0) instanceof Employee) {
-            return this.extractSubmissions((Employee) collection.get(0));
-        }
-
-        return null;
+        return this.extractSubmissions((Employee) collection.get(0));
     }
 
     public ArrayList<HashMap<String, String>> extractAvailability(Date date, ArrayList<? extends Extractable<?>> collection) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 
         for(Extractable<?> extractable : collection) {
-            if (!(extractable instanceof Employee)) {
-                continue;
-            }
+            if (extractable instanceof Employee) {
+                Employee employee = (Employee) extractable;
 
-            Employee employee = (Employee) extractable;
+                if (this.isEmployeeAvailable(employee, date)) {
+                    int activeActivities = 0;
+                    for (Activity activity : employee.getAllActiveActivities()) {
+                        Date start = activity.getStartWeek();
 
-            boolean isAvailable = true;
-            for(OutOfOfficeActivity OOOActivity : employee.getOOOActivities()) {
-                if(OOOActivity.getStart().compareTo(date) <= 0 && OOOActivity.getEnd().compareTo(date) >= 0) {
-                    isAvailable = false;
-                    break;
+                        Calendar endCal = new GregorianCalendar();
+                        endCal.add(Calendar.WEEK_OF_YEAR, 1);
+                        endCal.add(Calendar.SECOND, -1);
+                        Date end = endCal.getTime();
+
+                        if (start.compareTo(date) <= 0 && end.compareTo(date) >= 0) {
+                            activeActivities++;
+                        }
+                    }
+
+                    if (activeActivities >= employee.getWeeklyActivityCap()) {
+                        continue;
+                    }
+
+                    HashMap<String, String> entry = new HashMap<>();
+                    entry.put("ID", employee.getID());
+                    entry.put("Name", employee.getName());
+                    entry.put("Available activity slots", String.valueOf(employee.getWeeklyActivityCap() - activeActivities));
+
+                    result.add(entry);
                 }
             }
-
-            if(!isAvailable) {
-                continue;
-            }
-
-            int activeActivities = 0;
-            for(Activity activity : employee.getAllActiveActivities()) {
-                Date start = activity.getStartWeek();
-
-                Calendar endCal = new GregorianCalendar();
-                endCal.add(Calendar.WEEK_OF_YEAR, 1);
-                endCal.add(Calendar.SECOND, -1);
-                Date end = endCal.getTime();
-
-                if(start.compareTo(date) <= 0 && end.compareTo(date) >= 0) {
-                    activeActivities++;
-                }
-            }
-
-            if(activeActivities >= employee.getWeeklyActivityCap()) {
-                continue;
-            }
-
-            HashMap<String, String> entry = new HashMap<>();
-            entry.put("ID", employee.getID());
-            entry.put("Name", employee.getName());
-            entry.put("Available activity slots", String.valueOf(employee.getWeeklyActivityCap() - activeActivities));
-
-            result.add(entry);
         }
 
         return result;
@@ -167,7 +159,6 @@ public class Employee implements Extractable<Employee> {
                     Project project = activity.getProject();
 
                     double trackedHours = minutesSpent.get(formattedDate) / 60.0;
-
                     HashMap<String, String> entry = new HashMap<>();
                     entry.put("Project ID", project.getID());
                     entry.put("Activity ID", String.valueOf(activity.getID()));
