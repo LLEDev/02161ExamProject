@@ -73,8 +73,6 @@ public class WhiteBoxSteps {
 
     @Then("the white box error exception of type {string} with message {string} is given")
     public void theWhiteBoxErrorExceptionOfTypeWithMessageIsGiven(String type, String msg) {
-        System.out.println(this.exception);
-
         Assert.assertNotNull(this.exception);
         Assert.assertEquals(type, this.exception.getClass().getSimpleName());
         Assert.assertEquals(msg, this.exception.getMessage());
