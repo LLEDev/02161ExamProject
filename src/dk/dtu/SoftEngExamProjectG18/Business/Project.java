@@ -54,12 +54,6 @@ public class Project {
         this.isBillable = isBillable;
     }
 
-    public Project(int nextID, String name, Date createdAt, boolean isBillable) {
-        this(nextID, name, isBillable);
-
-        this.setupCreatedAt(createdAt);
-    }
-
     public Project(int nextID, String name, Date createdAt, boolean isBillable, Employee PM, boolean setupActivity) {
         this.setupID(nextID);
         this.setupName(name);
@@ -69,9 +63,7 @@ public class Project {
 
         this.setupCreatedAt(createdAt);
 
-        if(setupActivity) { // Do not setup activity if data is imported through CSVReader
-            this.setupActivity(null);
-        }
+        if(setupActivity) {this.setupActivity(null);} // Do not setup activity if data is imported through CSVReader
     }
 
     public void assertPM(Employee employee) throws AccessDeniedException {

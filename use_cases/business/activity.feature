@@ -8,6 +8,15 @@ Feature: Estimate and set interval for activities
         When the employee sets the work hours "-10" in the activity with ID "1".
         Then the error message "The set number of work minutes has to be more than or equal to 0. -600 received." is given
 
+    Scenario: An employee sets work hours under 0
+        Given that there is a project with name "Test project"
+        And there is an employee
+        And the employee is attached to all activities in the projects
+            | 2020-000001 |
+        When the employee sets the work hours "10" in the activity with ID "1".
+        Then these activities with overall durations are found
+            | 2020-000001 | 1 | 10 |
+
     Scenario: An employee estimates activity duration to negative hours
         Given that there is a project with name "Test project"
         And there is an employee

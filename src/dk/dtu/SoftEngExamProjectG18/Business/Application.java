@@ -30,17 +30,13 @@ public class Application {
     }
 
     public static void init(InputContextType contextType) throws IllegalArgumentException {
-        if(contextType == null) {
-            throw new IllegalArgumentException("Invalid context given.");
-        }
+        if(contextType == null) {throw new IllegalArgumentException("Invalid context given.");}
 
         instance = new Application(contextType);
     }
 
     public static Application getInstance() {
-        if (instance == null) {
-            throw new IllegalStateException("Application has not been initialized.");
-        }
+        if (instance == null) {throw new IllegalStateException("Application has not been initialized.");}
 
         return instance;
     }

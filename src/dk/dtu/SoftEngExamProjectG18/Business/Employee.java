@@ -159,7 +159,6 @@ public class Employee implements Extractable<Employee> {
                     Project project = activity.getProject();
 
                     double trackedHours = minutesSpent.get(formattedDate) / 60.0;
-
                     HashMap<String, String> entry = new HashMap<>();
                     entry.put("Project ID", project.getID());
                     entry.put("Activity ID", String.valueOf(activity.getID()));
