@@ -173,11 +173,13 @@ public class EmployeeSteps extends StepsBase {
                 throw new IllegalArgumentException("Invalid submission entry given.");
             }
 
+            double hours = Double.parseDouble(submission.get(2)) / 60;
+
             this.wrap(() -> application.submitHours(
                 submission.get(0),
                 Integer.parseInt(submission.get(1)),
                 new Date(),
-                Integer.parseInt(submission.get(2))
+                hours
             ));
         }
     }
@@ -255,8 +257,6 @@ public class EmployeeSteps extends StepsBase {
                 new Date(),
                 Integer.parseInt(workHours)
         ));
-
-
     }
 
     @When("the employee estimates the duration to {string} hours for the activity with ID {string}")

@@ -155,7 +155,7 @@ public class Application {
      * Action helpers
      */
 
-    protected void helperSetSubmitHours(String projectID, int activityID, Date date, double hours, boolean shouldSet) throws AccessDeniedException {
+    protected void helperSetSubmitHours(String projectID, int activityID, Date date, double hours, boolean shouldSet) throws AccessDeniedException, IllegalArgumentException {
         Project project = this.getProject(projectID);
         Activity activity = project.getActivity(activityID);
         Employee signedInEmployee = this.db.getSignedInEmployee();
@@ -166,7 +166,7 @@ public class Application {
         if(shouldSet) {
             employeeActivityIntermediate.setMinutes(date, minutes);
         } else {
-            employeeActivityIntermediate.addMinutes(date, minutes);
+            employeeActivityIntermediate.submitMinutes(date, minutes);
         }
     }
 
@@ -237,11 +237,11 @@ public class Application {
         activity.setEndWeek(end);
     }
 
-    public void setHours(String projectID, int activityID, Date date, int setHours) throws AccessDeniedException {
+    public void setHours(String projectID, int activityID, Date date, double setHours) throws AccessDeniedException, IllegalArgumentException {
         this.helperSetSubmitHours(projectID, activityID, date, setHours, true);
     }
 
-    public void submitHours(String projectID, int activityID, Date date, int addedHours) throws AccessDeniedException {
+    public void submitHours(String projectID, int activityID, Date date, double addedHours) throws AccessDeniedException, IllegalArgumentException {
         this.helperSetSubmitHours(projectID, activityID, date, addedHours, false);
     }
 

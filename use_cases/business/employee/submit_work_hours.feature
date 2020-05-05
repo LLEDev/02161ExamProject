@@ -18,9 +18,9 @@ Feature: Submit daily work hours
             | 2020-000002 | 1 | 90 |
             | 2020-000003 | 1 | 60 |
         Then these activities with overall durations are found
-            | 2020-000001 | 1 | 90 |
-            | 2020-000002 | 1 | 90 |
-            | 2020-000003 | 1 | 60 |
+            | 2020-000001 | 1 | 1.5 |
+            | 2020-000002 | 1 | 1.5 |
+            | 2020-000003 | 1 | 1 |
 
     Scenario: An employee submits work hours to a project he/she is not attached to
         Given that there is a project with name "Test Project"
@@ -37,5 +37,4 @@ Feature: Submit daily work hours
             | 2020-000001 |
         When the employee submits the work minutes
             | 2020-000001 | 1 | -90 |
-        Then these activities with overall durations are found
-            | 2020-000001 | 1 | -90 |
+        Then the error message "The submitted number of work minutes has to be more than or equal to 0. -90 received." is given

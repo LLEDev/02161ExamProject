@@ -48,11 +48,6 @@ public class EmployeeActivityIntermediate implements Extractable<EmployeeActivit
         a.getTrackedTime().put(e.getID(), this);
     }
 
-    public void addMinutes(Date d, int minutes) {
-        int cumulatedMinutes = minutes + this.getMinutes(d);
-        this.setMinutes(d, cumulatedMinutes);
-    }
-
     public Activity getActivity() {
         return this.activity;
     }
@@ -77,8 +72,22 @@ public class EmployeeActivityIntermediate implements Extractable<EmployeeActivit
         return this.minutesSpent.values().stream().mapToInt(i -> i).sum();
     }
 
-    public void setMinutes(Date d, int minutes) {
+    public void setMinutes(Date d, int minutes) throws IllegalArgumentException {
+        if(minutes < 0) {
+            String output = String.format("The set number of work minutes has to be more than or equal to 0. %s received.", minutes);
+            throw new IllegalArgumentException(output);
+        }
+
         this.minutesSpent.put(this.formatter.format(d), minutes);
+    }
+
+    public void submitMinutes(Date d, int minutes) throws IllegalArgumentException {
+        if(minutes < 0) {
+            String output = String.format("The submitted number of work minutes has to be more than or equal to 0. %s received.", minutes);
+            throw new IllegalArgumentException(output);
+        }
+
+        this.setMinutes(d, this.getMinutes(d) + minutes);
     }
 
     /*
