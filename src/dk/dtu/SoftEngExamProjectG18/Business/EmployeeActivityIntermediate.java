@@ -96,20 +96,14 @@ public class EmployeeActivityIntermediate implements Extractable<EmployeeActivit
 
     @Override
     public ArrayList<HashMap<String, String>> extract(String context, HashMap<String, Object> metaData, ArrayList<? extends Extractable<?>> collection) {
-        if(context.equals("overview")) {
-            return this.extractOverview(collection);
-        }
-
-        return null;
+        return context.equals("overview") ? this.extractOverview(collection) : null;
     }
 
     public ArrayList<HashMap<String, String>> extractOverview(ArrayList<? extends Extractable<?>> collection) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 
         for(Extractable<?> extractable : collection) {
-            if(!(extractable instanceof EmployeeActivityIntermediate)) {
-                continue;
-            }
+            if(!(extractable instanceof EmployeeActivityIntermediate)) { continue; }
 
             EmployeeActivityIntermediate eai = (EmployeeActivityIntermediate) extractable;
 
