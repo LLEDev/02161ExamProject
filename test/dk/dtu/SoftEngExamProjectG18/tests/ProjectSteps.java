@@ -55,19 +55,18 @@ public class ProjectSteps extends StepsBase {
         project.clearActivities();
 
         // Create all given activities
-        for(List<String> activityString : activities) {
-            if(activityString.size() == 0) {
-                continue;
-            }
+        for (List<String> activityString : activities) {
+            if (activityString.size() > 0) {
 
-            Activity activity = new Activity(activityString.get(0), project);
-            for(int i = 1; i < activityString.size(); i++) {
-                String cell = activityString.get(i);
+                Activity activity = new Activity(activityString.get(0), project);
+                for (int i = 1; i < activityString.size(); i++) {
+                    String cell = activityString.get(i);
 
-                switch(i) {
-                    case 1: activity.setEstimatedHours(Integer.parseInt(cell)); break;
-                    case 2: activity.setStartWeek(weekFormatter.parse(cell)); break;
-                    case 3: activity.setEndWeek(weekFormatter.parse(cell)); break;
+                    switch (i) {
+                        case 1: activity.setEstimatedHours(Integer.parseInt(cell)); break;
+                        case 2: activity.setStartWeek(weekFormatter.parse(cell)); break;
+                        case 3: activity.setEndWeek(weekFormatter.parse(cell)); break;
+                    }
                 }
             }
         }
