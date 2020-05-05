@@ -72,7 +72,9 @@ public class EmployeeActivityIntermediate implements Extractable<EmployeeActivit
             throw new IllegalArgumentException(output);
         }
 
-        this.minutesSpent.put(DateFormatter.formatDate(d), minutes);
+        String dateString = DateFormatter.formatDate(d);
+
+        this.minutesSpent.put(dateString, minutes);
     }
 
     public void submitMinutes(Date d, int minutes) throws IllegalArgumentException {
@@ -81,7 +83,9 @@ public class EmployeeActivityIntermediate implements Extractable<EmployeeActivit
             throw new IllegalArgumentException(output);
         }
 
-        this.minutesSpent.put(DateFormatter.formatDate(d), this.getMinutes(d) + minutes);
+        String dateString = DateFormatter.formatDate(d);
+
+        this.minutesSpent.put(dateString, this.getMinutes(d) + minutes);
     }
 
     /*
