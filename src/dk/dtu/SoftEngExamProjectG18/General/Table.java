@@ -16,14 +16,12 @@ public class Table {
 
         for(HashMap<String, String> entry : data) {
             for(String key : keyOrder) {
-                if(!entry.containsKey(key)) {
-                    continue;
-                }
+                if(entry.containsKey(key)) {
+                    int keyLength = (entry.get(key) != null ? entry.get(key).length() : 0) + 2;
 
-                int keyLength = (entry.get(key) != null ? entry.get(key).length() : 0) + 2;
-
-                if(keyLength > columnWidths.get(key)) {
-                    columnWidths.put(key, keyLength);
+                    if (keyLength > columnWidths.get(key)) {
+                        columnWidths.put(key, keyLength);
+                    }
                 }
             }
         }
@@ -77,26 +75,28 @@ public class Table {
     }
 
     public static String make(String context, String[] keyOrder, HashMap<String, Object> metaData, ArrayList<? extends Extractable<?>> collection) {
-        if(collection.size() == 0) {
-            return "No data found.";
-        }
+        String result = "No data found.";
 
-        ArrayList<HashMap<String, String>> data = collection.get(0).extract(context, metaData, collection);
+        if(collection.size() > 0) {
+            ArrayList<HashMap<String, String>> data = collection.get(0).extract(context, metaData, collection);
 
-        HashMap<String, Integer> columnWidths = determineColumnWidths(keyOrder, data);
-        String delimiter = makeDelimiter(columnWidths);
+            HashMap<String, Integer> columnWidths = determineColumnWidths(keyOrder, data);
+            String delimiter = makeDelimiter(columnWidths);
 
-        StringBuilder result = new StringBuilder();
-        result.append(delimiter)
+            StringBuilder resultBuilder = new StringBuilder();
+            resultBuilder.append(delimiter)
                 .append("\n").append(makeTitleRow(keyOrder, columnWidths))
                 .append("\n").append(delimiter);
 
-        for(HashMap<String, String> entry : data) {
-            result.append("\n").append(makeRow(keyOrder, entry, columnWidths))
+            for (HashMap<String, String> entry : data) {
+                resultBuilder.append("\n").append(makeRow(keyOrder, entry, columnWidths))
                     .append("\n").append(delimiter);
+            }
+
+            result = resultBuilder.toString();
         }
 
-        return result.toString();
+        return result;
     }
 
     public static String make(String context, String[] keyOrder, ArrayList<? extends Extractable<?>> collection) {

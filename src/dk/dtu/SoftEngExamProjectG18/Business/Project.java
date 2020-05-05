@@ -5,7 +5,7 @@ import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractable;
 
 import java.util.*;
 
-public class Project implements Extractable<Project> {
+public class Project {
 
     protected HashMap<Integer, Activity> activities = new HashMap<>();
     protected Calendar createdAt = new GregorianCalendar();
@@ -150,22 +150,5 @@ public class Project implements Extractable<Project> {
 
     public void setPM(Employee PM) {
         this.PM = PM;
-    }
-
-    /*
-        Table extraction methods
-     */
-
-    @Override
-    public ArrayList<HashMap<String, String>> extract(String context, HashMap<String, Object> metaData, ArrayList<? extends Extractable<?>> collection) {
-        if(context.equals("overview")) {
-            return this.extractOverview(collection);
-        }
-
-        return null;
-    }
-
-    public ArrayList<HashMap<String, String>> extractOverview(ArrayList<? extends Extractable<?>> collection) {
-        return null;
     }
 }
