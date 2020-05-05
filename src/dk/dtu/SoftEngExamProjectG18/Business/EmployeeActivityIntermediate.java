@@ -87,7 +87,7 @@ public class EmployeeActivityIntermediate implements Extractable<EmployeeActivit
             throw new IllegalArgumentException(output);
         }
 
-        this.setMinutes(d, this.getMinutes(d) + minutes);
+        this.minutesSpent.put(this.formatter.format(d), this.getMinutes(d) + minutes);
     }
 
     /*
