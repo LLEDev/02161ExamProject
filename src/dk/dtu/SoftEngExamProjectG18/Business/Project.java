@@ -54,12 +54,6 @@ public class Project {
         this.isBillable = isBillable;
     }
 
-    public Project(int nextID, String name, Date createdAt, boolean isBillable) {
-        this(nextID, name, isBillable);
-
-        this.setupCreatedAt(createdAt);
-    }
-
     public Project(int nextID, String name, Date createdAt, boolean isBillable, Employee PM, boolean setupActivity) {
         this.setupID(nextID);
         this.setupName(name);
