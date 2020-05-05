@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 
 public class ViewSteps {
 
+    protected Exception thrownByParse = null;
+
     protected void callCmd(InputContext context, ThrowingFunction<String[]> tf, String[] args) {
         context.setSandbox(true); // We're testing UI
 
@@ -116,6 +118,42 @@ public class ViewSteps {
         this.callCmd(ic, ic::cmdViewSubmissions, new String[] {});
     }
 
+    @When("string {string} is asserted integer-parseable")
+    public void stringIsAssertedIntegerParseable(String str) {
+        this.thrownByParse = null;
+
+        InputContext ic = new EmployeeInputContext();
+        try {
+            ic.assertStringParseIntDoable(str);
+        } catch (CommandException e) {
+            this.thrownByParse = e;
+        }
+    }
+
+    @When("string {string} is asserted date-parseable")
+    public void stringIsAssertedDateParseable(String str) {
+        this.thrownByParse = null;
+
+        InputContext ic = new EmployeeInputContext();
+        try {
+            ic.assertStringParseDateDoable(str);
+        } catch (CommandException e) {
+            this.thrownByParse = e;
+        }
+    }
+
+    @When("string {string} is asserted week date-parseable")
+    public void stringIsAssertedWeekDateParseable(String str) {
+        this.thrownByParse = null;
+
+        InputContext ic = new EmployeeInputContext();
+        try {
+            ic.assertStringParseWeekDoable(str);
+        } catch (CommandException e) {
+            this.thrownByParse = e;
+        }
+    }
+
     @Then("the following table is presented")
     public void theFollowingTableIsPresented(List<List<String>> table) {
         Scanner s = new Scanner(TestHolder.getInstance().getResponse().getResponse());
@@ -174,5 +212,15 @@ public class ViewSteps {
     @Then("a CommandException is thrown")
     public void aCommandExceptionIsThrown() {
         Assert.assertNotNull(TestHolder.getInstance().getResponse().getCommandException());
+    }
+
+    @Then("no exception related to parsing is thrown")
+    public void noExceptionRelatedToParsingIsThrown() {
+        Assert.assertNull(this.thrownByParse);
+    }
+
+    @Then("an exception related to parsing is thrown")
+    public void anExceptionRelatedToParsingIsThrown() {
+        Assert.assertNotNull(this.thrownByParse);
     }
 }
