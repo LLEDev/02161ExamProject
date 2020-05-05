@@ -43,6 +43,13 @@ public class ProjectSteps extends StepsBase {
         }
     }
 
+    @Given("the employee is the project manager for the project")
+    public void theEmployeeIsTheProjectManagerForTheProject() {
+        this.theEmployeeWithInitialsIsTheProjectManagerOfTheProject(
+            Application.getInstance().getSignedInEmployee().getID()
+        );
+    }
+
     @And("the project has the following activities")
     public void theProjectHasTheFollowingActivities(List<List<String>> activities) throws ParseException, AccessDeniedException {
         TestHolder th = TestHolder.getInstance();
@@ -91,6 +98,12 @@ public class ProjectSteps extends StepsBase {
     public void theActorAssignsTheEmployeeWithInitialsAsTheProjectManagerOfTheProject(String initials) {
         String projectID = TestHolder.getInstance().getProject().getID();
         this.wrap(() -> Application.getInstance().assignPM(projectID, initials));
+    }
+
+    @And("the employee with initials {string} is the project manager of the project")
+    public void theEmployeeWithInitialsIsTheProjectManagerOfTheProject(String employeeID) {
+        String projectID = TestHolder.getInstance().getProject().getID();
+        this.wrap(() -> Application.getInstance().assignPM(projectID, employeeID));
     }
 
     @And("the project does not have a project manager")

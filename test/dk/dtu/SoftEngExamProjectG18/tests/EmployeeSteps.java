@@ -28,13 +28,6 @@ public class EmployeeSteps extends StepsBase {
         this.thereIsAnEmployeeWithInitials("AA");
     }
 
-    @Given("the employee is the project manager for the project")
-    public void theEmployeeIsTheProjectManagerForTheProject() {
-        this.theEmployeeWithInitialsIsTheProjectManagerOfTheProject(
-            Application.getInstance().getSignedInEmployee().getID()
-        );
-    }
-
     @Given("the employee is assigned to the activity with ID {string}")
     public void theEmployeeIsAssignedToTheActivityWithID(String id) {
         this.theEmployeeWithInitialsIsAssignedToTheActivityWithID(
@@ -57,12 +50,6 @@ public class EmployeeSteps extends StepsBase {
         for (String employeeID: employees) {
             this.thereIsAnEmployeeWithInitials(employeeID);
         }
-    }
-
-    @And("the employee with initials {string} is the project manager of the project")
-    public void theEmployeeWithInitialsIsTheProjectManagerOfTheProject(String employeeID) {
-        String projectID = TestHolder.getInstance().getProject().getID();
-        this.wrap(() -> Application.getInstance().assignPM(projectID, employeeID));
     }
 
     @And("the employee with initials {string} is the actor")
