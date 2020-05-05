@@ -23,7 +23,7 @@ public class Activity implements Extractable<Activity> {
     // EmployeeID --> EmployeeActivityIntermediate
     protected HashMap<String, EmployeeActivityIntermediate> trackedTime = new HashMap<>();
 
-    protected void assertStartEndValid(Date start, Date end) {
+    protected void assertStartEndValid(Date start, Date end) throws IllegalArgumentException {
         if(start == null || end == null) {
             return;
         }
