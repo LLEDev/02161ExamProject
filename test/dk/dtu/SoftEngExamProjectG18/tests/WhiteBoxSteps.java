@@ -80,6 +80,19 @@ public class WhiteBoxSteps {
         Assert.assertEquals(msg, this.exception.getMessage());
     }
 
+    @When("request assistance is called in Application with arguments {string}, {string} And {string}")
+    public void requestAssistanceIsCalledInApplicationWithArgumentsAnd(String projectID, String activitID, String employeeID) {
+
+
+        Application application = Application.getInstance();
+
+        try {
+            application.requestAssistance(projectID,Integer.parseInt(activitID),employeeID);
+        } catch (IllegalArgumentException | AccessDeniedException e) {
+            this.exception = e;
+        }
+    }
+
     @Then("the project activity start week is {string}")
     public void theProjectActivityStartWeekIs(String weekStr) {
         weekStr = !weekStr.equals("null") ? weekStr : null;
