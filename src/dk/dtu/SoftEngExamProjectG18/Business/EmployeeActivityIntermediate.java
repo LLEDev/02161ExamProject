@@ -1,9 +1,9 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
+import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.General.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractable;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class EmployeeActivityIntermediate implements Extractable<EmployeeActivityIntermediate> {
@@ -23,8 +23,6 @@ public class EmployeeActivityIntermediate implements Extractable<EmployeeActivit
 
         return employeeActivityIntermediate;
     }
-
-    protected SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
     // Date -> Minutes
     protected HashMap<String, Integer> minutesSpent = new HashMap<>();
@@ -56,12 +54,8 @@ public class EmployeeActivityIntermediate implements Extractable<EmployeeActivit
         return this.employee;
     }
 
-    public SimpleDateFormat getFormatter() {
-        return this.formatter;
-    }
-
-    public int getMinutes(Date d) {
-        return this.minutesSpent.getOrDefault(this.formatter.format(d), 0);
+    public int getMinutes(Date d) throws IllegalArgumentException {
+        return this.minutesSpent.getOrDefault(DateFormatter.formatDate(d), 0);
     }
 
     public HashMap<String, Integer> getMinutesSpent() {
@@ -78,7 +72,7 @@ public class EmployeeActivityIntermediate implements Extractable<EmployeeActivit
             throw new IllegalArgumentException(output);
         }
 
-        this.minutesSpent.put(this.formatter.format(d), minutes);
+        this.minutesSpent.put(DateFormatter.formatDate(d), minutes);
     }
 
     public void submitMinutes(Date d, int minutes) throws IllegalArgumentException {
@@ -87,7 +81,7 @@ public class EmployeeActivityIntermediate implements Extractable<EmployeeActivit
             throw new IllegalArgumentException(output);
         }
 
-        this.minutesSpent.put(this.formatter.format(d), this.getMinutes(d) + minutes);
+        this.minutesSpent.put(DateFormatter.formatDate(d), this.getMinutes(d) + minutes);
     }
 
     /*

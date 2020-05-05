@@ -2,6 +2,7 @@ package dk.dtu.SoftEngExamProjectG18.Business;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractable;
+import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 
 import java.util.*;
 
@@ -151,7 +152,7 @@ public class Employee implements Extractable<Employee> {
 
         for(HashMap<Integer, EmployeeActivityIntermediate> projectActivities : employee.getActivities().values()) {
             for(EmployeeActivityIntermediate eai : projectActivities.values()) {
-                String formattedDate = eai.getFormatter().format(today);
+                String formattedDate = DateFormatter.formatDate(today);
                 HashMap<String, Integer> minutesSpent = eai.getMinutesSpent();
 
                 if(minutesSpent.containsKey(formattedDate)) {
