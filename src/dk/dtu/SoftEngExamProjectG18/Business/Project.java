@@ -30,9 +30,7 @@ public class Project implements Extractable<Project> {
     }
 
     protected void setupID(int nextID) {
-        if(nextID <= 0) {
-            throw new IllegalArgumentException("The given project ID is not valid.");
-        }
+        if(nextID <= 0) {throw new IllegalArgumentException("The given project ID is not valid.");}
 
         this.ID = nextID;
     }
