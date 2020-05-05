@@ -50,11 +50,9 @@ public class Employee implements Extractable<Employee> {
                 Activity activity = intermediate.getActivity();
                 String combinedID = activity.getProject().getID() + "-" + activity.getID();
 
-                if(activity.isDone() || allActivities.containsKey(combinedID)) {
-                    continue;
+                if(!activity.isDone() && !allActivities.containsKey(combinedID)) {
+                    allActivities.put(combinedID, activity);
                 }
-
-                allActivities.put(combinedID, activity);
             }
         }
 
@@ -164,20 +162,18 @@ public class Employee implements Extractable<Employee> {
                 String formattedDate = eai.getFormatter().format(today);
                 HashMap<String, Integer> minutesSpent = eai.getMinutesSpent();
 
-                if(!minutesSpent.containsKey(formattedDate)) {
-                    continue;
+                if(minutesSpent.containsKey(formattedDate)) {
+                    Activity activity = eai.getActivity();
+                    Project project = activity.getProject();
+
+                    double trackedHours = minutesSpent.get(formattedDate) / 60.0;
+
+                    HashMap<String, String> entry = new HashMap<>();
+                    entry.put("Project ID", project.getID());
+                    entry.put("Activity ID", String.valueOf(activity.getID()));
+                    entry.put("Tracked hours", String.valueOf(trackedHours));
+                    result.add(entry);
                 }
-
-                Activity activity = eai.getActivity();
-                Project project = activity.getProject();
-
-                double trackedHours = minutesSpent.get(formattedDate) / 60.0;
-
-                HashMap<String, String> entry = new HashMap<>();
-                entry.put("Project ID", project.getID());
-                entry.put("Activity ID", String.valueOf(activity.getID()));
-                entry.put("Tracked hours", String.valueOf(trackedHours));
-                result.add(entry);
             }
         }
 
