@@ -111,42 +111,31 @@ public class Activity implements Extractable<Activity> {
 
     @Override
     public ArrayList<HashMap<String, String>> extract(String context, HashMap<String, Object> metaData, ArrayList<? extends Extractable<?>> collection) {
-        if(context.equals("overview")) {
-            return this.extractOverview(collection);
-        }
-
-        return null;
+        return this.extractOverview(collection);
     }
 
     public ArrayList<HashMap<String, String>> extractOverview(ArrayList<? extends Extractable<?>> collection) {
-        SimpleDateFormat weekFormatter = new SimpleDateFormat("yyyy-ww");
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 
         for(Extractable<?> extractable : collection) {
-            if(!(extractable instanceof Activity)) {
-                continue;
+            if(extractable instanceof Activity) {
+                Activity activity = (Activity) extractable;
+
+                String startWeek = DateFormatter.formatWeek(activity.getStartWeek());
+                String endWeek = DateFormatter.formatWeek(activity.getEndWeek());
+
+                int trackedHours = (int) Math.ceil(activity.getTotalTrackedMinutes() / 60.0);
+
+                HashMap<String, String> entry = new HashMap<>();
+                entry.put("ID", String.valueOf(activity.getID()));
+                entry.put("Name", activity.getName());
+                entry.put("Start week", startWeek);
+                entry.put("End week", endWeek);
+                entry.put("Estimated work hours (in total)", String.valueOf(activity.getEstimatedHours()));
+                entry.put("Tracked work hours (in total)", String.valueOf(trackedHours));
+
+                result.add(entry);
             }
-
-            Activity activity = (Activity) extractable;
-
-            String startWeek = null;
-            String endWeek = null;
-            try {
-                startWeek = weekFormatter.format(activity.getStartWeek());
-                endWeek = weekFormatter.format(activity.getEndWeek());
-            } catch (Exception ignored) {}
-
-            int trackedHours = (int) Math.ceil(activity.getTotalTrackedMinutes() / 60.0);
-
-            HashMap<String, String> entry = new HashMap<>();
-            entry.put("ID", String.valueOf(activity.getID()));
-            entry.put("Name", activity.getName());
-            entry.put("Start week", startWeek);
-            entry.put("End week", endWeek);
-            entry.put("Estimated work hours (in total)", String.valueOf(activity.getEstimatedHours()));
-            entry.put("Tracked work hours (in total)", String.valueOf(trackedHours));
-
-            result.add(entry);
         }
 
         return result;
