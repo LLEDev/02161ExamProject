@@ -1,4 +1,4 @@
-Feature: test activity class
+Feature: Estimate and set interval for activities
 
    Scenario: An employee sets work hours under 0 again
      Given that there is a project with name "Test project"
