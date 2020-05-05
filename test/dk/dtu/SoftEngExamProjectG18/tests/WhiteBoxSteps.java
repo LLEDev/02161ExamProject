@@ -1,9 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
-import dk.dtu.SoftEngExamProjectG18.Business.Activity;
-import dk.dtu.SoftEngExamProjectG18.Business.Application;
-import dk.dtu.SoftEngExamProjectG18.Business.Employee;
-import dk.dtu.SoftEngExamProjectG18.Business.Project;
+import dk.dtu.SoftEngExamProjectG18.Business.*;
 import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.General.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
@@ -111,5 +108,45 @@ public class WhiteBoxSteps {
             weekStr,
             week != null ? DateFormatter.formatWeek(week) : null
         );
+    }
+
+    @When("submit minutes is called with date {string} and minutes {string} on the relation between the activity and the employee")
+    public void submitMinutesIsCalledWithDateAndMinutesOnTheRelationBetweenTheActivityAndTheEmployee(String dateStr, String minutes) throws ParseException {
+        Project project = TestHolder.getInstance().getProject();
+        Assert.assertNotNull(project);
+        Activity activity = project.getActivity(1);
+        Assert.assertNotNull(activity);
+
+        Employee employee = Application.getInstance().getSignedInEmployee();
+        Assert.assertNotNull(employee);
+
+        EmployeeActivityIntermediate eai = activity.getTrackedTime().get(employee.getID());
+        Assert.assertNotNull(eai);
+
+        Date date = !dateStr.equals("null") ? DateFormatter.parseDate(dateStr) : null;
+        try {
+            eai.submitMinutes(date, Integer.parseInt(minutes));
+        } catch (IllegalArgumentException e) {
+            this.exception = e;
+        }
+    }
+
+    @Then("the employee has spent {string} minutes on the activity on the day {string}")
+    public void theEmployeeHasSpentMinutesOnTheActivityOnTheDay(String minutesStr, String dateStr) throws ParseException {
+        Project project = TestHolder.getInstance().getProject();
+        Assert.assertNotNull(project);
+        Activity activity = project.getActivity(1);
+        Assert.assertNotNull(activity);
+
+        Employee employee = Application.getInstance().getSignedInEmployee();
+        Assert.assertNotNull(employee);
+
+        EmployeeActivityIntermediate eai = activity.getTrackedTime().get(employee.getID());
+        Assert.assertNotNull(eai);
+
+        Date date = !dateStr.equals("null") ? DateFormatter.parseDate(dateStr) : null;
+
+        int minutes = eai.getMinutes(date);
+        Assert.assertEquals(minutes, Integer.parseInt(minutesStr));
     }
 }
