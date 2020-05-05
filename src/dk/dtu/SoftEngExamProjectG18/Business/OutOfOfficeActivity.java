@@ -39,11 +39,7 @@ public class OutOfOfficeActivity implements Extractable<OutOfOfficeActivity> {
 
     @Override
     public ArrayList<HashMap<String, String>> extract(String context, HashMap<String, Object> metaData, ArrayList<? extends Extractable<?>> collection) {
-        if(context.equals("overview")) {
-            return this.extractOverview(collection);
-        }
-
-        return null;
+        return this.extractOverview(collection);
     }
 
     public ArrayList<HashMap<String, String>> extractOverview(ArrayList<? extends Extractable<?>> collection) {
@@ -52,18 +48,16 @@ public class OutOfOfficeActivity implements Extractable<OutOfOfficeActivity> {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 
         for(Extractable<?> extractable : collection) {
-            if(!(extractable instanceof OutOfOfficeActivity)) {
-                continue;
+            if(extractable instanceof OutOfOfficeActivity) {
+                OutOfOfficeActivity OOOActivity = (OutOfOfficeActivity) extractable;
+
+                HashMap<String, String> entry = new HashMap<>();
+                entry.put("Type", OOOActivity.getType().toString());
+                entry.put("Start", formatter.format(OOOActivity.getStart()));
+                entry.put("End", formatter.format(OOOActivity.getEnd()));
+
+                result.add(entry);
             }
-
-            OutOfOfficeActivity OOOActivity = (OutOfOfficeActivity) extractable;
-
-            HashMap<String, String> entry = new HashMap<>();
-            entry.put("Type", OOOActivity.getType().toString());
-            entry.put("Start", formatter.format(OOOActivity.getStart()));
-            entry.put("End", formatter.format(OOOActivity.getEnd()));
-
-            result.add(entry);
         }
 
         return result;
