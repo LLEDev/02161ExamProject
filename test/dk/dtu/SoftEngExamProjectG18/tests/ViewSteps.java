@@ -1,5 +1,10 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
+import dk.dtu.SoftEngExamProjectG18.Business.Application;
+import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.ExtractionException;
+import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeActivityIntermediateOverviewExtractor;
+import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeAvailabilityExtractor;
+import dk.dtu.SoftEngExamProjectG18.General.Table;
 import dk.dtu.SoftEngExamProjectG18.Input.*;
 import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunction;
@@ -9,15 +14,14 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ViewSteps {
 
+    protected String extractorOutput = null;
     protected Exception thrownByParse = null;
 
     protected void callCmd(InputContext context, ThrowingFunction<String[]> tf, String[] args) {
@@ -104,6 +108,22 @@ public class ViewSteps {
     public void theEmployeeRequestsAViewOfAvailableEmployeesAtTheDate(String date) {
         ProjectManagerInputContext ic = new ProjectManagerInputContext();
         this.callCmd(ic, ic::cmdViewAvailability, new String[]{date});
+    }
+
+    @When("the employee requests a view of available employees without a given date")
+    public void theEmployeeRequestsAViewOfAvailableEmployeesWithoutAGivenDate() {
+        this.extractorOutput = null;
+
+        this.extractorOutput = Table.make(
+            () -> Application.getInstance().extractData(
+                EmployeeAvailabilityExtractor.class,
+                new ArrayList<>(),
+                new HashMap<>()
+            ),
+            new String[]{}
+        );
+
+        System.out.println(this.extractorOutput);
     }
 
     @When("the employee requests a view of the schedule of the employee with ID {string}")
@@ -222,5 +242,10 @@ public class ViewSteps {
     @Then("an exception related to parsing is thrown")
     public void anExceptionRelatedToParsingIsThrown() {
         Assert.assertNotNull(this.thrownByParse);
+    }
+
+    @Then("the extractor output is {string}")
+    public void theExtractorOutputIs(String output) {
+        Assert.assertEquals(output, this.extractorOutput);
     }
 }

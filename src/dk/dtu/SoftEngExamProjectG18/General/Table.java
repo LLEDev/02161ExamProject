@@ -77,7 +77,7 @@ public class Table {
         return sb.toString();
     }
 
-    public static <X> String make(ExtractorFunction dataExtractor, String[] keyOrder) {
+    public static String make(ExtractorFunction dataExtractor, String[] keyOrder) {
         String result = "No data found.";
 
         ArrayList<HashMap<String, String>> extractedData;

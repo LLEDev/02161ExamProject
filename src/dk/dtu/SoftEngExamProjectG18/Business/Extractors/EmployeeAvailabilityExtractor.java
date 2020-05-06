@@ -14,9 +14,9 @@ public class EmployeeAvailabilityExtractor implements Extractor<Employee> {
     }
 
     @Override
-    public ArrayList<HashMap<String, String>> extract(ArrayList<Employee> collection, HashMap<String, Object> metaData) {
+    public ArrayList<HashMap<String, String>> extract(ArrayList<Employee> collection, HashMap<String, Object> metaData) throws IllegalArgumentException {
         if (!metaData.containsKey("date") || !(metaData.get("date") instanceof Date)) {
-            // TODO: Throw exception
+            throw new IllegalArgumentException("Date metadata has to be provided.");
         }
 
         return this.extractAvailability((Date) metaData.get("date"), collection);

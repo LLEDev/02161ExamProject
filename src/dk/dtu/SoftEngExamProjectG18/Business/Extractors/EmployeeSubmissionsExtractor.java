@@ -15,10 +15,6 @@ public class EmployeeSubmissionsExtractor implements Extractor<Employee> {
 
     @Override
     public ArrayList<HashMap<String, String>> extract(ArrayList<Employee> collection, HashMap<String, Object> metaData) {
-        if(collection.size() == 0) {
-            // TODO: Throw exception
-        }
-
         return this.extractSubmissions(collection.get(0));
     }
 

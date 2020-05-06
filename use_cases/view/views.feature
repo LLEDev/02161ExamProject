@@ -56,6 +56,11 @@ Feature: Test all "view X" commands
             | CC | CC | 5 |
             | AA | AA | 10 |
 
+    Scenario: Employee availability is extracted without date metadata
+        Given there is an employee
+        When the employee requests a view of available employees without a given date
+        Then the extractor output is "An error occurred: Date metadata has to be provided."
+
     Scenario: An employee who is a project manager of a project requests an overview of the project
         Given that there is a project with name "Test Project"
         And there is an employee
