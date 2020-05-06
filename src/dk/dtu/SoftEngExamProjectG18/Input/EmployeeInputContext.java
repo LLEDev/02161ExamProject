@@ -3,6 +3,7 @@ package dk.dtu.SoftEngExamProjectG18.Input;
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
+import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeSubmissionsExtractor;
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
 import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.General.Table;
@@ -143,15 +144,15 @@ public class EmployeeInputContext extends InputContext {
     public void cmdViewSubmissions(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 0);
 
+        Application application = Application.getInstance();
         Employee signedInEmployee = Application.getInstance().getSignedInEmployee();
 
         ArrayList<Employee> employeeList = new ArrayList<>();
         employeeList.add(signedInEmployee);
 
         this.writeOutput(Table.make(
-            "submissions",
-            new String[]{"Project ID", "Activity ID", "Tracked hours"},
-            employeeList
+            () -> application.extractData(EmployeeSubmissionsExtractor.class, employeeList),
+            new String[]{"Project ID", "Activity ID", "Tracked hours"}
         ));
     }
 

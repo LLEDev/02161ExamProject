@@ -1,9 +1,12 @@
 package dk.dtu.SoftEngExamProjectG18.General;
 
-import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractable;
+import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.ExtractionException;
+import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractor;
+import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.ExtractorFunction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 public class Table {
 
@@ -74,13 +77,19 @@ public class Table {
         return sb.toString();
     }
 
-    public static String make(String context, String[] keyOrder, HashMap<String, Object> metaData, ArrayList<? extends Extractable<?>> collection) {
+    public static <X> String make(ExtractorFunction dataExtractor, String[] keyOrder) {
         String result = "No data found.";
 
-        if(collection.size() > 0) {
-            ArrayList<HashMap<String, String>> data = collection.get(0).extract(context, metaData, collection);
+        ArrayList<HashMap<String, String>> extractedData;
 
-            HashMap<String, Integer> columnWidths = determineColumnWidths(keyOrder, data);
+        try {
+            extractedData = dataExtractor.get();
+        } catch (ExtractionException e) {
+            return "An error occurred: " + e.getMessage();
+        }
+
+        if(extractedData.size() > 0) {
+            HashMap<String, Integer> columnWidths = determineColumnWidths(keyOrder, extractedData);
             String delimiter = makeDelimiter(columnWidths);
 
             StringBuilder resultBuilder = new StringBuilder();
@@ -88,7 +97,7 @@ public class Table {
                 .append("\n").append(makeTitleRow(keyOrder, columnWidths))
                 .append("\n").append(delimiter);
 
-            for (HashMap<String, String> entry : data) {
+            for (HashMap<String, String> entry : extractedData) {
                 resultBuilder.append("\n").append(makeRow(keyOrder, entry, columnWidths))
                     .append("\n").append(delimiter);
             }
@@ -97,10 +106,6 @@ public class Table {
         }
 
         return result;
-    }
-
-    public static String make(String context, String[] keyOrder, ArrayList<? extends Extractable<?>> collection) {
-        return make(context, keyOrder, new HashMap<>(), collection);
     }
 
 }

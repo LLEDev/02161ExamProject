@@ -1,12 +1,16 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
+import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.ExtractionException;
+import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractor;
 import dk.dtu.SoftEngExamProjectG18.Input.InputContext;
 import dk.dtu.SoftEngExamProjectG18.Input.Enums.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
-import dk.dtu.SoftEngExamProjectG18.General.Exceptions.AccessDeniedException;
+import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Application {
@@ -105,6 +109,26 @@ public class Application {
         this.db.getProjects().put(project.getID(), project);
 
         return project;
+    }
+
+    public <X> ArrayList<HashMap<String, String>> extractData(
+        Class<? extends Extractor<X>> extractorClass,
+        ArrayList<X> collection
+    ) throws ExtractionException {
+        return this.extractData(extractorClass, collection, new HashMap<>());
+    }
+
+    public <X> ArrayList<HashMap<String, String>> extractData(
+        Class<? extends Extractor<X>> extractorClass,
+        ArrayList<X> collection,
+        HashMap<String, Object> metaData
+    ) throws ExtractionException {
+        try {
+            Extractor<X> extractorInstance = extractorClass.getConstructor().newInstance();
+            return extractorInstance.extract(collection, metaData);
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
+            throw new ExtractionException(e.getMessage());
+        }
     }
 
     public InputContext getContext() {

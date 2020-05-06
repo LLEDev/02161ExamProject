@@ -1,14 +1,11 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
-import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractable;
 import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class Activity implements Extractable<Activity> {
+public class Activity {
 
     protected int ID;
     protected String name;
@@ -103,41 +100,5 @@ public class Activity implements Extractable<Activity> {
     public void setStartWeek(Date startWeek) throws IllegalArgumentException {
         this.assertStartEndValid(startWeek, this.endWeek);
         this.startWeek = startWeek;
-    }
-
-    /*
-        Table extraction methods
-     */
-
-    @Override
-    public ArrayList<HashMap<String, String>> extract(String context, HashMap<String, Object> metaData, ArrayList<? extends Extractable<?>> collection) {
-        return this.extractOverview(collection);
-    }
-
-    public ArrayList<HashMap<String, String>> extractOverview(ArrayList<? extends Extractable<?>> collection) {
-        ArrayList<HashMap<String, String>> result = new ArrayList<>();
-
-        for(Extractable<?> extractable : collection) {
-            if(extractable instanceof Activity) {
-                Activity activity = (Activity) extractable;
-
-                String startWeek = DateFormatter.formatWeek(activity.getStartWeek());
-                String endWeek = DateFormatter.formatWeek(activity.getEndWeek());
-
-                int trackedHours = (int) Math.ceil(activity.getTotalTrackedMinutes() / 60.0);
-
-                HashMap<String, String> entry = new HashMap<>();
-                entry.put("ID", String.valueOf(activity.getID()));
-                entry.put("Name", activity.getName());
-                entry.put("Start week", startWeek);
-                entry.put("End week", endWeek);
-                entry.put("Estimated work hours (in total)", String.valueOf(activity.getEstimatedHours()));
-                entry.put("Tracked work hours (in total)", String.valueOf(trackedHours));
-
-                result.add(entry);
-            }
-        }
-
-        return result;
     }
 }

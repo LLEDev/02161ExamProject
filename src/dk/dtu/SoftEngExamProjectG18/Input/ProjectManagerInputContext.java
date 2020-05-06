@@ -1,7 +1,11 @@
 package dk.dtu.SoftEngExamProjectG18.Input;
 
 import dk.dtu.SoftEngExamProjectG18.Business.*;
-import dk.dtu.SoftEngExamProjectG18.General.Exceptions.AccessDeniedException;
+import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
+import dk.dtu.SoftEngExamProjectG18.Business.Extractors.ActivityOverviewExtractor;
+import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeActivityIntermediateOverviewExtractor;
+import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeAvailabilityExtractor;
+import dk.dtu.SoftEngExamProjectG18.Business.Extractors.OutOfOfficeActivityOverviewExtractor;
 import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.General.Table;
@@ -149,9 +153,8 @@ public class ProjectManagerInputContext extends InputContext {
             this.writeOutput("\nTracked time:\n");
             ArrayList<EmployeeActivityIntermediate> collection = new ArrayList<>(activity.getTrackedTime().values());
             this.writeOutput(Table.make(
-                "overview",
-                new String[] {"Employee", "Date", "Minutes"},
-                collection
+                () -> application.extractData(EmployeeActivityIntermediateOverviewExtractor.class, collection),
+                new String[] {"Employee", "Date", "Minutes"}
             ));
         } catch (AccessDeniedException e) {
             throw new CommandException(e.getMessage());
@@ -163,6 +166,7 @@ public class ProjectManagerInputContext extends InputContext {
         this.assertArgumentsValid(args.length, 1);
         this.assertStringParseDateDoable(args[0]);
 
+        Application application = Application.getInstance();
         Date d = DateFormatter.parseDate(args[0]);
 
         ArrayList<Employee> collection = new ArrayList<>(Application.getInstance().getEmployees().values());
@@ -171,10 +175,8 @@ public class ProjectManagerInputContext extends InputContext {
 
         this.writeOutput(String.format("\nAvailable employees at %s:\n", args[0]));
         this.writeOutput(Table.make(
-                "availability",
-                new String[] {"ID", "Name", "Available activity slots"},
-                meta,
-                collection
+            () -> application.extractData(EmployeeAvailabilityExtractor.class, collection, meta),
+            new String[] {"ID", "Name", "Available activity slots"}
         ));
     }
 
@@ -197,9 +199,8 @@ public class ProjectManagerInputContext extends InputContext {
             this.writeOutput("\nProject activities:\n");
             ArrayList<Activity> collection = new ArrayList<>(project.getActivities().values());
             this.writeOutput(Table.make(
-                "overview",
-                new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"},
-                collection
+                () -> application.extractData(ActivityOverviewExtractor.class, collection),
+                new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"}
             ));
         } catch (AccessDeniedException e) {
             throw new CommandException(e.getMessage());
@@ -222,17 +223,15 @@ public class ProjectManagerInputContext extends InputContext {
             this.writeOutput("\nWorking on the following active activities:\n");
             ArrayList<Activity> activityCollection = employee.getAllActiveActivities();
             this.writeOutput(Table.make(
-                    "overview",
-                    new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"},
-                    activityCollection
+                () -> application.extractData(ActivityOverviewExtractor.class, activityCollection),
+                new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"}
             ) + "\n");
 
             this.writeOutput("\nPlanned out-of-office activities:\n");
             ArrayList<OutOfOfficeActivity> OOOCollection = new ArrayList<>(employee.getOOOActivities());
             this.writeOutput(Table.make(
-                    "overview",
-                    new String[] {"Type", "Start", "End"},
-                    OOOCollection
+                () -> application.extractData(OutOfOfficeActivityOverviewExtractor.class, OOOCollection),
+                new String[] {"Type", "Start", "End"}
             ));
         } catch (IllegalArgumentException e) {
             throw new CommandException(e.getMessage());

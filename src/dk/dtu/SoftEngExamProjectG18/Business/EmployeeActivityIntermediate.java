@@ -1,14 +1,13 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
 import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
-import dk.dtu.SoftEngExamProjectG18.General.Exceptions.AccessDeniedException;
-import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractable;
+import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
 
 import java.util.*;
 
-public class EmployeeActivityIntermediate implements Extractable<EmployeeActivityIntermediate> {
+public class EmployeeActivityIntermediate {
 
-    public static EmployeeActivityIntermediate initAssociation(Employee employee, Activity activity) throws AccessDeniedException {
+    public static EmployeeActivityIntermediate initAssociation(Employee employee, Activity activity) {
         employee.assertOpenActivities();
         return new EmployeeActivityIntermediate(employee, activity);
     }
@@ -88,35 +87,4 @@ public class EmployeeActivityIntermediate implements Extractable<EmployeeActivit
         this.minutesSpent.put(dateString, this.getMinutes(d) + minutes);
     }
 
-    /*
-        Table extraction methods
-     */
-
-    @Override
-    public ArrayList<HashMap<String, String>> extract(String context, HashMap<String, Object> metaData, ArrayList<? extends Extractable<?>> collection) {
-        return context.equals("overview") ? this.extractOverview(collection) : null;
-    }
-
-    public ArrayList<HashMap<String, String>> extractOverview(ArrayList<? extends Extractable<?>> collection) {
-        ArrayList<HashMap<String, String>> result = new ArrayList<>();
-
-        for(Extractable<?> extractable : collection) {
-            if(!(extractable instanceof EmployeeActivityIntermediate)) { continue; }
-
-            EmployeeActivityIntermediate eai = (EmployeeActivityIntermediate) extractable;
-
-            for(String date : eai.minutesSpent.keySet()) {
-                int minutes = eai.minutesSpent.get(date);
-
-                HashMap<String, String> entry = new HashMap<>();
-                entry.put("Employee", eai.getEmployee().getName());
-                entry.put("Date", date);
-                entry.put("Minutes", String.valueOf(minutes));
-
-                result.add(entry);
-            }
-        }
-
-        return result;
-    }
 }
