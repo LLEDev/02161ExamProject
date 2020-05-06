@@ -21,7 +21,7 @@ public class Project {
     protected void setupCreatedAt(Date createdAt) {
         Calendar cal = new GregorianCalendar();
 
-        if(createdAt != null) {
+        if (createdAt != null) {
             cal.setTime(createdAt);
         }
 
@@ -29,13 +29,15 @@ public class Project {
     }
 
     protected void setupID(int nextID) {
-        if(nextID <= 0) {throw new IllegalArgumentException("The given project ID is not valid.");}
+        if (nextID <= 0) {
+            throw new IllegalArgumentException("The given project ID is not valid.");
+        }
 
         this.ID = nextID;
     }
 
     protected void setupName(String name) throws IllegalArgumentException {
-        if(name.length() == 0) {
+        if (name.length() == 0) {
             throw new IllegalArgumentException(String.format("The given project name, %s, is not valid.", name));
         }
 
@@ -62,11 +64,13 @@ public class Project {
 
         this.setupCreatedAt(createdAt);
 
-        if(setupActivity) {this.setupActivity(null);} // Do not setup activity if data is imported through CSVReader
+        if (setupActivity) {
+            this.setupActivity(null);
+        } // Do not setup activity if data is imported through CSVReader
     }
 
     public void assertPM(Employee employee) throws AccessDeniedException {
-        if(this.getPM() == null || !this.getPM().equals(employee)) {
+        if (this.getPM() == null || !this.getPM().equals(employee)) {
             throw new AccessDeniedException("Project manager role required.");
         }
     }
@@ -113,7 +117,7 @@ public class Project {
 
     public int getEstimatedWorkHoursLeft() {
         double minutesLeft = this.getActivities().values().stream()
-                .mapToInt(a -> Math.max(a.getEstimatedHours() * 60 - a.getTotalTrackedMinutes(), 0)).sum();
+            .mapToInt(a -> Math.max(a.getEstimatedHours() * 60 - a.getTotalTrackedMinutes(), 0)).sum();
 
         return (int) Math.ceil(minutesLeft / 60.0);
     }
@@ -122,7 +126,7 @@ public class Project {
         StringBuilder IDBuilder = new StringBuilder();
         IDBuilder.append(this.ID);
 
-        while(IDBuilder.length() < 6) {
+        while (IDBuilder.length() < 6) {
             IDBuilder.append("0");
         }
 
