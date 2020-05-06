@@ -1,12 +1,10 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
-import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.ExtractionException;
-import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeActivityIntermediateOverviewExtractor;
 import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeAvailabilityExtractor;
 import dk.dtu.SoftEngExamProjectG18.General.Table;
-import dk.dtu.SoftEngExamProjectG18.Input.*;
-import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.Controller.*;
+import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunction;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.CmdResponse;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;

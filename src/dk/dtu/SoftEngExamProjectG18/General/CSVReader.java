@@ -1,4 +1,4 @@
-package dk.dtu.SoftEngExamProjectG18.Persistence;
+package dk.dtu.SoftEngExamProjectG18.General;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Application;

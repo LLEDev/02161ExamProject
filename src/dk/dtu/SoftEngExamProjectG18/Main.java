@@ -1,12 +1,12 @@
 package dk.dtu.SoftEngExamProjectG18;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
-import dk.dtu.SoftEngExamProjectG18.Input.Action;
-import dk.dtu.SoftEngExamProjectG18.Input.InputContext;
-import dk.dtu.SoftEngExamProjectG18.Input.Enums.CommandExceptionReason;
-import dk.dtu.SoftEngExamProjectG18.Input.Enums.InputContextType;
-import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
-import dk.dtu.SoftEngExamProjectG18.Persistence.CSVReader;
+import dk.dtu.SoftEngExamProjectG18.Controller.Action;
+import dk.dtu.SoftEngExamProjectG18.Controller.InputContext;
+import dk.dtu.SoftEngExamProjectG18.Controller.Enums.CommandExceptionReason;
+import dk.dtu.SoftEngExamProjectG18.Controller.Enums.InputContextType;
+import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.General.CSVReader;
 
 import java.io.*;
 import java.util.*;

@@ -1,4 +1,4 @@
-package dk.dtu.SoftEngExamProjectG18.Input;
+package dk.dtu.SoftEngExamProjectG18.Controller;
 
 import java.util.HashMap;
 

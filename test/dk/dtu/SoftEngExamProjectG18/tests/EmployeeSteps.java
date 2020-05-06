@@ -3,7 +3,7 @@ package dk.dtu.SoftEngExamProjectG18.tests;
 import dk.dtu.SoftEngExamProjectG18.Business.*;
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
-import dk.dtu.SoftEngExamProjectG18.Input.EmployeeInputContext;
+import dk.dtu.SoftEngExamProjectG18.Controller.EmployeeInputContext;
 import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;

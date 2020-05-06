@@ -2,15 +2,14 @@ package dk.dtu.SoftEngExamProjectG18.Business;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.ExtractionException;
 import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractor;
-import dk.dtu.SoftEngExamProjectG18.Input.InputContext;
-import dk.dtu.SoftEngExamProjectG18.Input.Enums.InputContextType;
+import dk.dtu.SoftEngExamProjectG18.Controller.InputContext;
+import dk.dtu.SoftEngExamProjectG18.Controller.Enums.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Application {

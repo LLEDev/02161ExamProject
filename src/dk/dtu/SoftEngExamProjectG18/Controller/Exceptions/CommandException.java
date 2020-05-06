@@ -1,6 +1,6 @@
-package dk.dtu.SoftEngExamProjectG18.Input.Exceptions;
+package dk.dtu.SoftEngExamProjectG18.Controller.Exceptions;
 
-import dk.dtu.SoftEngExamProjectG18.Input.Enums.CommandExceptionReason;
+import dk.dtu.SoftEngExamProjectG18.Controller.Enums.CommandExceptionReason;
 
 public class CommandException extends Exception {
 

@@ -1,9 +1,9 @@
-package dk.dtu.SoftEngExamProjectG18.Input;
+package dk.dtu.SoftEngExamProjectG18.Controller;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
-import dk.dtu.SoftEngExamProjectG18.Input.Enums.CommandExceptionReason;
-import dk.dtu.SoftEngExamProjectG18.Input.Enums.InputContextType;
-import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.Controller.Enums.CommandExceptionReason;
+import dk.dtu.SoftEngExamProjectG18.Controller.Enums.InputContextType;
+import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
 import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 

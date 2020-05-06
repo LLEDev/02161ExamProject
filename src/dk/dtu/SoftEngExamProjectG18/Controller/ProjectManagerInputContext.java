@@ -1,4 +1,4 @@
-package dk.dtu.SoftEngExamProjectG18.Input;
+package dk.dtu.SoftEngExamProjectG18.Controller;
 
 import dk.dtu.SoftEngExamProjectG18.Business.*;
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
@@ -6,7 +6,7 @@ import dk.dtu.SoftEngExamProjectG18.Business.Extractors.ActivityOverviewExtracto
 import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeActivityIntermediateOverviewExtractor;
 import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeAvailabilityExtractor;
 import dk.dtu.SoftEngExamProjectG18.Business.Extractors.OutOfOfficeActivityOverviewExtractor;
-import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.General.Table;
 
@@ -54,7 +54,7 @@ public class ProjectManagerInputContext extends InputContext {
 
         this.wrapExceptions(() -> Application.getInstance().assignEmployeeToActivity(employeeID, projectID, activityID))
             .outputOnSuccess(() -> "Employee added to activity.")
-            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .outputOnError(Exception::getMessage)
             .run();
     }
 
@@ -67,7 +67,7 @@ public class ProjectManagerInputContext extends InputContext {
 
         this.wrapExceptions(() -> Application.getInstance().createActivity(projectID, activityName))
             .outputOnSuccess(() -> "Activity created.")
-            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .outputOnError(Exception::getMessage)
             .run();
     }
 
@@ -80,7 +80,7 @@ public class ProjectManagerInputContext extends InputContext {
 
         this.wrapExceptions(() -> Application.getInstance().finishActivity(projectID, activityID))
             .outputOnSuccess(() -> "Activity finished.")
-            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .outputOnError(Exception::getMessage)
             .run();
     }
 
@@ -95,7 +95,7 @@ public class ProjectManagerInputContext extends InputContext {
 
         this.wrapExceptions(() -> Application.getInstance().estimateActivityDuration(projectID, activityID, numHours))
             .outputOnSuccess(() -> "Estimated number of work hours updated.")
-            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .outputOnError(Exception::getMessage)
             .run();
     }
 
@@ -113,7 +113,7 @@ public class ProjectManagerInputContext extends InputContext {
 
         this.wrapExceptions(() -> Application.getInstance().setActivityInterval(projectID, activityID, start, end))
             .outputOnSuccess(() -> "Start/end weeks updated.")
-            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .outputOnError(Exception::getMessage)
             .run();
     }
 

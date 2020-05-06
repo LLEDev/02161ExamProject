@@ -1,4 +1,4 @@
-package dk.dtu.SoftEngExamProjectG18.Input;
+package dk.dtu.SoftEngExamProjectG18.Controller;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
@@ -7,7 +7,7 @@ import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeSubmissionsExtra
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
 import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.General.Table;
-import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
 
 import java.text.ParseException;
 import java.util.*;
@@ -72,7 +72,7 @@ public class EmployeeInputContext extends InputContext {
 
         this.wrapExceptions(() -> Application.getInstance().createProject(name, isBillable))
             .outputOnSuccess(() -> "Project created.")
-            .outputOnError(e -> String.format("Project not created due to error: %s.", e.getMessage()))
+            .outputOnError(Exception::getMessage)
             .run();
     }
 
@@ -86,7 +86,7 @@ public class EmployeeInputContext extends InputContext {
 
         this.wrapExceptions(() -> Application.getInstance().requestAssistance(projectID, activityID, employeeID))
             .outputOnSuccess(() -> "Assistance requested.")
-            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .outputOnError(Exception::getMessage)
             .run();
     }
 
@@ -126,7 +126,7 @@ public class EmployeeInputContext extends InputContext {
 
         this.wrapExceptions(() -> Application.getInstance().requestOutOfOffice(finalType, start, end))
             .outputOnSuccess(() -> "Out-of-office activity requested.")
-            .outputOnError(e -> "An error occurred: " + e.getMessage())
+            .outputOnError(Exception::getMessage)
             .run();
     }
 

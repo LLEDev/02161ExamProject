@@ -1,8 +1,8 @@
 package dk.dtu.SoftEngExamProjectG18.tests.Util;
 
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
-import dk.dtu.SoftEngExamProjectG18.Input.ExceptionWrapper;
-import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.Controller.ExceptionWrapper;
+import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
 
 public class TestExceptionWrapper extends ExceptionWrapper {
 

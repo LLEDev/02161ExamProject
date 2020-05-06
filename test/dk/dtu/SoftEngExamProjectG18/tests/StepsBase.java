@@ -2,7 +2,7 @@ package dk.dtu.SoftEngExamProjectG18.tests;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
-import dk.dtu.SoftEngExamProjectG18.Input.InputContext;
+import dk.dtu.SoftEngExamProjectG18.Controller.InputContext;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.CmdResponse;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestExceptionWrapper;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;

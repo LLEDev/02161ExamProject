@@ -1,8 +1,8 @@
-package dk.dtu.SoftEngExamProjectG18.Input;
+package dk.dtu.SoftEngExamProjectG18.Controller;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
-import dk.dtu.SoftEngExamProjectG18.Input.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ZeroArgumentFunction;
 
