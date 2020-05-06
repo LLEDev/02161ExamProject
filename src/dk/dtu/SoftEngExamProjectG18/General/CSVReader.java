@@ -115,7 +115,7 @@ public class CSVReader {
 
             try {
                 Employee PM = application.getEmployee(project.getOrDefault("PM", null));
-                application.createProject(name, createdAt, isBillable, PM, false);
+                application.createProject(name, createdAt, isBillable, PM);
             } catch (IllegalArgumentException ignored) {} // Ignore broken entries
         }
     }

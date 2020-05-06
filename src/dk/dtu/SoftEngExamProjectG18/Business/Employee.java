@@ -24,6 +24,21 @@ public class Employee {
         this.weeklyActivityCap = weeklyActivityCap;
     }
 
+    public void addActivity(Activity activity) {
+        String projectID = activity.getProject().getID();
+        int activityID = activity.getID();
+
+        if(!this.activities.containsKey(projectID)) {
+            this.activities.put(projectID, new HashMap<>());
+        }
+
+        HashMap<Integer, EmployeeActivityIntermediate> activityMap = this.activities.get(projectID);
+
+        if(!activityMap.containsKey(activityID)) {
+            activityMap.put(activityID, EmployeeActivityIntermediate.initAssociation(this, activity));
+        }
+    }
+
     public void addOOOActivity(OOOActivityType type, Date start, Date end) {
         this.OOOActivities.add(new OutOfOfficeActivity(type, start, end));
     }

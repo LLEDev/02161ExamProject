@@ -77,7 +77,7 @@ public class Application {
     public Employee createEmployee(String ID, String name) {
         Employee employee = new Employee(ID, name);
 
-        this.db.getEmployees().put(employee.getID(), employee);
+        this.db.addEmployee(employee);
 
         return employee;
     }
@@ -85,7 +85,7 @@ public class Application {
     public Employee createEmployee(String ID, String name, int weeklyActivityCap) {
         Employee employee = new Employee(ID, name, weeklyActivityCap);
 
-        this.db.getEmployees().put(employee.getID(), employee);
+        this.db.addEmployee(employee);
 
         return employee;
     }
@@ -95,17 +95,17 @@ public class Application {
         int nextID = this.db.incrementNextProjectID(year);
 
         Project project = new Project(nextID, name, isBillable);
-        this.db.getProjects().put(project.getID(), project);
+        this.db.addProject(project);
 
         return project;
     }
 
-    public Project createProject(String name, Date createdAt, boolean isBillable, Employee PM, boolean setupActivity) throws IllegalArgumentException {
+    public Project createProject(String name, Date createdAt, boolean isBillable, Employee PM) throws IllegalArgumentException {
         int year = (new GregorianCalendar()).get(Calendar.YEAR);
         int nextID = this.db.incrementNextProjectID(year);
 
-        Project project = new Project(nextID, name, createdAt, isBillable, PM, setupActivity);
-        this.db.getProjects().put(project.getID(), project);
+        Project project = new Project(nextID, name, createdAt, isBillable, PM);
+        this.db.addProject(project);
 
         return project;
     }
@@ -242,7 +242,7 @@ public class Application {
         }
 
         employee.assertOpenActivities();
-        employee.getActivities().put(project.getID(), signedInEmployeeActivities.get(project.getID()));
+        employee.addActivity(activity);
     }
 
     public void requestOutOfOffice(OOOActivityType type, Date start, Date end) throws IllegalArgumentException {

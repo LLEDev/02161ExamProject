@@ -14,6 +14,14 @@ public class CompanyDB {
     protected HashMap<String, Project> projects = new HashMap<>();
     protected Employee signedInEmployee;
 
+    public void addEmployee(Employee employee) {
+        this.employees.put(employee.getID(), employee);
+    }
+
+    public void addProject(Project project) {
+        this.projects.put(project.getID(), project);
+    }
+
     public Employee getEmployee(String ID) {
         return this.employees.get(ID);
     }
@@ -35,10 +43,6 @@ public class CompanyDB {
 
     public Project getProject(String ID) {
         return this.projects.get(ID);
-    }
-
-    public HashMap<String, Project> getProjects() {
-        return this.projects;
     }
 
     public Employee getSignedInEmployee() throws IllegalStateException {

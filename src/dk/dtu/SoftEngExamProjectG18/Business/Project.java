@@ -28,14 +28,6 @@ public class Project {
         this.createdAt = cal;
     }
 
-    protected void setupID(int nextID) {
-        if (nextID <= 0) {
-            throw new IllegalArgumentException("The given project ID is not valid.");
-        }
-
-        this.ID = nextID;
-    }
-
     protected void setupName(String name) throws IllegalArgumentException {
         if (name.length() == 0) {
             throw new IllegalArgumentException(String.format("The given project name, %s, is not valid.", name));
@@ -45,7 +37,7 @@ public class Project {
     }
 
     public Project(int nextID, String name) throws IllegalArgumentException {
-        this.setupID(nextID);
+        this.ID = nextID;
         this.setupName(name);
         this.setupActivity(null);
     }
@@ -55,8 +47,8 @@ public class Project {
         this.isBillable = isBillable;
     }
 
-    public Project(int nextID, String name, Date createdAt, boolean isBillable, Employee PM, boolean setupActivity) {
-        this.setupID(nextID);
+    public Project(int nextID, String name, Date createdAt, boolean isBillable, Employee PM) {
+        this.ID = nextID;
         this.setupName(name);
 
         this.isBillable = isBillable;
@@ -64,9 +56,7 @@ public class Project {
 
         this.setupCreatedAt(createdAt);
 
-        if (setupActivity) {
-            this.setupActivity(null);
-        } // Do not setup activity if data is imported through CSVReader
+        // Do not setup activity if data is imported through CSVReader
     }
 
     public void assertPM(Employee employee) throws AccessDeniedException {
