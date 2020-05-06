@@ -120,8 +120,6 @@ public class ViewSteps {
             ),
             new String[]{}
         );
-
-        System.out.println(this.extractorOutput);
     }
 
     @When("the employee requests a view of the schedule of the employee with ID {string}")
