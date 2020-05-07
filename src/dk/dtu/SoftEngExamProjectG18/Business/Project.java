@@ -2,7 +2,10 @@ package dk.dtu.SoftEngExamProjectG18.Business;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 public class Project {
 
@@ -66,14 +69,14 @@ public class Project {
     }
 
     public void assignPM(Employee newPM, Employee signedInEmployee) throws AccessDeniedException {
-        if (this.PM!=null && signedInEmployee != this.PM) {
+        if (this.PM != null && signedInEmployee != this.PM) {
             throw new AccessDeniedException("Project manager role required.");
         }
-        assert (this.PM==null || signedInEmployee==this.PM): "Precondition of assignPM";
+        assert (this.PM == null || signedInEmployee == this.PM) : "Precondition of assignPM";
 
         this.PM = newPM;
 
-        assert (this.PM == newPM): "Postcondition of assignPM";
+        assert (this.PM == newPM) : "Postcondition of assignPM";
     }
 
     public void clearActivities() {

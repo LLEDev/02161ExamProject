@@ -2,14 +2,17 @@ package dk.dtu.SoftEngExamProjectG18;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Controller.Action;
-import dk.dtu.SoftEngExamProjectG18.Controller.InputContext;
 import dk.dtu.SoftEngExamProjectG18.Controller.Enums.CommandExceptionReason;
 import dk.dtu.SoftEngExamProjectG18.Controller.Enums.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.Controller.InputContext;
 import dk.dtu.SoftEngExamProjectG18.General.CSVReader;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Scanner;
 
 public class Main {
 
@@ -19,10 +22,10 @@ public class Main {
     protected static Scanner inputScanner;
 
     protected static void handleCommandException(Throwable t, String usage) {
-        if(t instanceof CommandException) {
+        if (t instanceof CommandException) {
             CommandException ce = (CommandException) t;
 
-            if(ce.getReason() == CommandExceptionReason.INVALID_ARGUMENTS) {
+            if (ce.getReason() == CommandExceptionReason.INVALID_ARGUMENTS) {
                 outSource.println("Usage: " + usage);
                 return;
             }
@@ -32,7 +35,7 @@ public class Main {
     }
 
     protected static boolean loadData(String dir) {
-        if(dir.equals("")) {
+        if (dir.equals("")) {
             return loadDataInternal();
         }
 
@@ -50,7 +53,8 @@ public class Main {
             CSVReader.readWorkHours(workHours);
 
             return true;
-        } catch (FileNotFoundException ignored) {}
+        } catch (FileNotFoundException ignored) {
+        }
 
         outSource.println("One or more data files are missing.");
         return false;
@@ -66,12 +70,12 @@ public class Main {
         InputStream workHours = cl.getResourceAsStream("data/workhours.csv");
 
         boolean success = activities != null
-                && employees != null
-                && projects != null
-                && oooActivities != null
-                && workHours != null;
+            && employees != null
+            && projects != null
+            && oooActivities != null
+            && workHours != null;
 
-        if(success) {
+        if (success) {
             CSVReader.readEmployees(new InputStreamReader(employees));
             CSVReader.readProjects(new InputStreamReader(projects));
             CSVReader.readActivities(new InputStreamReader(activities));
@@ -83,12 +87,12 @@ public class Main {
     }
 
     protected static boolean redirectBasicInput(String[] input) {
-        if(input[0].equals("help")) {
+        if (input[0].equals("help")) {
             help();
             return true;
         }
 
-        if(input[0].equals("quit")) {
+        if (input[0].equals("quit")) {
             quit();
             return true;
         }
@@ -110,8 +114,8 @@ public class Main {
     }
 
     protected static boolean setupContext(String context) {
-        for(InputContextType type : InputContextType.values()) {
-            if(context.equalsIgnoreCase(type.toString())) {
+        for (InputContextType type : InputContextType.values()) {
+            if (context.equalsIgnoreCase(type.toString())) {
                 Application.init(type);
                 return true;
             }
@@ -137,14 +141,14 @@ public class Main {
         String[] inputSplit = input.split("");
 
         StringBuilder current = new StringBuilder();
-        for(String c : inputSplit) {
-            if(splitAllowed && c.equals(" ")) {
+        for (String c : inputSplit) {
+            if (splitAllowed && c.equals(" ")) {
                 tokens.add(current.toString());
                 current.setLength(0);
                 continue;
             }
 
-            if(c.equals("\"")) {
+            if (c.equals("\"")) {
                 splitAllowed = !splitAllowed;
                 continue;
             }
@@ -162,14 +166,14 @@ public class Main {
 
     protected static void help() {
         ArrayList<String> usages = new ArrayList<>();
-        for(Action action : Application.getInstance().getContext().getTriggers().values()) {
+        for (Action action : Application.getInstance().getContext().getTriggers().values()) {
             usages.add(action.getFullSignature());
         }
 
         Collections.sort(usages);
 
         outSource.println("Available commands:");
-        for(String usage : usages) {
+        for (String usage : usages) {
             outSource.println(" - " + usage);
         }
     }
@@ -177,7 +181,7 @@ public class Main {
     protected static void quit() {
         outSource.println("Bye!");
 
-        if(inputScanner != null) {
+        if (inputScanner != null) {
             inputScanner.close();
         }
     }
@@ -187,12 +191,12 @@ public class Main {
      */
 
     public static void main(String[] args) {
-        if(args.length < 2) {
+        if (args.length < 2) {
             outSource.println("Usage: java -jar 02161ExamProject {Employee Initials} {Context=Emp/PM)} [Data folder/N]");
             return;
         }
 
-        if(!setupContext(args[1]) || !(args.length >= 3 ? loadData(args[2]) : loadData("")) || !signIn(args[0])) {
+        if (!setupContext(args[1]) || !(args.length >= 3 ? loadData(args[2]) : loadData("")) || !signIn(args[0])) {
             return;
         }
 
@@ -208,27 +212,27 @@ public class Main {
             while (inputScanner.hasNextLine()) {
                 redirectInput(splitInput(inputScanner.nextLine().trim()));
             }
-        } catch(IllegalStateException ignored) {} // Thrown when quitting
+        } catch (IllegalStateException ignored) {} // Thrown when quitting
     }
 
     public static void redirectInput(String[] input) {
-        if(input.length == 0 || redirectBasicInput(input)) {
+        if (input.length == 0 || redirectBasicInput(input)) {
             return;
         }
 
         ArrayList<String> inputVariants = new ArrayList<>();
         inputVariants.add(input[0]);
 
-        for(int i = 1; i < input.length; i++) {
+        for (int i = 1; i < input.length; i++) {
             inputVariants.add(inputVariants.get(inputVariants.size() - 1) + " " + input[i]);
         }
 
         InputContext inputContext = Application.getInstance().getContext();
 
-        for(int i = 0; i < inputVariants.size(); i++) {
+        for (int i = 0; i < inputVariants.size(); i++) {
             String variant = inputVariants.get(i).toLowerCase();
 
-            if(!inputContext.getTriggers().containsKey(variant)) {
+            if (!inputContext.getTriggers().containsKey(variant)) {
                 continue;
             }
 

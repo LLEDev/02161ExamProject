@@ -4,8 +4,8 @@ Feature: Run Main application
 
     Scenario: A user boots the application with invalid external data files
         When a user boots the application with the following arguments
-            | HH |
-            | PM |
+            | HH           |
+            | PM           |
             | INVALID_PATH |
         Then "One or more data files are missing" is a part of the output
         And "Welcome, Hans Hansen" is not a part of the output
@@ -29,21 +29,21 @@ Feature: Run Main application
 
     Scenario: A user tries to sign in without specifying arguments
         When a user boots the application with the following arguments
-            ||
+            |  |
         Then "Usage: java -jar" is a part of the output
         Then the output will be reset
 
     Scenario: A user tries to sign in with non-existing user
         When a user boots the application with the following arguments
             | ABCD |
-            | PM |
+            | PM   |
         Then "Given employee does not exist" is a part of the output
         And "Welcome, Hans Hansen" is not a part of the output
         Then the output will be reset
 
     Scenario: A user tries to sign in with non-existing context
         When a user boots the application with the following arguments
-            | HH |
+            | HH  |
             | ABC |
         Then "This context is not available" is a part of the output
         And "Welcome, Hans Hansen" is not a part of the output
@@ -59,7 +59,7 @@ Feature: Run Main application
 
     Scenario: A user signs in as employee and quits
         When a user boots the application with the following arguments
-            | HH |
+            | HH  |
             | EMP |
         And a user quits the application
         Then "Bye!" is a part of the output

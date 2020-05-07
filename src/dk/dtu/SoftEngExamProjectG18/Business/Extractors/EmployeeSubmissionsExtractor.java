@@ -23,12 +23,12 @@ public class EmployeeSubmissionsExtractor implements Extractor<Employee> {
 
         Date today = new Date();
 
-        for(HashMap<Integer, EmployeeActivityIntermediate> projectActivities : employee.getActivities().values()) {
-            for(EmployeeActivityIntermediate eai : projectActivities.values()) {
+        for (HashMap<Integer, EmployeeActivityIntermediate> projectActivities : employee.getActivities().values()) {
+            for (EmployeeActivityIntermediate eai : projectActivities.values()) {
                 String formattedDate = DateFormatter.formatDate(today);
                 HashMap<String, Integer> minutesSpent = eai.getMinutesSpent();
 
-                if(minutesSpent.containsKey(formattedDate)) {
+                if (minutesSpent.containsKey(formattedDate)) {
                     Activity activity = eai.getActivity();
                     Project project = activity.getProject();
 

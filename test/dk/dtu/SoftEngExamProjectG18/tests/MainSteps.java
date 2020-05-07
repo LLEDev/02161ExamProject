@@ -1,9 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
 import dk.dtu.SoftEngExamProjectG18.Main;
-
-import static org.junit.Assert.*;
-
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -13,21 +10,21 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class MainSteps {
 
     // Inputted commands
     protected static String input = String.join("\n", new String[]{
-            "help",
-            "view availability",
-            "view availability 2020-04-01",
-            "view availability \"arg 2\"",
-            "unknown command"
+        "help",
+        "view availability",
+        "view availability 2020-04-01",
+        "view availability \"arg 2\"",
+        "unknown command"
     });
 
     // System output can be collected using this variable
@@ -47,15 +44,15 @@ public class MainSteps {
     }
 
     @When("a user boots the application with valid external data files and the following arguments")
-    public void aUserBootsTheApplicationWithValidExternalDataFilesAndTheFollowingArguments(List<String> args) throws Exception  {
+    public void aUserBootsTheApplicationWithValidExternalDataFilesAndTheFollowingArguments(List<String> args) throws Exception {
         Main.setInSource(inSource);
         Main.setOutSource(outSource);
 
         ClassLoader cl = Main.class.getClassLoader();
         String path = Paths.get(Objects.requireNonNull(cl.getResource("data"))
-                .toURI()).toString();
+            .toURI()).toString();
 
-        Main.main(new String[] {args.get(0), args.get(1), path});
+        Main.main(new String[]{args.get(0), args.get(1), path});
     }
 
     @When("a user boots the application with test data files and the following arguments")
@@ -66,7 +63,7 @@ public class MainSteps {
         ClassLoader cl = Main.class.getClassLoader();
         String path = Paths.get(Objects.requireNonNull(cl.getResource("data/test")).toURI()).toString();
 
-        Main.main(new String[] {args.get(0), args.get(1), path});
+        Main.main(new String[]{args.get(0), args.get(1), path});
     }
 
     @Then("{string} is a part of the output")
@@ -87,6 +84,6 @@ public class MainSteps {
 
     @And("a user quits the application")
     public void aUserQuitsTheApplication() throws Exception {
-        Main.redirectInput(new String[] {"quit"});
+        Main.redirectInput(new String[]{"quit"});
     }
 }

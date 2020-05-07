@@ -1,19 +1,16 @@
 package dk.dtu.SoftEngExamProjectG18.General;
 
-import dk.dtu.SoftEngExamProjectG18.Business.Activity;
-import dk.dtu.SoftEngExamProjectG18.Business.Application;
-import dk.dtu.SoftEngExamProjectG18.Business.Employee;
-import dk.dtu.SoftEngExamProjectG18.Business.Project;
+import dk.dtu.SoftEngExamProjectG18.Business.*;
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
-import dk.dtu.SoftEngExamProjectG18.Business.EmployeeActivityIntermediate;
-import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 
 public class CSVReader {
 
@@ -25,28 +22,32 @@ public class CSVReader {
     protected static Date getDate(HashMap<String, String> entry, String property) {
         try {
             return DateFormatter.parseDate(entry.get(property));
-        } catch (ParseException ignored) {}
+        } catch (ParseException ignored) {
+        }
         return null;
     }
 
     protected static int getInt(HashMap<String, String> entry, String property, int def) {
         try {
             return Integer.parseInt(entry.get(property));
-        } catch (NumberFormatException ignored) {}
+        } catch (NumberFormatException ignored) {
+        }
         return def;
     }
 
     protected static Date getDateFromYearWeek(HashMap<String, String> entry, String property) {
         try {
             return DateFormatter.parseWeek(entry.getOrDefault(property, ""));
-        } catch (ParseException ignored) {}
+        } catch (ParseException ignored) {
+        }
         return null;
     }
 
     protected static OOOActivityType getOOOActivityType(String input) {
         try {
             return OOOActivityType.valueOf(input);
-        } catch (IllegalArgumentException ignored) {}
+        } catch (IllegalArgumentException ignored) {
+        }
 
         return null;
     }
@@ -68,7 +69,7 @@ public class CSVReader {
 
                 HashMap<String, String> line = new HashMap<>();
 
-                for(int i = 0; i < Math.min(properties.length, values.length); i++) {
+                for (int i = 0; i < Math.min(properties.length, values.length); i++) {
                     line.put(properties[i], values[i]);
                 }
 
@@ -83,10 +84,10 @@ public class CSVReader {
         Application application = Application.getInstance();
         ArrayList<HashMap<String, String>> employees = readFile(fileReader);
 
-        for(HashMap<String, String> employee : employees) {
+        for (HashMap<String, String> employee : employees) {
             String ID = employee.get("ID");
 
-            if(ID == null || ID.length() == 0) {
+            if (ID == null || ID.length() == 0) {
                 continue;
             }
 
@@ -103,11 +104,11 @@ public class CSVReader {
         Application application = Application.getInstance();
         ArrayList<HashMap<String, String>> projects = readFile(fileReader);
 
-        for(HashMap<String, String> project : projects) {
+        for (HashMap<String, String> project : projects) {
             String name = project.get("Name");
             Date createdAt = getDate(project, "CreatedAt");
 
-            if(name == null || createdAt == null) {
+            if (name == null || createdAt == null) {
                 continue;
             }
 
@@ -116,7 +117,8 @@ public class CSVReader {
             try {
                 Employee PM = application.getEmployee(project.getOrDefault("PM", null));
                 application.createProject(name, createdAt, isBillable, PM);
-            } catch (IllegalArgumentException ignored) {} // Ignore broken entries
+            } catch (IllegalArgumentException ignored) {
+            } // Ignore broken entries
         }
     }
 
@@ -124,7 +126,7 @@ public class CSVReader {
         Application application = Application.getInstance();
         ArrayList<HashMap<String, String>> activities = readFile(fileReader);
 
-        for(HashMap<String, String> activity : activities) {
+        for (HashMap<String, String> activity : activities) {
             String projectID = activity.get("Project ID");
             String name = activity.get("Name");
 
@@ -140,7 +142,8 @@ public class CSVReader {
                 }
 
                 activityInstance.setDone(getBoolean(activity, "IsDone", false));
-            } catch (IllegalArgumentException ignored) {} // Ignore broken entries
+            } catch (IllegalArgumentException ignored) {
+            } // Ignore broken entries
         }
     }
 
@@ -189,7 +192,8 @@ public class CSVReader {
                     eai = new EmployeeActivityIntermediate(employee, activity);
                 }
                 eai.setMinutes(date, minutes);
-            } catch (IllegalArgumentException ignored) {} // Ignore broken entries
+            } catch (IllegalArgumentException ignored) {
+            } // Ignore broken entries
         }
     }
 }

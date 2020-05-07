@@ -3,7 +3,6 @@ package dk.dtu.SoftEngExamProjectG18.General;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.function.Supplier;
 
 public class DateFormatter {
 

@@ -13,7 +13,9 @@ import io.cucumber.java.en.When;
 import org.junit.Assert;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class EmployeeSteps extends StepsBase {
@@ -46,7 +48,7 @@ public class EmployeeSteps extends StepsBase {
 
     @And("the following employees are given")
     public void theFollowingEmployeesAreGiven(List<String> employees) {
-        for (String employeeID: employees) {
+        for (String employeeID : employees) {
             this.thereIsAnEmployeeWithInitials(employeeID);
         }
     }
@@ -62,15 +64,15 @@ public class EmployeeSteps extends StepsBase {
         Application application = Application.getInstance();
         Employee signedInEmployee = application.getSignedInEmployee();
 
-        for(String projectID : projects) {
+        for (String projectID : projects) {
             Project project = application.getProject(projectID);
             Assert.assertNotNull(project);
 
             // Get employees' activity associations related to project
             HashMap<Integer, EmployeeActivityIntermediate> ePA = signedInEmployee.getActivities().get(project.getID());
 
-            for(Activity activity : project.getActivities().values()) {
-                if(ePA == null || !ePA.containsKey(activity.getID())) {
+            for (Activity activity : project.getActivities().values()) {
+                if (ePA == null || !ePA.containsKey(activity.getID())) {
                     EmployeeActivityIntermediate.initAssociation(signedInEmployee, activity);
                 }
 
@@ -96,7 +98,7 @@ public class EmployeeSteps extends StepsBase {
         Application application = Application.getInstance();
         Employee employee = application.getSignedInEmployee();
 
-        for(List<String> entry : workMinutes) {
+        for (List<String> entry : workMinutes) {
             Assert.assertEquals(entry.size(), 4);
 
             Project project = application.getProject(entry.get(0));
@@ -155,7 +157,7 @@ public class EmployeeSteps extends StepsBase {
         Application application = Application.getInstance();
 
         for (List<String> submission : minutes) {
-            if(submission.size() != 3) {
+            if (submission.size() != 3) {
                 throw new IllegalArgumentException("Invalid submission entry given.");
             }
 
@@ -174,8 +176,8 @@ public class EmployeeSteps extends StepsBase {
     public void theEmployeeRequestsTheFollowingOOOActivities(List<List<String>> activities) throws Exception {
         Application application = Application.getInstance();
 
-        for(List<String> activity : activities) {
-            if(activity.size() != 3) {
+        for (List<String> activity : activities) {
+            if (activity.size() != 3) {
                 throw new Exception("Invalid OOO activity entry given.");
             }
 
@@ -203,7 +205,7 @@ public class EmployeeSteps extends StepsBase {
         Project project = TestHolder.getInstance().getProject();
 
         HashMap<Integer, EmployeeActivityIntermediate> otherEmployeeIntermediates =
-                otherEmployee.getActivities().get(project.getID());
+            otherEmployee.getActivities().get(project.getID());
         Assert.assertNotNull(otherEmployeeIntermediates);
         Assert.assertTrue(otherEmployeeIntermediates.containsKey(Integer.parseInt(activityIDString)));
     }
@@ -238,10 +240,10 @@ public class EmployeeSteps extends StepsBase {
         Application application = Application.getInstance();
 
         this.wrap(() -> application.setHours(
-                project.getID(),
-                Integer.parseInt(activityID),
-                new Date(),
-                Integer.parseInt(workHours)
+            project.getID(),
+            Integer.parseInt(activityID),
+            new Date(),
+            Integer.parseInt(workHours)
         ));
     }
 
@@ -255,9 +257,9 @@ public class EmployeeSteps extends StepsBase {
         Application application = Application.getInstance();
 
         this.wrap(() -> application.estimateActivityDuration(
-                project.getID(),
-                Integer.parseInt(activityID),
-                Integer.parseInt(hours)
+            project.getID(),
+            Integer.parseInt(activityID),
+            Integer.parseInt(hours)
         ));
 
     }
@@ -272,10 +274,10 @@ public class EmployeeSteps extends StepsBase {
         Application application = Application.getInstance();
 
         this.wrap(() -> application.setActivityInterval(
-                project.getID(),
-                Integer.parseInt(activityID),
-                DateFormatter.parseDate(start),
-                DateFormatter.parseDate(end)
+            project.getID(),
+            Integer.parseInt(activityID),
+            DateFormatter.parseDate(start),
+            DateFormatter.parseDate(end)
         ));
 
     }

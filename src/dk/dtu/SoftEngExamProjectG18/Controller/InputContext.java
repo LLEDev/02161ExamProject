@@ -4,8 +4,8 @@ import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Controller.Enums.CommandExceptionReason;
 import dk.dtu.SoftEngExamProjectG18.Controller.Enums.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
-import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
 import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ abstract public class InputContext {
 
 
     public void assertArgumentsValid(int argsLength, int requiredLength) throws CommandException {
-        if(argsLength != requiredLength) {
+        if (argsLength != requiredLength) {
             throw new CommandException(CommandExceptionReason.INVALID_ARGUMENTS);
         }
     }

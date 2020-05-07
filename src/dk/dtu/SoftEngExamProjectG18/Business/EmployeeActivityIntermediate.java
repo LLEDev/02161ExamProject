@@ -1,9 +1,10 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
-import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
+import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
 
 public class EmployeeActivityIntermediate {
 
@@ -89,8 +90,8 @@ public class EmployeeActivityIntermediate {
 
         this.minutesSpent.put(dateString, total);
         assert this.minutesSpent.containsKey(dateString) &&
-                this.minutesSpent.get(dateString) == total :
-                "Postcondition of submitMinutes";
+            this.minutesSpent.get(dateString) == total :
+            "Postcondition of submitMinutes";
     }
 
 }

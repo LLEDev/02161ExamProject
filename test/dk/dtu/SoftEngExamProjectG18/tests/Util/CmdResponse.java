@@ -26,7 +26,7 @@ public class CmdResponse {
     }
 
     public boolean exceptionMessageIs(String message) {
-        if(this.ce == null || this.ce.getMessage() == null) {
+        if (this.ce == null || this.ce.getMessage() == null) {
             return false;
         }
 
@@ -34,7 +34,7 @@ public class CmdResponse {
     }
 
     public boolean exceptionReasonIs(CommandExceptionReason cer) {
-        if(this.ce == null || this.ce.getReason() == null) {
+        if (this.ce == null || this.ce.getReason() == null) {
             return false;
         }
 

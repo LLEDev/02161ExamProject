@@ -1,10 +1,10 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
-import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Business.Activity;
+import dk.dtu.SoftEngExamProjectG18.Business.Application;
+import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
 import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
-import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -14,7 +14,10 @@ import org.junit.Assert;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
@@ -69,9 +72,15 @@ public class ProjectSteps extends StepsBase {
                     String cell = activityString.get(i);
 
                     switch (i) {
-                        case 1: activity.setEstimatedHours(Integer.parseInt(cell)); break;
-                        case 2: activity.setStartWeek(weekFormatter.parse(cell)); break;
-                        case 3: activity.setEndWeek(weekFormatter.parse(cell)); break;
+                        case 1:
+                            activity.setEstimatedHours(Integer.parseInt(cell));
+                            break;
+                        case 2:
+                            activity.setStartWeek(weekFormatter.parse(cell));
+                            break;
+                        case 3:
+                            activity.setEndWeek(weekFormatter.parse(cell));
+                            break;
                     }
                 }
             }
@@ -189,7 +198,7 @@ public class ProjectSteps extends StepsBase {
         Activity activity = project.getActivity(Integer.parseInt(activityID));
 
         int estimatedHours = activity.getEstimatedHours();
-        Assert.assertEquals(estimatedHours,Integer.parseInt(hours));
+        Assert.assertEquals(estimatedHours, Integer.parseInt(hours));
 
     }
 
@@ -202,8 +211,8 @@ public class ProjectSteps extends StepsBase {
 
         Activity activity = project.getActivity(Integer.parseInt(activityID));
 
-        Assert.assertEquals(activity.getStartWeek(),DateFormatter.parseDate(start));
-        Assert.assertEquals(activity.getEndWeek(),DateFormatter.parseDate(end));
+        Assert.assertEquals(activity.getStartWeek(), DateFormatter.parseDate(start));
+        Assert.assertEquals(activity.getEndWeek(), DateFormatter.parseDate(end));
 
     }
 }

@@ -4,13 +4,15 @@ import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeSubmissionsExtractor;
-import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
-import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
-import dk.dtu.SoftEngExamProjectG18.General.Table;
 import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
+import dk.dtu.SoftEngExamProjectG18.General.Table;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 
 public class EmployeeInputContext extends InputContext {
 
@@ -104,7 +106,7 @@ public class EmployeeInputContext extends InputContext {
             }
         }
 
-        if(type == null) {
+        if (type == null) {
             String optionDelimiter = ", ";
             String options = Arrays.stream(OOOActivityType.values())
                 .map(t -> optionDelimiter + t.toString().toLowerCase())

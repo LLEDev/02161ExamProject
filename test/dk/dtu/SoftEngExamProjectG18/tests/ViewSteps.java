@@ -2,10 +2,10 @@ package dk.dtu.SoftEngExamProjectG18.tests;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeAvailabilityExtractor;
-import dk.dtu.SoftEngExamProjectG18.General.Table;
 import dk.dtu.SoftEngExamProjectG18.Controller.*;
 import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunction;
+import dk.dtu.SoftEngExamProjectG18.General.Table;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.CmdResponse;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.Then;
@@ -43,7 +43,7 @@ public class ViewSteps {
 
         context.removeCommandExceptionHook(exceptionHook);
 
-        if(commandException == null) {
+        if (commandException == null) {
             Exception exception = atomicException.get();
             if (exception != null && !(exception instanceof CommandException)) {
                 handleNonCommandException(exception);
@@ -131,7 +131,7 @@ public class ViewSteps {
     @When("the employee requests of the daily submissions")
     public void theEmployeeRequestsOfTheDailySubmissions() {
         EmployeeInputContext ic = new EmployeeInputContext();
-        this.callCmd(ic, ic::cmdViewSubmissions, new String[] {});
+        this.callCmd(ic, ic::cmdViewSubmissions, new String[]{});
     }
 
     @When("string {string} is asserted integer-parseable")
@@ -176,15 +176,15 @@ public class ViewSteps {
 
         boolean tableFound = false;
         int tableIndex = -1;
-        while(s.hasNextLine()) {
+        while (s.hasNextLine()) {
             String next = s.nextLine();
 
-            if(next.matches("^[-]+$")) { // Check if line only contains hyphens - if yes, a table is found
+            if (next.matches("^[-]+$")) { // Check if line only contains hyphens - if yes, a table is found
                 tableIndex = Math.max(0, tableIndex);
                 continue;
             }
 
-            if(tableIndex == -1 || !next.contains("|")) { // If no pipes are found, we're not reading a table anymore
+            if (tableIndex == -1 || !next.contains("|")) { // If no pipes are found, we're not reading a table anymore
                 tableIndex = -1;
                 continue;
             }
@@ -195,23 +195,23 @@ public class ViewSteps {
                 .filter(cell -> cell.length() > 0)
                 .collect(Collectors.toList());
 
-            if(cells.size() < tableRow.size()) { // Are there fewer cells than required?
+            if (cells.size() < tableRow.size()) { // Are there fewer cells than required?
                 tableIndex = -1;
                 continue;
             }
 
-            for(int i = 0; i < tableRow.size(); i++) {
-                if(!cells.get(i).equals(tableRow.get(i))) { // If cells do not match, stop reading table
+            for (int i = 0; i < tableRow.size(); i++) {
+                if (!cells.get(i).equals(tableRow.get(i))) { // If cells do not match, stop reading table
                     tableIndex = -1;
                     break;
                 }
             }
 
-            if(tableIndex >= 0) {
+            if (tableIndex >= 0) {
                 tableIndex++;
             }
 
-            if(tableIndex >= table.size()) {
+            if (tableIndex >= table.size()) {
                 tableFound = true;
                 break;
             }

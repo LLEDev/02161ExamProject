@@ -11,7 +11,9 @@ import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.General.Table;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 public class ProjectManagerInputContext extends InputContext {
 
@@ -154,7 +156,7 @@ public class ProjectManagerInputContext extends InputContext {
             ArrayList<EmployeeActivityIntermediate> collection = new ArrayList<>(activity.getTrackedTime().values());
             this.writeOutput(Table.make(
                 () -> application.extractData(EmployeeActivityIntermediateOverviewExtractor.class, collection),
-                new String[] {"Employee", "Date", "Minutes"}
+                new String[]{"Employee", "Date", "Minutes"}
             ));
         } catch (AccessDeniedException e) {
             throw new CommandException(e.getMessage());
@@ -176,7 +178,7 @@ public class ProjectManagerInputContext extends InputContext {
         this.writeOutput(String.format("\nAvailable employees at %s:\n", args[0]));
         this.writeOutput(Table.make(
             () -> application.extractData(EmployeeAvailabilityExtractor.class, collection, meta),
-            new String[] {"ID", "Name", "Available activity slots"}
+            new String[]{"ID", "Name", "Available activity slots"}
         ));
     }
 
@@ -200,7 +202,7 @@ public class ProjectManagerInputContext extends InputContext {
             ArrayList<Activity> collection = new ArrayList<>(project.getActivities().values());
             this.writeOutput(Table.make(
                 () -> application.extractData(ActivityOverviewExtractor.class, collection),
-                new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"}
+                new String[]{"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"}
             ));
         } catch (AccessDeniedException e) {
             throw new CommandException(e.getMessage());
@@ -224,14 +226,14 @@ public class ProjectManagerInputContext extends InputContext {
             ArrayList<Activity> activityCollection = employee.getAllActiveActivities();
             this.writeOutput(Table.make(
                 () -> application.extractData(ActivityOverviewExtractor.class, activityCollection),
-                new String[] {"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"}
+                new String[]{"ID", "Name", "Start week", "End week", "Estimated work hours (in total)", "Tracked work hours (in total)"}
             ) + "\n");
 
             this.writeOutput("\nPlanned out-of-office activities:\n");
             ArrayList<OutOfOfficeActivity> OOOCollection = new ArrayList<>(employee.getOOOActivities());
             this.writeOutput(Table.make(
                 () -> application.extractData(OutOfOfficeActivityOverviewExtractor.class, OOOCollection),
-                new String[] {"Type", "Start", "End"}
+                new String[]{"Type", "Start", "End"}
             ));
         } catch (IllegalArgumentException e) {
             throw new CommandException(e.getMessage());

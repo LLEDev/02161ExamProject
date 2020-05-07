@@ -1,25 +1,23 @@
 package dk.dtu.SoftEngExamProjectG18.General;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.ExtractionException;
-import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractor;
 import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.ExtractorFunction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.Supplier;
 
 public class Table {
 
     protected static HashMap<String, Integer> determineColumnWidths(String[] keyOrder, ArrayList<HashMap<String, String>> data) {
         HashMap<String, Integer> columnWidths = new HashMap<>();
 
-        for(String key : keyOrder) {
+        for (String key : keyOrder) {
             columnWidths.put(key, key.length() + 2);
         }
 
-        for(HashMap<String, String> entry : data) {
-            for(String key : keyOrder) {
-                if(entry.containsKey(key)) {
+        for (HashMap<String, String> entry : data) {
+            for (String key : keyOrder) {
+                if (entry.containsKey(key)) {
                     int keyLength = (entry.get(key) != null ? entry.get(key).length() : 0) + 2;
 
                     if (keyLength > columnWidths.get(key)) {
@@ -36,7 +34,7 @@ public class Table {
         int numChars = columnWidths.values().stream().mapToInt(i -> i).sum() + columnWidths.size() + 1;
 
         StringBuilder sb = new StringBuilder();
-        while(sb.length() < numChars) {
+        while (sb.length() < numChars) {
             sb.append("-");
         }
 
@@ -47,7 +45,7 @@ public class Table {
         StringBuilder sb = new StringBuilder();
         sb.append("|");
 
-        for(String key : keyOrder) {
+        for (String key : keyOrder) {
             sb.append(padToWidth(key, columnWidths.get(key))).append("|");
         }
 
@@ -58,7 +56,7 @@ public class Table {
         StringBuilder sb = new StringBuilder();
         sb.append("|");
 
-        for(String key : keyOrder) {
+        for (String key : keyOrder) {
             String value = entry.containsKey(key) && entry.get(key) != null ? entry.get(key) : "";
             sb.append(padToWidth(value, columnWidths.get(key))).append("|");
         }
@@ -70,7 +68,7 @@ public class Table {
         StringBuilder sb = new StringBuilder();
         sb.append(" ").append(str);
 
-        while(sb.length() < width) {
+        while (sb.length() < width) {
             sb.append(" ");
         }
 
@@ -88,7 +86,7 @@ public class Table {
             return "An error occurred: " + e.getMessage();
         }
 
-        if(extractedData.size() > 0) {
+        if (extractedData.size() > 0) {
             HashMap<String, Integer> columnWidths = determineColumnWidths(keyOrder, extractedData);
             String delimiter = makeDelimiter(columnWidths);
 

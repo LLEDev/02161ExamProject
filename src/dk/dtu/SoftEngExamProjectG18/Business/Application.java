@@ -1,11 +1,12 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
-import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.ExtractionException;
-import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractor;
-import dk.dtu.SoftEngExamProjectG18.Controller.InputContext;
-import dk.dtu.SoftEngExamProjectG18.Controller.Enums.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
+import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.ExtractionException;
+import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractor;
+import dk.dtu.SoftEngExamProjectG18.Controller.Enums.InputContextType;
+import dk.dtu.SoftEngExamProjectG18.Controller.InputContext;
+import dk.dtu.SoftEngExamProjectG18.General.Assertions;
 import dk.dtu.SoftEngExamProjectG18.Persistence.CompanyDB;
 
 import java.lang.reflect.InvocationTargetException;
@@ -17,8 +18,8 @@ public class Application {
     protected static Application instance;
 
     public static void init(String context) throws IllegalArgumentException {
-        for(InputContextType ict : InputContextType.values()) {
-            if(context.equalsIgnoreCase(ict.toString())) {
+        for (InputContextType ict : InputContextType.values()) {
+            if (context.equalsIgnoreCase(ict.toString())) {
                 init(ict);
                 return;
             }
@@ -33,13 +34,19 @@ public class Application {
     }
 
     public static void init(InputContextType contextType) throws IllegalArgumentException {
-        if(contextType == null) {throw new IllegalArgumentException("Invalid context given.");}
+        Assertions.assertOrThrow(
+            () -> new IllegalArgumentException("Invalid context given."),
+            contextType != null
+        );
 
         instance = new Application(contextType);
     }
 
     public static Application getInstance() {
-        if (instance == null) {throw new IllegalStateException("Application has not been initialized.");}
+        Assertions.assertOrThrow(
+            () -> new IllegalStateException("Application has not been initialized."),
+            instance != null
+        );
 
         return instance;
     }
@@ -181,7 +188,7 @@ public class Application {
         EmployeeActivityIntermediate employeeActivityIntermediate = EmployeeActivityIntermediate.getAssociation(signedInEmployee, activity);
 
         int minutes = (int) (hours * 60.0);
-        if(shouldSet) {
+        if (shouldSet) {
             employeeActivityIntermediate.setMinutes(date, minutes);
         } else {
             employeeActivityIntermediate.submitMinutes(date, minutes);
@@ -221,7 +228,7 @@ public class Application {
         Project project = this.getProject(projectID);
         Activity activity = project.getActivity(activityID);
         Employee employee = this.getEmployee(employeeID);
-        assert project!=null && activity!=null && employee!=null: "Precondition 1 of requestAssistance";
+        assert project != null && activity != null && employee != null : "Precondition 1 of requestAssistance";
 
 
         Employee signedInEmployee = db.getSignedInEmployee();
@@ -241,13 +248,13 @@ public class Application {
             String output = String.format("You are not allowed to work with the given activity, %s.", activityID);
             throw new AccessDeniedException(output);
         }
-        assert signedInEmployeeProjectActivities!=null && !signedInEmployeeIsNotAttachedToActivity: "Precondition 2 of requestAssistance";
+        assert signedInEmployeeProjectActivities != null && !signedInEmployeeIsNotAttachedToActivity : "Precondition 2 of requestAssistance";
 
         employee.assertOpenActivities();
-        assert employee.getNumOpenActivities()>0: "Precondition 3 of requestAssistance";
+        assert employee.getNumOpenActivities() > 0 : "Precondition 3 of requestAssistance";
         employee.addActivity(activity);
         assert employee.getActivities().containsKey(projectID) &&
-                employee.getActivities().get(projectID).containsKey(activityID): "Postcondition of requestAssistance";
+            employee.getActivities().get(projectID).containsKey(activityID) : "Postcondition of requestAssistance";
     }
 
     public void requestOutOfOffice(OOOActivityType type, Date start, Date end) throws IllegalArgumentException {

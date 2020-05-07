@@ -1,8 +1,8 @@
 package dk.dtu.SoftEngExamProjectG18.tests;
 
 import dk.dtu.SoftEngExamProjectG18.Business.*;
-import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
+import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
@@ -82,7 +82,7 @@ public class WhiteBoxSteps {
         Application application = Application.getInstance();
 
         try {
-            application.requestAssistance(projectID,Integer.parseInt(activitID),employeeID);
+            application.requestAssistance(projectID, Integer.parseInt(activitID), employeeID);
         } catch (IllegalArgumentException | AccessDeniedException e) {
             this.exception = e;
         }

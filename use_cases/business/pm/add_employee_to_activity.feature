@@ -6,7 +6,7 @@ Feature: Add employee to project activity
         Given that there is a project with name "Test Project"
         And the following employees are given
             | ABCD |
-            | BS |
+            | BS   |
         And the employee with initials "BS" is the project manager of the project
         And the employee with initials "ABCD" has not reached the activity cap
         And the employee with initials "BS" is the actor
@@ -16,7 +16,7 @@ Feature: Add employee to project activity
     Scenario: Employee adds another employee to a project activity
         Given that there is a project with name "Test Project"
         And the following employees are given
-            | BS |
+            | BS   |
             | ABCD |
         And the employee with initials "ABCD" is assigned to the activity with ID "1"
         And the employee with initials "BS" has not reached the activity cap
@@ -28,7 +28,7 @@ Feature: Add employee to project activity
         Given that there is a project with name "Test Project"
         And the following employees are given
             | ABCD |
-            | BS |
+            | BS   |
         And the employee with initials "BS" is the project manager of the project
         And the employee with initials "ABCD" has not reached the activity cap
         And the employee with initials "BS" is the actor
@@ -39,7 +39,7 @@ Feature: Add employee to project activity
         Given that there is a project with name "Test Project"
         And the following employees are given
             | ABCD |
-            | BS |
+            | BS   |
         And the employee with initials "BS" is the project manager of the project
         And the employee with initials "ABCD" has reached the activity cap
         And the employee with initials "BS" is the actor

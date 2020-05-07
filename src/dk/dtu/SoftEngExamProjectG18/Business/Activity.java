@@ -21,11 +21,11 @@ public class Activity {
     protected HashMap<String, EmployeeActivityIntermediate> trackedTime = new HashMap<>();
 
     protected void assertStartEndValid(Date start, Date end) throws IllegalArgumentException {
-        if(start == null || end == null) {
+        if (start == null || end == null) {
             return;
         }
 
-        if(start.compareTo(end) >= 0) {
+        if (start.compareTo(end) >= 0) {
             String output = String.format(
                 "The given start week, %s, is after the given end week, %s.",
                 DateFormatter.formatWeek(start),
@@ -33,8 +33,8 @@ public class Activity {
             );
             throw new IllegalArgumentException(output);
         }
-        assert start==null || end == null || start.compareTo(end) < 0: "Precondition of assertStartEndValid";
-        assert true: "Postcondition of assertStartEndValid";
+        assert start == null || end == null || start.compareTo(end) < 0 : "Precondition of assertStartEndValid";
+        assert true : "Postcondition of assertStartEndValid";
     }
 
     public Activity(String name, Project project) {
@@ -91,7 +91,7 @@ public class Activity {
     }
 
     public void setEstimatedHours(int estimatedHours) throws IllegalArgumentException {
-        if(estimatedHours <= 0) {
+        if (estimatedHours <= 0) {
             String output = String.format("The estimated number of work hours has to be bigger than 0. %s received.", estimatedHours);
             throw new IllegalArgumentException(output);
         }

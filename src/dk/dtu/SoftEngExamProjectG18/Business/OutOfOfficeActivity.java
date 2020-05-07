@@ -1,8 +1,8 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
-import java.util.Date;
-
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
+
+import java.util.Date;
 
 public class OutOfOfficeActivity {
 

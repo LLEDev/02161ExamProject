@@ -16,10 +16,10 @@ public class EmployeeActivityIntermediateOverviewExtractor implements Extractor<
     public ArrayList<HashMap<String, String>> extractOverview(ArrayList<EmployeeActivityIntermediate> collection) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 
-        for(EmployeeActivityIntermediate eai : collection) {
+        for (EmployeeActivityIntermediate eai : collection) {
             HashMap<String, Integer> minutesSpent = eai.getMinutesSpent();
 
-            for(String date : minutesSpent.keySet()) {
+            for (String date : minutesSpent.keySet()) {
                 int minutes = minutesSpent.get(date);
 
                 HashMap<String, String> entry = new HashMap<>();

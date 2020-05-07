@@ -5,7 +5,6 @@ import dk.dtu.SoftEngExamProjectG18.Business.Project;
 import dk.dtu.SoftEngExamProjectG18.General.Assertions;
 
 import java.util.HashMap;
-import java.util.function.Supplier;
 
 public class CompanyDB {
 
@@ -31,7 +30,7 @@ public class CompanyDB {
     }
 
     public int incrementNextProjectID(int year) {
-        if(!this.nextProjectID.containsKey(year)) {
+        if (!this.nextProjectID.containsKey(year)) {
             this.nextProjectID.put(year, 1);
         }
 

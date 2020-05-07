@@ -13,7 +13,7 @@ import java.util.function.Function;
 
 public class ExceptionWrapper {
 
-    protected static final Class[] CHECKED_EXCEPTIONS = new Class[] {
+    protected static final Class[] CHECKED_EXCEPTIONS = new Class[]{
         AccessDeniedException.class,
         IllegalArgumentException.class,
     };
@@ -48,7 +48,7 @@ public class ExceptionWrapper {
 
     public void run() {
         // Do not run business logic if testing UI
-        if(this.sandbox) {
+        if (this.sandbox) {
             return;
         }
 
@@ -60,7 +60,7 @@ public class ExceptionWrapper {
         } catch (Exception e) {
             CommandException ce = null;
 
-            if(Arrays.asList(CHECKED_EXCEPTIONS).contains(e.getClass())) {
+            if (Arrays.asList(CHECKED_EXCEPTIONS).contains(e.getClass())) {
                 ce = new CommandException(e.getMessage());
 
                 final CommandException fce = ce;

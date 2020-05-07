@@ -14,7 +14,7 @@ Feature: Assign project manager
     Scenario: Employee assigns project manager to a project to which a project manager is already assigned
         Given that there is a project with name "Test Project"
         And the following employees are given
-            | BS |
+            | BS  |
             | TED |
             | MTW |
         And the employee with initials "BS" is the project manager of the project
@@ -25,7 +25,7 @@ Feature: Assign project manager
     Scenario: Employee who is a project manager assigns project manager to their project
         Given that there is a project with name "Test Project"
         And the following employees are given
-            | BS |
+            | BS  |
             | TED |
             | MTW |
         And the employee with initials "BS" is the project manager of the project

@@ -5,7 +5,7 @@ Feature: Submit daily work hours
 
     Scenario: An employee submits daily work hours
         Given there are projects with names
-            | Test Project |
+            | Test Project   |
             | Test Project 2 |
             | Test Project 3 |
         And there is an employee
@@ -20,7 +20,7 @@ Feature: Submit daily work hours
         Then these activities with overall durations are found
             | 2020-000001 | 1 | 1.5 |
             | 2020-000002 | 1 | 1.5 |
-            | 2020-000003 | 1 | 1 |
+            | 2020-000003 | 1 | 1   |
 
     Scenario: An employee submits work hours to a project he/she is not attached to
         Given that there is a project with name "Test Project"

@@ -19,7 +19,7 @@ public class OutOfOfficeActivityOverviewExtractor implements Extractor<OutOfOffi
 
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 
-        for(OutOfOfficeActivity OOOActivity : collection) {
+        for (OutOfOfficeActivity OOOActivity : collection) {
             HashMap<String, String> entry = new HashMap<>();
             entry.put("Type", OOOActivity.getType().toString());
             entry.put("Start", formatter.format(OOOActivity.getStart()));

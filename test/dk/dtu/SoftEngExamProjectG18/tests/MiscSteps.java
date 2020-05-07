@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 public class MiscSteps {
 
     @Before // Reset Application before each scenario
-    public void beforeScenario(){
+    public void beforeScenario() {
         Application.init(InputContextType.Emp);
     }
 

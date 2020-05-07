@@ -23,7 +23,7 @@ public class Action {
     }
 
     public String getFullSignature() {
-        if(this.getArguments().length == 0) {
+        if (this.getArguments().length == 0) {
             return this.getSignature();
         }
 

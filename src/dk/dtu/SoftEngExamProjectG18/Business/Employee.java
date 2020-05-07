@@ -2,7 +2,9 @@ package dk.dtu.SoftEngExamProjectG18.Business;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 public class Employee {
 
@@ -28,13 +30,13 @@ public class Employee {
         String projectID = activity.getProject().getID();
         int activityID = activity.getID();
 
-        if(!this.activities.containsKey(projectID)) {
+        if (!this.activities.containsKey(projectID)) {
             this.activities.put(projectID, new HashMap<>());
         }
 
         HashMap<Integer, EmployeeActivityIntermediate> activityMap = this.activities.get(projectID);
 
-        if(!activityMap.containsKey(activityID)) {
+        if (!activityMap.containsKey(activityID)) {
             activityMap.put(activityID, EmployeeActivityIntermediate.initAssociation(this, activity));
         }
     }
@@ -59,12 +61,12 @@ public class Employee {
 
     public ArrayList<Activity> getAllActiveActivities() {
         HashMap<String, Activity> allActivities = new HashMap<>();
-        for(HashMap<Integer, EmployeeActivityIntermediate> activities : this.getActivities().values()) {
-            for(EmployeeActivityIntermediate intermediate : activities.values()) {
+        for (HashMap<Integer, EmployeeActivityIntermediate> activities : this.getActivities().values()) {
+            for (EmployeeActivityIntermediate intermediate : activities.values()) {
                 Activity activity = intermediate.getActivity();
                 String combinedID = activity.getProject().getID() + "-" + activity.getID();
 
-                if(!activity.isDone() && !allActivities.containsKey(combinedID)) {
+                if (!activity.isDone() && !allActivities.containsKey(combinedID)) {
                     allActivities.put(combinedID, activity);
                 }
             }
