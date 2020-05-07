@@ -72,11 +72,12 @@ public class Project {
         if (this.PM != null && signedInEmployee != this.PM) {
             throw new AccessDeniedException("Project manager role required.");
         }
-        assert (this.PM == null || signedInEmployee == this.PM) : "Precondition of assignPM";
+
+        assert this.PM == null || signedInEmployee == this.PM : "Precondition of assignPM";
 
         this.PM = newPM;
 
-        assert (this.PM == newPM) : "Postcondition of assignPM";
+        assert this.PM == newPM : "Postcondition of assignPM";
     }
 
     public void clearActivities() {

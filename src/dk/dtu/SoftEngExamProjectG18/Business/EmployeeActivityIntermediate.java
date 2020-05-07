@@ -86,9 +86,11 @@ public class EmployeeActivityIntermediate {
         String dateString = DateFormatter.formatDate(d);
 
         assert d != null && minutes >= 0 : "Precondition of submitMinutes";
+
         int total = this.getMinutes(d) + minutes;
 
         this.minutesSpent.put(dateString, total);
+
         assert this.minutesSpent.containsKey(dateString) &&
             this.minutesSpent.get(dateString) == total :
             "Postcondition of submitMinutes";
