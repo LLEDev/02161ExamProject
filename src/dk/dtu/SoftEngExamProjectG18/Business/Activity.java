@@ -33,6 +33,8 @@ public class Activity {
             );
             throw new IllegalArgumentException(output);
         }
+        assert start==null || end == null || start.compareTo(end) < 0: "Precondition of assertStartEndValid";
+        assert true: "Postcondition of assertStartEndValid";
     }
 
     public Activity(String name, Project project) {

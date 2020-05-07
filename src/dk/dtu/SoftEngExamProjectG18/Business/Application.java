@@ -150,7 +150,6 @@ public class Application {
 
     public Project getProject(String projectID) throws IllegalArgumentException {
         Project project = db.getProject(projectID);
-
         if (project == null) {
             throw new IllegalArgumentException(String.format("The given project, %s, does not exist.", projectID));
         }
@@ -222,6 +221,8 @@ public class Application {
         Project project = this.getProject(projectID);
         Activity activity = project.getActivity(activityID);
         Employee employee = this.getEmployee(employeeID);
+        assert project!=null && activity!=null && employee!=null: "Precondition 1 of requestAssistance";
+
 
         Employee signedInEmployee = db.getSignedInEmployee();
         HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> signedInEmployeeActivities
@@ -240,9 +241,13 @@ public class Application {
             String output = String.format("You are not allowed to work with the given activity, %s.", activityID);
             throw new AccessDeniedException(output);
         }
+        assert signedInEmployeeProjectActivities!=null && !signedInEmployeeIsNotAttachedToActivity: "Precondition 2 of requestAssistance";
 
         employee.assertOpenActivities();
+        assert employee.getNumOpenActivities()>0: "Precondition 3 of requestAssistance";
         employee.addActivity(activity);
+        assert employee.getActivities().containsKey(projectID) &&
+                employee.getActivities().get(projectID).containsKey(activityID): "Postcondition of requestAssistance";
     }
 
     public void requestOutOfOffice(OOOActivityType type, Date start, Date end) throws IllegalArgumentException {

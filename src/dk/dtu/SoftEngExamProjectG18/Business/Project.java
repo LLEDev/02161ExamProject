@@ -66,16 +66,14 @@ public class Project {
     }
 
     public void assignPM(Employee newPM, Employee signedInEmployee) throws AccessDeniedException {
-        if (this.PM == null) {
-            this.PM = newPM;
-            return;
-        }
-
-        if (signedInEmployee != this.PM) {
+        if (this.PM!=null && signedInEmployee != this.PM) {
             throw new AccessDeniedException("Project manager role required.");
         }
+        assert (this.PM==null || signedInEmployee==this.PM): "Precondition of assignPM";
 
         this.PM = newPM;
+
+        assert (this.PM == newPM): "Postcondition of assignPM";
     }
 
     public void clearActivities() {

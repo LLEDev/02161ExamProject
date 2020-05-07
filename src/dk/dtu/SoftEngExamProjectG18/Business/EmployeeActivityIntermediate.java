@@ -16,7 +16,7 @@ public class EmployeeActivityIntermediate {
         HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
         EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(employee.getID());
 
-        if(employeeActivityIntermediate == null) {
+        if (employeeActivityIntermediate == null) {
             throw new AccessDeniedException("You are not associated with one or more of these projects.");
         }
 
@@ -36,7 +36,7 @@ public class EmployeeActivityIntermediate {
         Project project = a.getProject();
 
         HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> employeeProjectActivities = e.getActivities();
-        if(!employeeProjectActivities.containsKey(project.getID())) {
+        if (!employeeProjectActivities.containsKey(project.getID())) {
             employeeProjectActivities.put(project.getID(), new HashMap<>());
         }
 
@@ -66,7 +66,7 @@ public class EmployeeActivityIntermediate {
     }
 
     public void setMinutes(Date d, int minutes) throws IllegalArgumentException {
-        if(minutes < 0) {
+        if (minutes < 0) {
             String output = String.format("The set number of work minutes has to be more than or equal to 0. %s received.", minutes);
             throw new IllegalArgumentException(output);
         }
@@ -77,14 +77,20 @@ public class EmployeeActivityIntermediate {
     }
 
     public void submitMinutes(Date d, int minutes) throws IllegalArgumentException {
-        if(minutes < 0) {
+        if (minutes < 0) {
             String output = String.format("The submitted number of work minutes has to be more than or equal to 0. %s received.", minutes);
             throw new IllegalArgumentException(output);
         }
 
         String dateString = DateFormatter.formatDate(d);
 
-        this.minutesSpent.put(dateString, this.getMinutes(d) + minutes);
+        assert d != null && minutes >= 0 : "Precondition of submitMinutes";
+        int total = this.getMinutes(d) + minutes;
+
+        this.minutesSpent.put(dateString, total);
+        assert this.minutesSpent.containsKey(dateString) &&
+                this.minutesSpent.get(dateString) == total :
+                "Postcondition of submitMinutes";
     }
 
 }
