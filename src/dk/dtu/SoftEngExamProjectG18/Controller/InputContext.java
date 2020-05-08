@@ -64,7 +64,7 @@ abstract public class InputContext {
         try {
             Integer.parseInt(possibleInt);
         } catch (NumberFormatException nfe) {
-            String output = String.format("Any number must be given as an integer. Received %s.", possibleInt);
+            String output = String.format("Any number must be given as an integer (where -2147483649 < i < 2147483648). Received %s.", possibleInt);
             throw new CommandException(output);
         }
     }
