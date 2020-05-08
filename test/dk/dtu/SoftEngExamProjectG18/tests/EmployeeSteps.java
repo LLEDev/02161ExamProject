@@ -4,7 +4,7 @@ import dk.dtu.SoftEngExamProjectG18.Business.*;
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Controller.EmployeeInputContext;
-import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Dates;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -103,7 +103,7 @@ public class EmployeeSteps extends StepsBase {
 
             Project project = application.getProject(entry.get(0));
             Activity activity = project.getActivity(Integer.parseInt(entry.get(1)));
-            Date date = DateFormatter.parseDate(entry.get(2));
+            Date date = Dates.parseDate(entry.get(2));
             int minutes = Integer.parseInt(entry.get(3));
 
             Assert.assertNotNull(project);
@@ -117,7 +117,7 @@ public class EmployeeSteps extends StepsBase {
 
     @And("the employee has the following work minutes today")
     public void theEmployeeHasTheFollowingWorkMinutesToday(List<List<String>> workMinutes) throws ParseException, AccessDeniedException {
-        final String today = DateFormatter.formatDate(new Date());
+        final String today = Dates.formatDate(new Date());
         List<List<String>> newWorkMinutes = workMinutes.stream().peek(l -> l.add(2, today)).collect(Collectors.toList());
         this.theEmployeeHasTheFollowingWorkMinutes(newWorkMinutes);
     }
@@ -183,8 +183,8 @@ public class EmployeeSteps extends StepsBase {
 
             this.wrap(() -> application.requestOutOfOffice(
                 OOOActivityType.valueOf(activity.get(0)),
-                DateFormatter.parseDate(activity.get(1)),
-                DateFormatter.parseDate(activity.get(2))
+                Dates.parseDate(activity.get(1)),
+                Dates.parseDate(activity.get(2))
             ));
         }
     }
@@ -276,8 +276,8 @@ public class EmployeeSteps extends StepsBase {
         this.wrap(() -> application.setActivityInterval(
             project.getID(),
             Integer.parseInt(activityID),
-            DateFormatter.parseDate(start),
-            DateFormatter.parseDate(end)
+            Dates.parseDate(start),
+            Dates.parseDate(end)
         ));
 
     }

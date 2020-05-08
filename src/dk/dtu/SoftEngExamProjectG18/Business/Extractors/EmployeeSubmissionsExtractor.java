@@ -5,7 +5,7 @@ import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.EmployeeActivityIntermediate;
 import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractor;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Dates;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class EmployeeSubmissionsExtractor implements Extractor<Employee> {
 
         for (HashMap<Integer, EmployeeActivityIntermediate> projectActivities : employee.getActivities().values()) {
             for (EmployeeActivityIntermediate eai : projectActivities.values()) {
-                String formattedDate = DateFormatter.formatDate(today);
+                String formattedDate = Dates.formatDate(today);
                 HashMap<String, Integer> minutesSpent = eai.getMinutesSpent();
 
                 if (minutesSpent.containsKey(formattedDate)) {

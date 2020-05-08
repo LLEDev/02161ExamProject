@@ -1,6 +1,6 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
-import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Dates;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -19,23 +19,6 @@ public class Activity {
 
     // EmployeeID --> EmployeeActivityIntermediate
     protected HashMap<String, EmployeeActivityIntermediate> trackedTime = new HashMap<>();
-
-    protected void assertStartEndValid(Date start, Date end) throws IllegalArgumentException {
-        if (start == null || end == null) {
-            return;
-        }
-
-        if (start.compareTo(end) >= 0) {
-            String output = String.format(
-                "The given start week, %s, is after the given end week, %s.",
-                DateFormatter.formatWeek(start),
-                DateFormatter.formatWeek(end)
-            );
-            throw new IllegalArgumentException(output);
-        }
-        assert start == null || end == null || start.compareTo(end) < 0 : "Precondition of assertStartEndValid";
-        assert true : "Postcondition of assertStartEndValid";
-    }
 
     public Activity(String name, Project project) {
         this.ID = project.incrementNextActivityID();
@@ -86,7 +69,8 @@ public class Activity {
     }
 
     public void setEndWeek(Date endWeek) throws IllegalArgumentException {
-        this.assertStartEndValid(this.startWeek, endWeek);
+        Dates.assertStartEndValid(this.startWeek, endWeek);
+
         this.endWeek = endWeek;
     }
 
@@ -100,7 +84,8 @@ public class Activity {
     }
 
     public void setStartWeek(Date startWeek) throws IllegalArgumentException {
-        this.assertStartEndValid(startWeek, this.endWeek);
+        Dates.assertStartEndValid(startWeek, this.endWeek);
+
         this.startWeek = startWeek;
     }
 }

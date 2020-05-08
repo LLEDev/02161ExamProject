@@ -41,7 +41,7 @@ public class Employee {
         }
     }
 
-    public void addOOOActivity(OOOActivityType type, Date start, Date end) {
+    public void addOOOActivity(OOOActivityType type, Date start, Date end) throws IllegalArgumentException {
         this.OOOActivities.add(new OutOfOfficeActivity(type, start, end));
     }
 

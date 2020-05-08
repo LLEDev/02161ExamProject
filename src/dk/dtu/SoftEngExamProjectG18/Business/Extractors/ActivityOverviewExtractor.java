@@ -2,7 +2,7 @@ package dk.dtu.SoftEngExamProjectG18.Business.Extractors;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Interfaces.Extractor;
-import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Dates;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,8 +18,8 @@ public class ActivityOverviewExtractor implements Extractor<Activity> {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 
         for (Activity activity : collection) {
-            String startWeek = DateFormatter.formatWeek(activity.getStartWeek());
-            String endWeek = DateFormatter.formatWeek(activity.getEndWeek());
+            String startWeek = Dates.formatWeek(activity.getStartWeek());
+            String endWeek = Dates.formatWeek(activity.getEndWeek());
 
             int trackedHours = (int) Math.ceil(activity.getTotalTrackedMinutes() / 60.0);
 

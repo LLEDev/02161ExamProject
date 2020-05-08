@@ -1,7 +1,7 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
-import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Dates;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -55,7 +55,7 @@ public class EmployeeActivityIntermediate {
     }
 
     public int getMinutes(Date d) throws IllegalArgumentException {
-        return this.minutesSpent.getOrDefault(DateFormatter.formatDate(d), 0);
+        return this.minutesSpent.getOrDefault(Dates.formatDate(d), 0);
     }
 
     public HashMap<String, Integer> getMinutesSpent() {
@@ -72,7 +72,7 @@ public class EmployeeActivityIntermediate {
             throw new IllegalArgumentException(output);
         }
 
-        String dateString = DateFormatter.formatDate(d);
+        String dateString = Dates.formatDate(d);
 
         this.minutesSpent.put(dateString, minutes);
     }
@@ -83,7 +83,7 @@ public class EmployeeActivityIntermediate {
             throw new IllegalArgumentException(output);
         }
 
-        String dateString = DateFormatter.formatDate(d);
+        String dateString = Dates.formatDate(d);
 
         assert d != null && minutes >= 0 : "Precondition of submitMinutes";
 

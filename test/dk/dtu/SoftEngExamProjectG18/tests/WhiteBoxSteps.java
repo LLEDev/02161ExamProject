@@ -2,7 +2,7 @@ package dk.dtu.SoftEngExamProjectG18.tests;
 
 import dk.dtu.SoftEngExamProjectG18.Business.*;
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
-import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Dates;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
@@ -46,7 +46,7 @@ public class WhiteBoxSteps {
     public void theProjectActivityStartWeekIsSetTo(String week) throws ParseException {
         this.exception = null;
 
-        Date d = DateFormatter.parseWeek(week);
+        Date d = Dates.parseWeek(week);
 
         try {
             this.getProjectActivity().setStartWeek(d);
@@ -59,7 +59,7 @@ public class WhiteBoxSteps {
     public void theProjectActivityEndWeekIsSetTo(String week) throws ParseException {
         this.exception = null;
 
-        Date d = DateFormatter.parseWeek(week);
+        Date d = Dates.parseWeek(week);
 
         try {
             this.getProjectActivity().setEndWeek(d);
@@ -95,7 +95,7 @@ public class WhiteBoxSteps {
 
         Assert.assertEquals(
             weekStr,
-            week != null ? DateFormatter.formatWeek(week) : null
+            week != null ? Dates.formatWeek(week) : null
         );
     }
 
@@ -106,7 +106,7 @@ public class WhiteBoxSteps {
 
         Assert.assertEquals(
             weekStr,
-            week != null ? DateFormatter.formatWeek(week) : null
+            week != null ? Dates.formatWeek(week) : null
         );
     }
 
@@ -123,7 +123,7 @@ public class WhiteBoxSteps {
         EmployeeActivityIntermediate eai = activity.getTrackedTime().get(employee.getID());
         Assert.assertNotNull(eai);
 
-        Date date = !dateStr.equals("null") ? DateFormatter.parseDate(dateStr) : null;
+        Date date = !dateStr.equals("null") ? Dates.parseDate(dateStr) : null;
         try {
             eai.submitMinutes(date, Integer.parseInt(minutes));
         } catch (IllegalArgumentException e) {
@@ -144,7 +144,7 @@ public class WhiteBoxSteps {
         EmployeeActivityIntermediate eai = activity.getTrackedTime().get(employee.getID());
         Assert.assertNotNull(eai);
 
-        Date date = !dateStr.equals("null") ? DateFormatter.parseDate(dateStr) : null;
+        Date date = !dateStr.equals("null") ? Dates.parseDate(dateStr) : null;
 
         int minutes = eai.getMinutes(date);
         Assert.assertEquals(minutes, Integer.parseInt(minutesStr));

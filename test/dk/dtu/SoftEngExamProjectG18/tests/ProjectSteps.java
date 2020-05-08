@@ -4,7 +4,7 @@ import dk.dtu.SoftEngExamProjectG18.Business.Activity;
 import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
 import dk.dtu.SoftEngExamProjectG18.Business.Project;
-import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Dates;
 import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -134,7 +134,7 @@ public class ProjectSteps extends StepsBase {
         Activity activity = project.getActivity(Integer.parseInt(id));
 
         // Create dates
-        Date today = DateFormatter.parseDate(date), newDate = new Date(today.getTime());
+        Date today = Dates.parseDate(date), newDate = new Date(today.getTime());
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(newDate);
         calendar.add(Calendar.DATE, Integer.parseInt(weeks) * 7);
@@ -211,8 +211,8 @@ public class ProjectSteps extends StepsBase {
 
         Activity activity = project.getActivity(Integer.parseInt(activityID));
 
-        Assert.assertEquals(activity.getStartWeek(), DateFormatter.parseDate(start));
-        Assert.assertEquals(activity.getEndWeek(), DateFormatter.parseDate(end));
+        Assert.assertEquals(activity.getStartWeek(), Dates.parseDate(start));
+        Assert.assertEquals(activity.getEndWeek(), Dates.parseDate(end));
 
     }
 }

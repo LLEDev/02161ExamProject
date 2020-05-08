@@ -4,7 +4,7 @@ import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Controller.Enums.CommandExceptionReason;
 import dk.dtu.SoftEngExamProjectG18.Controller.Enums.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
-import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Dates;
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
 
 import java.text.ParseException;
@@ -44,18 +44,18 @@ abstract public class InputContext {
 
     public void assertStringParseDateDoable(String possibleDate) throws CommandException {
         try {
-            DateFormatter.parseDate(possibleDate);
+            Dates.parseDate(possibleDate);
         } catch (ParseException e) {
-            String output = String.format("Any date must be given in the format %s. Received %s.", DateFormatter.toDatePattern(), possibleDate);
+            String output = String.format("Any date must be given in the format %s. Received %s.", Dates.toDatePattern(), possibleDate);
             throw new CommandException(output);
         }
     }
 
     public void assertStringParseWeekDoable(String possibleDate) throws CommandException {
         try {
-            DateFormatter.parseWeek(possibleDate);
+            Dates.parseWeek(possibleDate);
         } catch (ParseException e) {
-            String output = String.format("Any week must be given in the format %s. Received %s.", DateFormatter.toWeekPattern(), possibleDate);
+            String output = String.format("Any week must be given in the format %s. Received %s.", Dates.toWeekPattern(), possibleDate);
             throw new CommandException(output);
         }
     }

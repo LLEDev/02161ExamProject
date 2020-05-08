@@ -5,7 +5,7 @@ import dk.dtu.SoftEngExamProjectG18.Business.Employee;
 import dk.dtu.SoftEngExamProjectG18.Business.Enums.OOOActivityType;
 import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeSubmissionsExtractor;
 import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
-import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Dates;
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
 import dk.dtu.SoftEngExamProjectG18.General.Table;
 
@@ -48,7 +48,7 @@ public class EmployeeInputContext extends InputContext {
 
         String projectID = args[0];
         int activityID = Integer.parseInt(args[1]);
-        Date date = DateFormatter.parseDate(args[2]);
+        Date date = Dates.parseDate(args[2]);
         int hours = Integer.parseInt(args[3]);
 
         ThrowingFunctionWithoutArgs tf = shouldSet ?
@@ -123,8 +123,8 @@ public class EmployeeInputContext extends InputContext {
 
         final OOOActivityType finalType = type;
 
-        Date start = DateFormatter.parseDate(args[1]);
-        Date end = DateFormatter.parseDate(args[2]);
+        Date start = Dates.parseDate(args[1]);
+        Date end = Dates.parseDate(args[2]);
 
         this.wrapExceptions(() -> Application.getInstance().requestOutOfOffice(finalType, start, end))
             .outputOnSuccess(() -> "Out-of-office activity requested.")

@@ -4,10 +4,28 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DateFormatter {
+public class Dates {
 
     protected static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     protected static SimpleDateFormat weekFormatter = new SimpleDateFormat("YYYY-ww");
+
+    public static void assertStartEndValid(Date start, Date end) throws IllegalArgumentException {
+        if (start == null || end == null) {
+            return;
+        }
+
+        if (start.compareTo(end) > 0) {
+            String output = String.format(
+                "The given start week, %s, is after the given end week, %s.",
+                Dates.formatWeek(start),
+                Dates.formatWeek(end)
+            );
+            throw new IllegalArgumentException(output);
+        }
+
+        assert start == null || end == null || start.compareTo(end) < 0 : "Precondition of assertStartEndValid";
+        assert true : "Postcondition of assertStartEndValid";
+    }
 
     public static String formatDate(Date d) throws IllegalArgumentException {
         Assertions.assertOrThrow(

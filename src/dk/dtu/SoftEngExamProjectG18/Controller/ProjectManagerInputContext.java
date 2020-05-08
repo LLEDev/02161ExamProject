@@ -7,7 +7,7 @@ import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeActivityIntermed
 import dk.dtu.SoftEngExamProjectG18.Business.Extractors.EmployeeAvailabilityExtractor;
 import dk.dtu.SoftEngExamProjectG18.Business.Extractors.OutOfOfficeActivityOverviewExtractor;
 import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
-import dk.dtu.SoftEngExamProjectG18.General.DateFormatter;
+import dk.dtu.SoftEngExamProjectG18.General.Dates;
 import dk.dtu.SoftEngExamProjectG18.General.Table;
 
 import java.text.ParseException;
@@ -110,8 +110,8 @@ public class ProjectManagerInputContext extends InputContext {
 
         String projectID = args[0];
         int activityID = Integer.parseInt(args[1]);
-        Date start = DateFormatter.parseWeek(args[2]);
-        Date end = DateFormatter.parseWeek(args[3]);
+        Date start = Dates.parseWeek(args[2]);
+        Date end = Dates.parseWeek(args[3]);
 
         this.wrapExceptions(() -> Application.getInstance().setActivityInterval(projectID, activityID, start, end))
             .outputOnSuccess(() -> "Start/end weeks updated.")
@@ -138,8 +138,8 @@ public class ProjectManagerInputContext extends InputContext {
             String startWeek = null;
             String endWeek = null;
             try {
-                startWeek = DateFormatter.formatWeek(activity.getStartWeek());
-                endWeek = DateFormatter.formatWeek(activity.getEndWeek());
+                startWeek = Dates.formatWeek(activity.getStartWeek());
+                endWeek = Dates.formatWeek(activity.getEndWeek());
             } catch (Exception ignored) {}
 
             int trackedHours = (int) Math.ceil(activity.getTotalTrackedMinutes() / 60.0);
@@ -169,7 +169,7 @@ public class ProjectManagerInputContext extends InputContext {
         this.assertStringParseDateDoable(args[0]);
 
         Application application = Application.getInstance();
-        Date d = DateFormatter.parseDate(args[0]);
+        Date d = Dates.parseDate(args[0]);
 
         ArrayList<Employee> collection = new ArrayList<>(Application.getInstance().getEmployees().values());
         HashMap<String, Object> meta = new HashMap<>();

@@ -21,7 +21,7 @@ public class CSVReader {
 
     protected static Date getDate(HashMap<String, String> entry, String property) {
         try {
-            return DateFormatter.parseDate(entry.get(property));
+            return Dates.parseDate(entry.get(property));
         } catch (ParseException ignored) {
         }
         return null;
@@ -37,7 +37,7 @@ public class CSVReader {
 
     protected static Date getDateFromYearWeek(HashMap<String, String> entry, String property) {
         try {
-            return DateFormatter.parseWeek(entry.getOrDefault(property, ""));
+            return Dates.parseWeek(entry.getOrDefault(property, ""));
         } catch (ParseException ignored) {
         }
         return null;
