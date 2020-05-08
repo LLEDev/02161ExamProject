@@ -38,7 +38,7 @@ Feature: Add employee to project activity
         When the actor adds the employee with initials "ABCD" to the activity with ID "2"
         Then the error message "The given activity, 2, does not exist within project, 2020-000001." is given
 
-    # Author: Someone
+    # Author: Mikkel Theiss Westermann (s194601)
     Scenario: Employee who is a project manager adds employee who has reached activity cap to a project
         Given that there is a project with name "Test Project"
         And the following employees are given

@@ -2,7 +2,7 @@ Feature: Assign project manager
     Description: A project manager is assigned to a project
     Actors: Employee
 
-    # Author: Someone
+    # Author: Thor Eric Dueholm (s194589)
     Scenario: Employee assigns project manager to a project without project manager
         Given that there is a project with name "Test Project"
         And there is an employee with initials "ABCD"
@@ -12,7 +12,7 @@ Feature: Assign project manager
         When the actor assigns the employee with initials "BS" as the project manager of the project
         Then the project has a project manager with initials "BS"
 
-    # Author: Someone
+    # Author: Mikkel Theiss Westermann (s194601)
     Scenario: Employee assigns project manager to a project to which a project manager is already assigned
         Given that there is a project with name "Test Project"
         And the following employees are given
