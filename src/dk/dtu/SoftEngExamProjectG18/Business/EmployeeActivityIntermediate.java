@@ -1,6 +1,7 @@
 package dk.dtu.SoftEngExamProjectG18.Business;
 
 import dk.dtu.SoftEngExamProjectG18.Business.Exceptions.AccessDeniedException;
+import dk.dtu.SoftEngExamProjectG18.General.Assertions;
 import dk.dtu.SoftEngExamProjectG18.General.Dates;
 
 import java.util.Date;
@@ -67,10 +68,12 @@ public class EmployeeActivityIntermediate {
     }
 
     public void setMinutes(Date d, int minutes) throws IllegalArgumentException {
-        if (minutes < 0) {
-            String output = String.format("The set number of work minutes has to be more than or equal to 0. %s received.", minutes);
-            throw new IllegalArgumentException(output);
-        }
+        Assertions.assertOrThrow(
+            () -> new IllegalArgumentException(
+                String.format("The set number of work minutes has to be more than or equal to 0. %s received.", minutes)
+            ),
+            minutes >= 0
+        );
 
         String dateString = Dates.formatDate(d);
 
@@ -78,16 +81,23 @@ public class EmployeeActivityIntermediate {
     }
 
     public void submitMinutes(Date d, int minutes) throws IllegalArgumentException {
-        if (minutes < 0) {
-            String output = String.format("The submitted number of work minutes has to be more than or equal to 0. %s received.", minutes);
-            throw new IllegalArgumentException(output);
-        }
+        Assertions.assertOrThrow(
+            () -> new IllegalArgumentException(
+                String.format("The submitted number of work minutes has to be more than or equal to 0. %s received.", minutes)
+            ),
+            minutes >= 0
+        );
+
+        int total = this.getMinutes(d) + minutes;
+
+        Assertions.assertOrThrow(
+            () -> new IllegalArgumentException("The total amount of work minutes has is now too high. This action cannot be done."),
+            total >= 0
+        );
 
         String dateString = Dates.formatDate(d);
 
         assert d != null && minutes >= 0 : "Precondition of submitMinutes";
-
-        int total = this.getMinutes(d) + minutes;
 
         this.minutesSpent.put(dateString, total);
 
