@@ -4,6 +4,7 @@ import dk.dtu.SoftEngExamProjectG18.Business.Application;
 import dk.dtu.SoftEngExamProjectG18.Controller.Enums.CommandExceptionReason;
 import dk.dtu.SoftEngExamProjectG18.Controller.Enums.InputContextType;
 import dk.dtu.SoftEngExamProjectG18.Controller.Exceptions.CommandException;
+import dk.dtu.SoftEngExamProjectG18.General.Assertions;
 import dk.dtu.SoftEngExamProjectG18.General.Dates;
 import dk.dtu.SoftEngExamProjectG18.General.Interfaces.ThrowingFunctionWithoutArgs;
 
@@ -53,6 +54,10 @@ abstract public class InputContext {
 
     public void assertStringParseWeekDoable(String possibleDate) throws CommandException {
         try {
+            Assertions.assertOrThrow(
+                () -> new ParseException("Wrong format", 0),
+                possibleDate.split("-").length == 2
+            );
             Dates.parseWeek(possibleDate);
         } catch (ParseException e) {
             String output = String.format("Any week must be given in the format %s. Received %s.", Dates.toWeekPattern(), possibleDate);
