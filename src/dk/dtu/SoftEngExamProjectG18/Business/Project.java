@@ -90,7 +90,7 @@ public class Project {
     }
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     public void assignPM(Employee newPM, Employee signedInEmployee) throws AccessDeniedException {
         if (this.PM != null && signedInEmployee != this.PM) {

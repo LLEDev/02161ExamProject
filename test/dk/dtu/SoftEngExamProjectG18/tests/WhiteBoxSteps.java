@@ -91,7 +91,7 @@ public class WhiteBoxSteps {
     }
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     @When("request assistance is called in Application with arguments {string}, {string} And {string}")
     public void requestAssistanceIsCalledInApplicationWithArgumentsAnd(String projectID, String activitID, String employeeID) {
@@ -133,7 +133,7 @@ public class WhiteBoxSteps {
     }
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     @When("submit minutes is called with date {string} and minutes {string} on the relation between the activity and the employee")
     public void submitMinutesIsCalledWithDateAndMinutesOnTheRelationBetweenTheActivityAndTheEmployee(String dateStr, String minutes) throws ParseException {
@@ -157,7 +157,7 @@ public class WhiteBoxSteps {
     }
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     @Then("the employee has spent {string} minutes on the activity on the day {string}")
     public void theEmployeeHasSpentMinutesOnTheActivityOnTheDay(String minutesStr, String dateStr) throws ParseException {

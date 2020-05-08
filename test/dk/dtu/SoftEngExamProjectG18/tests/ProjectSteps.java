@@ -58,7 +58,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     @And("the project has the following activities")
     public void theProjectHasTheFollowingActivities(List<List<String>> activities) throws ParseException, AccessDeniedException {

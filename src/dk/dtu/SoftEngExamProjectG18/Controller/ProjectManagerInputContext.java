@@ -52,7 +52,7 @@ public class ProjectManagerInputContext extends InputContext {
      */
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     // Command arguments: String employeeID, String projectID, int activityID
     public void cmdAssignEmployeeToActivity(String[] args) throws CommandException {

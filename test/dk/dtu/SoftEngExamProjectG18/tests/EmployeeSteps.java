@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class EmployeeSteps extends StepsBase {
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     @Given("there is an employee")
     public void thereIsAnEmployee() {
@@ -29,7 +29,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     @Given("the employee is assigned to the activity with ID {string}")
     public void theEmployeeIsAssignedToTheActivityWithID(String id) {
@@ -40,7 +40,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     @And("there is an employee with initials {string}")
     public void thereIsAnEmployeeWithInitials(String employeeID) {
@@ -52,7 +52,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     @And("the following employees are given")
     public void theFollowingEmployeesAreGiven(List<String> employees) {

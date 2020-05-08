@@ -48,7 +48,7 @@ public class EmployeeInputContext extends InputContext {
      */
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     public void cmdSetSubmitHours(String[] args, boolean shouldSet) throws CommandException, ParseException {
         this.assertArgumentsValid(args.length, 4);
@@ -91,7 +91,7 @@ public class EmployeeInputContext extends InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     // Command arguments: String projectID, int activityID, String employeeID
     public void cmdRequestAssistance(String[] args) throws CommandException {
@@ -108,7 +108,7 @@ public class EmployeeInputContext extends InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     // Command arguments: OOOActivityType type, Date start, Date end
     public void cmdRequestOutOfOffice(String[] args) throws CommandException, ParseException {
@@ -151,7 +151,7 @@ public class EmployeeInputContext extends InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     // Command arguments: String projectID, int activityID, Date date, int setHours
     public void cmdSetHours(String[] args) throws CommandException, ParseException {
@@ -159,7 +159,7 @@ public class EmployeeInputContext extends InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Thor Dueholm (s194589)
      */
     // Command arguments: String projectID, int activityID, Date date, int addedHours
     public void cmdSubmitHours(String[] args) throws CommandException, ParseException {

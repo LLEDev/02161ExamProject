@@ -31,7 +31,7 @@ Feature: Submit daily work hours
             | 2020-000001 | 1 | 90 |
         Then the error message "You are not associated with one or more of these projects." is given
 
-    # Author: Someone
+    # Author: Thor Dueholm (s194589)
     Scenario: An employee submits work hours under 0
         Given there are projects with names
             | Test Project |
