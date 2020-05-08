@@ -75,7 +75,7 @@ public class EmployeeInputContext extends InputContext {
      */
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     // Command arguments: String name, boolean isBillable
     public void cmdCreateProject(String[] args) throws CommandException {

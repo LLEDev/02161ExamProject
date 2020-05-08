@@ -156,7 +156,7 @@ abstract public class InputContext {
       */
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     // String projectID, String employeeID
     public void cmdAssignPM(String[] args) throws CommandException {

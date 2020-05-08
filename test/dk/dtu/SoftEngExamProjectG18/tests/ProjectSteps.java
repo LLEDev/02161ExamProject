@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 public class ProjectSteps extends StepsBase {
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @Given("that there is a project with name {string}")
     public void thatThereIsAProjectWithName(String name) {
@@ -36,7 +36,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @Given("there are projects with names")
     public void thereAreProjectsWithNames(List<String> projects) {
@@ -48,7 +48,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @Given("the employee is the project manager for the project")
     public void theEmployeeIsTheProjectManagerForTheProject() {
@@ -96,7 +96,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @When("the employee creates a project with name {string}")
     public void theEmployeeCreatesAProjectWithName(String name) {
@@ -104,7 +104,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @When("the employee adds an activity with name {string} to the project")
     public void theEmployeeAddsAnActivityWithNameToTheProject(String name) {
@@ -113,7 +113,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @When("the actor assigns the employee with initials {string} as the project manager of the project")
     public void theActorAssignsTheEmployeeWithInitialsAsTheProjectManagerOfTheProject(String initials) {
@@ -122,7 +122,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @And("the employee with initials {string} is the project manager of the project")
     public void theEmployeeWithInitialsIsTheProjectManagerOfTheProject(String employeeID) {
@@ -131,7 +131,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @And("the project does not have a project manager")
     public void theProjectDoesNotHaveAProjectManager() {
@@ -139,7 +139,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @When("the employee finishes the activity with ID {string} in the project")
     public void theEmployeeFinishesTheActivityWithIDInTheProject(String activityID) {
@@ -148,7 +148,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @Given("the activity with ID {string} has an estimated duration of {string} weeks and registered {string} hours spent on date {string}")
     public void theActivityWithIDHasAnEstimatedDurationOfWeeksAndRegisteredHoursSpentOnDate(String id, String weeks, String hours, String date) throws ParseException, AccessDeniedException {
@@ -173,7 +173,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @Then("the activity with ID {string} is marked as finished in the project")
     public void theActivityWithIDIsMarkedAsFinishedInTheProject(String id) {
@@ -182,7 +182,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @Then("there is a project with ID {string} and name {string}")
     public void thereIsAProjectWithIDAndName(String id, String name) {
@@ -190,7 +190,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @Then("the project contains an activity with ID {string}")
     public void theProjectContainsAnActivityWithID(String id) {
@@ -199,7 +199,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @Then("the project has a project manager with initials {string}")
     public void theProjectHasAProjectManagerWithInitials(String initials) {
@@ -209,7 +209,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @Then("these activities with overall durations are found")
     public void theseActivitiesWithOverallDurationsAreFound(List<List<String>> durations) {
@@ -224,7 +224,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @Then("the activity with ID {string} has an estimated duration of {string} hours")
     public void theActivityWithIDHasAnEstimatedDurationOfHours(String activityID, String hours) {

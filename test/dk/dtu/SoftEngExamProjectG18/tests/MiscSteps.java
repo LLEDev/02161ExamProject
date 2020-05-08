@@ -19,7 +19,7 @@ public class MiscSteps {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     @Then("the error message {string} is given")
     public void theErrorMessageIsGiven(String message) {

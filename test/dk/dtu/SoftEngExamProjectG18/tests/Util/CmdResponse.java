@@ -31,7 +31,7 @@ public class CmdResponse {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     public boolean exceptionMessageIs(String message) {
         if (this.ce == null || this.ce.getMessage() == null) {

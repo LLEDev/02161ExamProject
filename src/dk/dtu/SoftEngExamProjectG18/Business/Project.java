@@ -168,7 +168,7 @@ public class Project {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     public String getName() {
         return this.name;
@@ -182,7 +182,7 @@ public class Project {
     }
 
     /**
-     * @author Someone
+     * @author Mikkel Theiss Westermann (s194601)
      */
     public void setPM(Employee PM) {
         this.PM = PM;
