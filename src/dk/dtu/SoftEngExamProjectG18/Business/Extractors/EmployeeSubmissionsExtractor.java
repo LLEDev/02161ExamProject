@@ -13,11 +13,17 @@ import java.util.HashMap;
 
 public class EmployeeSubmissionsExtractor implements Extractor<Employee> {
 
+    /**
+     * @author Someone
+     */
     @Override
     public ArrayList<HashMap<String, String>> extract(ArrayList<Employee> collection, HashMap<String, Object> metaData) {
         return this.extractSubmissions(collection.get(0));
     }
 
+    /**
+     * @author Someone
+     */
     public ArrayList<HashMap<String, String>> extractSubmissions(Employee employee) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 

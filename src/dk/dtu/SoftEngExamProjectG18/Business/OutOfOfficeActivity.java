@@ -12,6 +12,9 @@ public class OutOfOfficeActivity {
     protected Date start;
     protected Date end;
 
+    /**
+     * @author Someone
+     */
     public OutOfOfficeActivity(OOOActivityType type, Date start, Date end) throws IllegalArgumentException {
         this.type = type;
 
@@ -21,14 +24,23 @@ public class OutOfOfficeActivity {
         this.end = end;
     }
 
+    /**
+     * @author Someone
+     */
     public Date getEnd() {
         return this.end;
     }
 
+    /**
+     * @author Someone
+     */
     public OOOActivityType getType() {
         return this.type;
     }
 
+    /**
+     * @author Someone
+     */
     public Date getStart() {
         return this.start;
     }

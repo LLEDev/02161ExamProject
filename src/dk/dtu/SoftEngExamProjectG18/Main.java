@@ -21,6 +21,9 @@ public class Main {
 
     protected static Scanner inputScanner;
 
+    /**
+     * @author Someone
+     */
     protected static void handleCommandException(Throwable t, String usage) {
         if (t instanceof CommandException) {
             CommandException ce = (CommandException) t;
@@ -34,6 +37,9 @@ public class Main {
         outSource.println(t.getMessage());
     }
 
+    /**
+     * @author Someone
+     */
     protected static boolean loadData(String dir) {
         if (dir.equals("")) {
             return loadDataInternal();
@@ -60,6 +66,9 @@ public class Main {
         return false;
     }
 
+    /**
+     * @author Someone
+     */
     protected static boolean loadDataInternal() {
         ClassLoader cl = Main.class.getClassLoader();
 
@@ -86,6 +95,9 @@ public class Main {
         return success;
     }
 
+    /**
+     * @author Someone
+     */
     protected static boolean redirectBasicInput(String[] input) {
         if (input[0].equals("help")) {
             help();
@@ -100,6 +112,9 @@ public class Main {
         return false;
     }
 
+    /**
+     * @author Someone
+     */
     protected static void runAction(Action action, ArrayList<String> args) {
         InputContext inputContext = Application.getInstance().getContext();
 
@@ -113,6 +128,9 @@ public class Main {
         inputContext.resetOutput();
     }
 
+    /**
+     * @author Someone
+     */
     protected static boolean setupContext(String context) {
         for (InputContextType type : InputContextType.values()) {
             if (context.equalsIgnoreCase(type.toString())) {
@@ -125,6 +143,9 @@ public class Main {
         return false;
     }
 
+    /**
+     * @author Someone
+     */
     protected static boolean signIn(String ID) {
         try {
             Application.getInstance().setSignedInEmployee(ID);
@@ -135,6 +156,9 @@ public class Main {
         }
     }
 
+    /**
+     * @author Someone
+     */
     protected static String[] splitInput(String input) {
         boolean splitAllowed = true;
         ArrayList<String> tokens = new ArrayList<>();
@@ -164,6 +188,9 @@ public class Main {
         Basic commands
      */
 
+    /**
+     * @author Someone
+     */
     protected static void help() {
         ArrayList<String> usages = new ArrayList<>();
         for (Action action : Application.getInstance().getContext().getTriggers().values()) {
@@ -178,6 +205,9 @@ public class Main {
         }
     }
 
+    /**
+     * @author Someone
+     */
     protected static void quit() {
         outSource.println("Bye!");
 
@@ -190,6 +220,9 @@ public class Main {
         Main
      */
 
+    /**
+     * @author Someone
+     */
     public static void main(String[] args) {
         if (args.length < 2) {
             outSource.println("Usage: java -jar 02161ExamProject {Employee Initials} {Context=Emp/PM)} [Data folder/N]");
@@ -215,6 +248,9 @@ public class Main {
         } catch (IllegalStateException ignored) {} // Thrown when quitting
     }
 
+    /**
+     * @author Someone
+     */
     public static void redirectInput(String[] input) {
         if (input.length == 0 || redirectBasicInput(input)) {
             return;
@@ -247,10 +283,16 @@ public class Main {
         outSource.println("Command not found.");
     }
 
+    /**
+     * @author Someone
+     */
     public static void setInSource(InputStream is) {
         inputSource = is;
     }
 
+    /**
+     * @author Someone
+     */
     public static void setOutSource(PrintStream ps) {
         outSource = ps;
     }

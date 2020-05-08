@@ -9,6 +9,9 @@ import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 
 abstract public class StepsBase {
 
+    /**
+     * @author Someone
+     */
     public void wrap(ThrowingFunctionWithoutArgs tf) {
         TestExceptionWrapper tew = new TestExceptionWrapper(tf);
         tew.run();

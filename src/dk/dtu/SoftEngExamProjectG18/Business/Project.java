@@ -17,10 +17,16 @@ public class Project {
     protected int nextActivityID = 1;
     protected Employee PM = null;
 
+    /**
+     * @author Someone
+     */
     protected void setupActivity(String name) {
         new Activity(name == null ? "First Activity" : name, this);
     }
 
+    /**
+     * @author Someone
+     */
     protected void setupCreatedAt(Date createdAt) {
         Calendar cal = new GregorianCalendar();
 
@@ -31,6 +37,9 @@ public class Project {
         this.createdAt = cal;
     }
 
+    /**
+     * @author Someone
+     */
     protected void setupName(String name) throws IllegalArgumentException {
         if (name.length() == 0) {
             throw new IllegalArgumentException(String.format("The given project name, %s, is not valid.", name));
@@ -39,17 +48,26 @@ public class Project {
         this.name = name;
     }
 
+    /**
+     * @author Someone
+     */
     public Project(int nextID, String name) throws IllegalArgumentException {
         this.ID = nextID;
         this.setupName(name);
         this.setupActivity(null);
     }
 
+    /**
+     * @author Someone
+     */
     public Project(int nextID, String name, boolean isBillable) throws IllegalArgumentException {
         this(nextID, name);
         this.isBillable = isBillable;
     }
 
+    /**
+     * @author Someone
+     */
     public Project(int nextID, String name, Date createdAt, boolean isBillable, Employee PM) {
         this.ID = nextID;
         this.setupName(name);
@@ -62,12 +80,18 @@ public class Project {
         // Do not setup activity if data is imported through CSVReader
     }
 
+    /**
+     * @author Someone
+     */
     public void assertPM(Employee employee) throws AccessDeniedException {
         if (this.getPM() == null || !this.getPM().equals(employee)) {
             throw new AccessDeniedException("Project manager role required.");
         }
     }
 
+    /**
+     * @author Someone
+     */
     public void assignPM(Employee newPM, Employee signedInEmployee) throws AccessDeniedException {
         if (this.PM != null && signedInEmployee != this.PM) {
             throw new AccessDeniedException("Project manager role required.");
@@ -80,16 +104,25 @@ public class Project {
         assert this.PM == newPM : "Postcondition of assignPM";
     }
 
+    /**
+     * @author Someone
+     */
     public void clearActivities() {
         this.getActivities().clear();
         this.nextActivityID = 1;
     }
 
+    /**
+     * @author Someone
+     */
     public int incrementNextActivityID() {
         this.nextActivityID++;
         return this.nextActivityID - 1;
     }
 
+    /**
+     * @author Someone
+     */
     public Activity getActivity(int ID) {
         if (!this.activities.containsKey(ID)) {
             String eMsg = String.format(
@@ -103,10 +136,16 @@ public class Project {
         return this.activities.get(ID);
     }
 
+    /**
+     * @author Someone
+     */
     public HashMap<Integer, Activity> getActivities() {
         return this.activities;
     }
 
+    /**
+     * @author Someone
+     */
     public int getEstimatedWorkHoursLeft() {
         double minutesLeft = this.getActivities().values().stream()
             .mapToInt(a -> Math.max(a.getEstimatedHours() * 60 - a.getTotalTrackedMinutes(), 0)).sum();
@@ -114,6 +153,9 @@ public class Project {
         return (int) Math.ceil(minutesLeft / 60.0);
     }
 
+    /**
+     * @author Someone
+     */
     public String getID() {
         StringBuilder IDBuilder = new StringBuilder();
         IDBuilder.append(this.ID);
@@ -125,14 +167,23 @@ public class Project {
         return this.createdAt.get(Calendar.YEAR) + "-" + IDBuilder.reverse().toString();
     }
 
+    /**
+     * @author Someone
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * @author Someone
+     */
     public Employee getPM() {
         return this.PM;
     }
 
+    /**
+     * @author Someone
+     */
     public void setPM(Employee PM) {
         this.PM = PM;
     }

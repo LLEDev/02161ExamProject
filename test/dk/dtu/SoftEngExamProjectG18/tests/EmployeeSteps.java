@@ -20,15 +20,17 @@ import java.util.stream.Collectors;
 
 public class EmployeeSteps extends StepsBase {
 
-    /*
-        Given (or and) methods
+    /**
+     * @author Someone
      */
-
     @Given("there is an employee")
     public void thereIsAnEmployee() {
         this.thereIsAnEmployeeWithInitials("AA");
     }
 
+    /**
+     * @author Someone
+     */
     @Given("the employee is assigned to the activity with ID {string}")
     public void theEmployeeIsAssignedToTheActivityWithID(String id) {
         this.theEmployeeWithInitialsIsAssignedToTheActivityWithID(
@@ -37,6 +39,9 @@ public class EmployeeSteps extends StepsBase {
         );
     }
 
+    /**
+     * @author Someone
+     */
     @And("there is an employee with initials {string}")
     public void thereIsAnEmployeeWithInitials(String employeeID) {
         Application application = Application.getInstance();
@@ -46,6 +51,9 @@ public class EmployeeSteps extends StepsBase {
         application.setContext(new EmployeeInputContext());
     }
 
+    /**
+     * @author Someone
+     */
     @And("the following employees are given")
     public void theFollowingEmployeesAreGiven(List<String> employees) {
         for (String employeeID : employees) {
@@ -53,12 +61,18 @@ public class EmployeeSteps extends StepsBase {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @And("the employee with initials {string} is the actor")
     public void theEmployeeWithInitialsIsTheActor(String employeeID) {
         Application application = Application.getInstance();
         application.setSignedInEmployee(employeeID);
     }
 
+    /**
+     * @author Someone
+     */
     @And("the employee is attached to all activities in the projects")
     public void theEmployeeIsAttachedToAllActivitiesInTheProjects(List<String> projects) throws AccessDeniedException {
         Application application = Application.getInstance();
@@ -82,6 +96,9 @@ public class EmployeeSteps extends StepsBase {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @And("the employee with initials {string} is assigned to the activity with ID {string}")
     public void theEmployeeWithInitialsIsAssignedToTheActivityWithID(String employeeID, String activityID) {
         Application application = Application.getInstance();
@@ -93,6 +110,9 @@ public class EmployeeSteps extends StepsBase {
         this.wrap(() -> EmployeeActivityIntermediate.initAssociation(employee, activity));
     }
 
+    /**
+     * @author Someone
+     */
     @And("the employee has the following work minutes")
     public void theEmployeeHasTheFollowingWorkMinutes(List<List<String>> workMinutes) throws ParseException, AccessDeniedException {
         Application application = Application.getInstance();
@@ -115,6 +135,9 @@ public class EmployeeSteps extends StepsBase {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @And("the employee has the following work minutes today")
     public void theEmployeeHasTheFollowingWorkMinutesToday(List<List<String>> workMinutes) throws ParseException, AccessDeniedException {
         final String today = Dates.formatDate(new Date());
@@ -122,10 +145,9 @@ public class EmployeeSteps extends StepsBase {
         this.theEmployeeHasTheFollowingWorkMinutes(newWorkMinutes);
     }
 
-    /*
-        When (or and) methods (actions)
+    /**
+     * @author Someone
      */
-
     @When("the actor adds the employee with initials {string} to the activity with ID {string}")
     public void theActorAddsTheEmployeeWithInitialsToTheActivityWithID(String employeeID, String activityID) {
         Project project = TestHolder.getInstance().getProject();
@@ -139,6 +161,9 @@ public class EmployeeSteps extends StepsBase {
         );
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee requests assistance from {string} on activity with ID {string} in the project")
     public void theEmployeeRequestsAssistanceFromOnActivityWithIDInTheProject(String otherEmployeeID, String activityID) {
         Project project = TestHolder.getInstance().getProject();
@@ -152,6 +177,9 @@ public class EmployeeSteps extends StepsBase {
         );
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee submits the work minutes")
     public void theEmployeeSubmitsTheWorkMinutes(List<List<String>> minutes) throws AccessDeniedException, IllegalArgumentException {
         Application application = Application.getInstance();
@@ -172,6 +200,9 @@ public class EmployeeSteps extends StepsBase {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee requests the following OOO activities")
     public void theEmployeeRequestsTheFollowingOOOActivities(List<List<String>> activities) throws Exception {
         Application application = Application.getInstance();
@@ -189,15 +220,17 @@ public class EmployeeSteps extends StepsBase {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee switches to context {string}")
     public void theEmployeeSwitchesToContext(String context) {
         this.wrap(() -> Application.getInstance().switchContext(context));
     }
 
-    /*
-        Then (or and) methods (assertions)
+    /**
+     * @author Someone
      */
-
     @Then("the employee with initials {string} has been assigned to the activity with ID {string}")
     public void theEmployeeWithInitialsHasBeenAssignedToTheActivityWithID(String employeeID, String activityIDString) {
         Application application = Application.getInstance();
@@ -210,6 +243,9 @@ public class EmployeeSteps extends StepsBase {
         Assert.assertTrue(otherEmployeeIntermediates.containsKey(Integer.parseInt(activityIDString)));
     }
 
+    /**
+     * @author Someone
+     */
     @And("the employee with initials {string} has not reached the activity cap")
     public void theEmployeeWithInitialsHasNotReachedTheActivityCap(String arg0) {
         Application application = Application.getInstance();
@@ -217,6 +253,9 @@ public class EmployeeSteps extends StepsBase {
         employee.assertOpenActivities();
     }
 
+    /**
+     * @author Someone
+     */
     @And("the employee with initials {string} has reached the activity cap")
     public void theEmployeeWithInitialsHasReachedTheActivityCap(String arg0) {
         Application application = Application.getInstance();
@@ -225,11 +264,17 @@ public class EmployeeSteps extends StepsBase {
         employee.setWeeklyActivityCap(0);
     }
 
+    /**
+     * @author Someone
+     */
     @Then("the current context is {string}")
     public void theCurrentContextIs(String context) {
         Assert.assertEquals(Application.getInstance().getContext().getClass().getSimpleName(), context);
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee sets the work hours {string} in the activity with ID {string}.")
     public void theEmployeeSetsTheWorkHoursInTheActivityWithID(String workHours, String activityID) {
         TestHolder th = TestHolder.getInstance();
@@ -247,6 +292,9 @@ public class EmployeeSteps extends StepsBase {
         ));
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee estimates the duration to {string} hours for the activity with ID {string}")
     public void theEmployeeEstimatesTheDurationToHoursForTheActivityWithID(String hours, String activityID) {
         TestHolder th = TestHolder.getInstance();
@@ -264,6 +312,9 @@ public class EmployeeSteps extends StepsBase {
 
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee sets the start date {string} and the end date {string} of the activity with ID {string}")
     public void theEmployeeSetsTheStartDateAndTheEndDateOfTheActivityWithID(String start, String end, String activityID) throws ParseException {
         TestHolder th = TestHolder.getInstance();

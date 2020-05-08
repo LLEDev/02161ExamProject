@@ -3,6 +3,7 @@ Feature: Submit daily work hours
     he/she has worked on (and how long) the given day
     Actors: Employee
 
+    # Author: Someone
     Scenario: An employee submits daily work hours
         Given there are projects with names
             | Test Project   |
@@ -22,6 +23,7 @@ Feature: Submit daily work hours
             | 2020-000002 | 1 | 1.5 |
             | 2020-000003 | 1 | 1   |
 
+    # Author: Someone
     Scenario: An employee submits work hours to a project he/she is not attached to
         Given that there is a project with name "Test Project"
         And there is an employee
@@ -29,6 +31,7 @@ Feature: Submit daily work hours
             | 2020-000001 | 1 | 90 |
         Then the error message "You are not associated with one or more of these projects." is given
 
+    # Author: Someone
     Scenario: An employee submits work hours under 0
         Given there are projects with names
             | Test Project |

@@ -20,6 +20,9 @@ abstract public class InputContext {
 
     abstract public String getSingularContextName();
 
+    /**
+     * @author Someone
+     */
     public static InputContext getContext(InputContextType ict) {
         if (ict == InputContextType.PM) {
             return new ProjectManagerInputContext();
@@ -36,13 +39,18 @@ abstract public class InputContext {
         new Action("switch context", new String[]{"contextType"}, this::cmdSwitchContext),
     });
 
-
+    /**
+     * @author Someone
+     */
     public void assertArgumentsValid(int argsLength, int requiredLength) throws CommandException {
         if (argsLength != requiredLength) {
             throw new CommandException(CommandExceptionReason.INVALID_ARGUMENTS);
         }
     }
 
+    /**
+     * @author Someone
+     */
     public void assertStringParseDateDoable(String possibleDate) throws CommandException {
         try {
             Dates.parseDate(possibleDate);
@@ -52,6 +60,9 @@ abstract public class InputContext {
         }
     }
 
+    /**
+     * @author Someone
+     */
     public void assertStringParseWeekDoable(String possibleDate) throws CommandException {
         try {
             Assertions.assertOrThrow(
@@ -65,6 +76,9 @@ abstract public class InputContext {
         }
     }
 
+    /**
+     * @author Someone
+     */
     public void assertStringParseIntDoable(String possibleInt) throws CommandException {
         try {
             Integer.parseInt(possibleInt);
@@ -74,38 +88,65 @@ abstract public class InputContext {
         }
     }
 
+    /**
+     * @author Someone
+     */
     public String getOutput() {
         return this.output;
     }
 
+    /**
+     * @author Someone
+     */
     public boolean getSandbox() {
         return this.sandbox;
     }
 
+    /**
+     * @author Someone
+     */
     public ActionMap getTriggers() {
         return this.triggers;
     }
 
+    /**
+     * @author Someone
+     */
     public void addCommandExceptionHook(Consumer<Exception> hook) {
         this.onExceptionHooks.add(hook);
     }
 
+    /**
+     * @author Someone
+     */
     public void removeCommandExceptionHook(Consumer<Exception> hook) {
         this.onExceptionHooks.remove(hook);
     }
 
+    /**
+     * @author Someone
+     */
     public void resetOutput() {
         this.output = "";
     }
 
+    /**
+     * @author Someone
+     */
     public void setSandbox(boolean sandbox) {
         this.sandbox = sandbox;
     }
 
+    /**
+     * @author Someone
+     */
     public ExceptionWrapper wrapExceptions(ThrowingFunctionWithoutArgs tf) {
         return new ExceptionWrapper(tf, this.onExceptionHooks, this.getSandbox());
     }
 
+    /**
+     * @author Someone
+     */
     public void writeOutput(String s) {
         this.output += s;
     }
@@ -114,6 +155,9 @@ abstract public class InputContext {
         Shared commands - warnings relating to use of reflection API are suppressed
       */
 
+    /**
+     * @author Someone
+     */
     // String projectID, String employeeID
     public void cmdAssignPM(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 2);
@@ -128,6 +172,9 @@ abstract public class InputContext {
 
     }
 
+    /**
+     * @author Someone
+     */
     // String inputContext
     public void cmdSwitchContext(String[] args) throws CommandException {
         assertArgumentsValid(args.length, 1);

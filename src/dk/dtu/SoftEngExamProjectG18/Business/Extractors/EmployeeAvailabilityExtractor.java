@@ -8,11 +8,17 @@ import java.util.*;
 
 public class EmployeeAvailabilityExtractor implements Extractor<Employee> {
 
+    /**
+     * @author Someone
+     */
     protected boolean isEmployeeAvailable(Employee employee, Date date) {
         return employee.getOOOActivities().stream()
             .noneMatch(OOOActivity -> OOOActivity.getStart().compareTo(date) <= 0 && OOOActivity.getEnd().compareTo(date) >= 0);
     }
 
+    /**
+     * @author Someone
+     */
     @Override
     public ArrayList<HashMap<String, String>> extract(ArrayList<Employee> collection, HashMap<String, Object> metaData) throws IllegalArgumentException {
         if (!metaData.containsKey("date") || !(metaData.get("date") instanceof Date)) {
@@ -22,6 +28,9 @@ public class EmployeeAvailabilityExtractor implements Extractor<Employee> {
         return this.extractAvailability((Date) metaData.get("date"), collection);
     }
 
+    /**
+     * @author Someone
+     */
     public ArrayList<HashMap<String, String>> extractAvailability(Date date, ArrayList<Employee> collection) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 

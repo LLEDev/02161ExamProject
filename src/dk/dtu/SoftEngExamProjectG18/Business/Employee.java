@@ -15,17 +15,26 @@ public class Employee {
     protected ArrayList<OutOfOfficeActivity> OOOActivities = new ArrayList<>();
     protected int weeklyActivityCap = 10;
 
+    /**
+     * @author Someone
+     */
     public Employee(String ID, String name) {
         this.ID = ID;
         this.name = name;
     }
 
+    /**
+     * @author Someone
+     */
     public Employee(String ID, String name, int weeklyActivityCap) {
         this.ID = ID;
         this.name = name;
         this.weeklyActivityCap = weeklyActivityCap;
     }
 
+    /**
+     * @author Someone
+     */
     public void addActivity(Activity activity) {
         String projectID = activity.getProject().getID();
         int activityID = activity.getID();
@@ -41,10 +50,16 @@ public class Employee {
         }
     }
 
+    /**
+     * @author Someone
+     */
     public void addOOOActivity(OOOActivityType type, Date start, Date end) throws IllegalArgumentException {
         this.OOOActivities.add(new OutOfOfficeActivity(type, start, end));
     }
 
+    /**
+     * @author Someone
+     */
     public void assertOpenActivities() throws IllegalArgumentException {
         if (this.getNumOpenActivities() == 0) {
             String output = String.format(
@@ -55,10 +70,16 @@ public class Employee {
         }
     }
 
+    /**
+     * @author Someone
+     */
     public HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> getActivities() {
         return this.activities;
     }
 
+    /**
+     * @author Someone
+     */
     public ArrayList<Activity> getAllActiveActivities() {
         HashMap<String, Activity> allActivities = new HashMap<>();
         for (HashMap<Integer, EmployeeActivityIntermediate> activities : this.getActivities().values()) {
@@ -75,26 +96,44 @@ public class Employee {
         return new ArrayList<>(allActivities.values());
     }
 
+    /**
+     * @author Someone
+     */
     public String getID() {
         return this.ID;
     }
 
+    /**
+     * @author Someone
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * @author Someone
+     */
     public int getNumOpenActivities() {
         return this.weeklyActivityCap - this.activities.size();
     }
 
+    /**
+     * @author Someone
+     */
     public ArrayList<OutOfOfficeActivity> getOOOActivities() {
         return this.OOOActivities;
     }
 
+    /**
+     * @author Someone
+     */
     public int getWeeklyActivityCap() {
         return this.weeklyActivityCap;
     }
 
+    /**
+     * @author Someone
+     */
     public void setWeeklyActivityCap(int weeklyActivityCap) {
         this.weeklyActivityCap = weeklyActivityCap;
     }

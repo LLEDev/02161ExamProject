@@ -9,11 +9,17 @@ import java.util.HashMap;
 
 public class EmployeeActivityIntermediate {
 
+    /**
+     * @author Someone
+     */
     public static EmployeeActivityIntermediate initAssociation(Employee employee, Activity activity) {
         employee.assertOpenActivities();
         return new EmployeeActivityIntermediate(employee, activity);
     }
 
+    /**
+     * @author Someone
+     */
     public static EmployeeActivityIntermediate getAssociation(Employee employee, Activity activity) throws AccessDeniedException {
         HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
         EmployeeActivityIntermediate employeeActivityIntermediate = trackedTime.get(employee.getID());
@@ -31,6 +37,9 @@ public class EmployeeActivityIntermediate {
     protected Activity activity;
     protected Employee employee;
 
+    /**
+     * @author Someone
+     */
     public EmployeeActivityIntermediate(Employee e, Activity a) {
         this.employee = e;
         this.activity = a;
@@ -47,26 +56,44 @@ public class EmployeeActivityIntermediate {
         a.getTrackedTime().put(e.getID(), this);
     }
 
+    /**
+     * @author Someone
+     */
     public Activity getActivity() {
         return this.activity;
     }
 
+    /**
+     * @author Someone
+     */
     public Employee getEmployee() {
         return this.employee;
     }
 
+    /**
+     * @author Someone
+     */
     public int getMinutes(Date d) throws IllegalArgumentException {
         return this.minutesSpent.getOrDefault(Dates.formatDate(d), 0);
     }
 
+    /**
+     * @author Someone
+     */
     public HashMap<String, Integer> getMinutesSpent() {
         return this.minutesSpent;
     }
 
+    /**
+     * @author Someone
+     */
     public int getTotalMinutes() {
         return this.minutesSpent.values().stream().mapToInt(i -> i).sum();
     }
 
+    /**
+     * @author Someone
+     */
     public void setMinutes(Date d, int minutes) throws IllegalArgumentException {
         Assertions.assertOrThrow(
             () -> new IllegalArgumentException(
@@ -80,6 +107,9 @@ public class EmployeeActivityIntermediate {
         this.minutesSpent.put(dateString, minutes);
     }
 
+    /**
+     * @author Someone
+     */
     public void submitMinutes(Date d, int minutes) throws IllegalArgumentException {
         Assertions.assertOrThrow(
             () -> new IllegalArgumentException(

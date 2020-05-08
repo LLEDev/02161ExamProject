@@ -9,11 +9,17 @@ import java.util.HashMap;
 
 public class ActivityOverviewExtractor implements Extractor<Activity> {
 
+    /**
+     * @author Someone
+     */
     @Override
     public ArrayList<HashMap<String, String>> extract(ArrayList<Activity> collection, HashMap<String, Object> metaData) {
         return this.extractOverview(collection);
     }
 
+    /**
+     * @author Someone
+     */
     public ArrayList<HashMap<String, String>> extractOverview(ArrayList<Activity> collection) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 

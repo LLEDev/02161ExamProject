@@ -10,11 +10,17 @@ import static org.junit.Assert.assertTrue;
 
 public class MiscSteps {
 
+    /**
+     * @author Someone
+     */
     @Before // Reset Application before each scenario
     public void beforeScenario() {
         Application.init(InputContextType.Emp);
     }
 
+    /**
+     * @author Someone
+     */
     @Then("the error message {string} is given")
     public void theErrorMessageIsGiven(String message) {
         TestHolder testHolder = TestHolder.getInstance();

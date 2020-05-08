@@ -24,28 +24,43 @@ public class ExceptionWrapper {
     protected boolean sandbox = false;
     protected ThrowingFunctionWithoutArgs tf;
 
+    /**
+     * @author Someone
+     */
     public ExceptionWrapper(ThrowingFunctionWithoutArgs tf) {
         this.tf = tf;
     }
 
+    /**
+     * @author Someone
+     */
     public ExceptionWrapper(ThrowingFunctionWithoutArgs tf, ArrayList<Consumer<Exception>> exceptionHooks, boolean sandbox) {
         this(tf);
         this.exceptionHooks = exceptionHooks;
         this.sandbox = sandbox;
     }
 
+    /**
+     * @author Someone
+     */
     public ExceptionWrapper outputOnError(Function<CommandException, String> callable) {
         this.onErrorOutputs.add(callable);
 
         return this;
     }
 
+    /**
+     * @author Someone
+     */
     public ExceptionWrapper outputOnSuccess(ZeroArgumentFunction<String> callable) {
         this.onSuccessOutputs.add(callable);
 
         return this;
     }
 
+    /**
+     * @author Someone
+     */
     public void run() {
         // Do not run business logic if testing UI
         if (this.sandbox) {

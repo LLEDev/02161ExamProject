@@ -1,5 +1,6 @@
 Feature: Test UI part of business logic commands
 
+    # Author: Someone
     Scenario: "project assign pm" is run in employee context
         Given there is an employee
         When the command "project assign pm" is run in employee context with the following arguments
@@ -7,12 +8,14 @@ Feature: Test UI part of business logic commands
             | BB          |
         Then no exception is thrown
 
+    # Author: Someone
     Scenario: "switch context" is run in employee context
         Given there is an employee
         When the command "switch context" is run in employee context with the following arguments
             | PM |
         Then no exception is thrown
 
+    # Author: Someone
     Scenario: "hours set" is run in employee context
         Given there is an employee
         When the command "hours set" is run in employee context with the following arguments
@@ -22,6 +25,7 @@ Feature: Test UI part of business logic commands
             | 2           |
         Then no exception is thrown
 
+    # Author: Someone
     Scenario: "hours submit" is run in employee context
         Given there is an employee
         When the command "hours submit" is run in employee context with the following arguments
@@ -31,6 +35,7 @@ Feature: Test UI part of business logic commands
             | 2           |
         Then no exception is thrown
 
+    # Author: Someone
     Scenario: "project create" is run in employee context
         Given there is an employee
         When the command "project create" is run in employee context with the following arguments
@@ -38,6 +43,7 @@ Feature: Test UI part of business logic commands
             | true         |
         Then no exception is thrown
 
+    # Author: Someone
     Scenario: "request assistance" is run in employee context
         Given there is an employee
         When the command "request assistance" is run in employee context with the following arguments
@@ -46,6 +52,7 @@ Feature: Test UI part of business logic commands
             | BB          |
         Then no exception is thrown
 
+    # Author: Someone
     Scenario: "request ooo" is run in employee context
         Given there is an employee
         When the command "request ooo" is run in employee context with the following arguments
@@ -54,6 +61,7 @@ Feature: Test UI part of business logic commands
             | 2020-05-05 |
         Then no exception is thrown
 
+    # Author: Someone
     Scenario: "request ooo" is run in employee context with incorrect type
         Given there is an employee
         When the command "request ooo" is run in employee context with the following arguments
@@ -62,6 +70,7 @@ Feature: Test UI part of business logic commands
             | 2020-05-05    |
         Then a CommandException is thrown
 
+    # Author: Someone
     Scenario: "project activity assign" is run in project manager context with incorrect type
         Given there is an employee
         When the command "project activity assign" is run in project manager context with the following arguments
@@ -70,6 +79,7 @@ Feature: Test UI part of business logic commands
             | 1           |
         Then no exception is thrown
 
+    # Author: Someone
     Scenario: "project activity create" is run in project manager context with incorrect type
         Given there is an employee
         When the command "project activity create" is run in project manager context with the following arguments
@@ -77,6 +87,7 @@ Feature: Test UI part of business logic commands
             | Test activity |
         Then no exception is thrown
 
+    # Author: Someone
     Scenario: "project activity estimate" is run in project manager context with incorrect type
         Given there is an employee
         When the command "project activity estimate" is run in project manager context with the following arguments
@@ -85,6 +96,7 @@ Feature: Test UI part of business logic commands
             | 10          |
         Then no exception is thrown
 
+    # Author: Someone
     Scenario: "project activity finish" is run in project manager context with incorrect type
         Given there is an employee
         When the command "project activity finish" is run in project manager context with the following arguments
@@ -92,6 +104,7 @@ Feature: Test UI part of business logic commands
             | 1           |
         Then no exception is thrown
 
+    # Author: Someone
     Scenario: "project activity setweeks" is run in project manager context with incorrect type
         Given there is an employee
         When the command "project activity setweeks" is run in project manager context with the following arguments

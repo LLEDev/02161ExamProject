@@ -33,10 +33,16 @@ public class ProjectManagerInputContext extends InputContext {
         new Action("view schedule", new String[]{"employeeID"}, this::cmdViewSchedule),
     });
 
+    /**
+     * @author Someone
+     */
     public String getSingularContextName() {
         return "a project manager";
     }
 
+    /**
+     * @author Someone
+     */
     public ActionMap getTriggers() {
         return this.triggers;
     }
@@ -45,6 +51,9 @@ public class ProjectManagerInputContext extends InputContext {
         Commands
      */
 
+    /**
+     * @author Someone
+     */
     // Command arguments: String employeeID, String projectID, int activityID
     public void cmdAssignEmployeeToActivity(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 3);
@@ -60,6 +69,9 @@ public class ProjectManagerInputContext extends InputContext {
             .run();
     }
 
+    /**
+     * @author Someone
+     */
     // Command arguments: String projectID, String activityName
     public void cmdCreateActivity(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
@@ -73,6 +85,9 @@ public class ProjectManagerInputContext extends InputContext {
             .run();
     }
 
+    /**
+     * @author Someone
+     */
     // Command arguments: String projectID, String activityID
     public void cmdFinishActivity(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
@@ -86,6 +101,9 @@ public class ProjectManagerInputContext extends InputContext {
             .run();
     }
 
+    /**
+     * @author Someone
+     */
     // Command arguments: String projectID, int activityID, int numHours
     public void cmdSetActivityEstimatedDuration(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 3);
@@ -101,6 +119,9 @@ public class ProjectManagerInputContext extends InputContext {
             .run();
     }
 
+    /**
+     * @author Someone
+     */
     // Command arguments: String projectID, int activityID, Date start, Date end
     public void cmdSetActivityInterval(String[] args) throws CommandException, ParseException {
         this.assertArgumentsValid(args.length, 4);
@@ -119,6 +140,9 @@ public class ProjectManagerInputContext extends InputContext {
             .run();
     }
 
+    /**
+     * @author Someone
+     */
     // Command arguments: String projectID, activityID
     public void cmdViewActivity(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
@@ -163,6 +187,9 @@ public class ProjectManagerInputContext extends InputContext {
         }
     }
 
+    /**
+     * @author Someone
+     */
     // Command arguments: String date
     public void cmdViewAvailability(String[] args) throws CommandException, ParseException {
         this.assertArgumentsValid(args.length, 1);
@@ -182,6 +209,9 @@ public class ProjectManagerInputContext extends InputContext {
         ));
     }
 
+    /**
+     * @author Someone
+     */
     // Command arguments: String projectID
     public void cmdViewProject(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 1);
@@ -209,6 +239,9 @@ public class ProjectManagerInputContext extends InputContext {
         }
     }
 
+    /**
+     * @author Someone
+     */
     // Command arguments: String employeeID
     public void cmdViewSchedule(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 1);

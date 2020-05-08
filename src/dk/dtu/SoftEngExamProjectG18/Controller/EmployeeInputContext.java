@@ -29,10 +29,16 @@ public class EmployeeInputContext extends InputContext {
         new Action("view submissions", new String[]{}, this::cmdViewSubmissions),
     });
 
+    /**
+     * @author Someone
+     */
     public String getSingularContextName() {
         return "an employee";
     }
 
+    /**
+     * @author Someone
+     */
     public ActionMap getTriggers() {
         return this.triggers;
     }
@@ -41,6 +47,9 @@ public class EmployeeInputContext extends InputContext {
         Command helpers
      */
 
+    /**
+     * @author Someone
+     */
     public void cmdSetSubmitHours(String[] args, boolean shouldSet) throws CommandException, ParseException {
         this.assertArgumentsValid(args.length, 4);
         this.assertStringParseDateDoable(args[2]);
@@ -65,6 +74,9 @@ public class EmployeeInputContext extends InputContext {
         Commands
      */
 
+    /**
+     * @author Someone
+     */
     // Command arguments: String name, boolean isBillable
     public void cmdCreateProject(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 2);
@@ -78,6 +90,9 @@ public class EmployeeInputContext extends InputContext {
             .run();
     }
 
+    /**
+     * @author Someone
+     */
     // Command arguments: String projectID, int activityID, String employeeID
     public void cmdRequestAssistance(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 3);
@@ -92,6 +107,9 @@ public class EmployeeInputContext extends InputContext {
             .run();
     }
 
+    /**
+     * @author Someone
+     */
     // Command arguments: OOOActivityType type, Date start, Date end
     public void cmdRequestOutOfOffice(String[] args) throws CommandException, ParseException {
         this.assertArgumentsValid(args.length, 3);
@@ -132,16 +150,25 @@ public class EmployeeInputContext extends InputContext {
             .run();
     }
 
+    /**
+     * @author Someone
+     */
     // Command arguments: String projectID, int activityID, Date date, int setHours
     public void cmdSetHours(String[] args) throws CommandException, ParseException {
         this.cmdSetSubmitHours(args, true);
     }
 
+    /**
+     * @author Someone
+     */
     // Command arguments: String projectID, int activityID, Date date, int addedHours
     public void cmdSubmitHours(String[] args) throws CommandException, ParseException {
         this.cmdSetSubmitHours(args, false);
     }
 
+    /**
+     * @author Someone
+     */
     // Command arguments: none
     public void cmdViewSubmissions(String[] args) throws CommandException {
         this.assertArgumentsValid(args.length, 0);

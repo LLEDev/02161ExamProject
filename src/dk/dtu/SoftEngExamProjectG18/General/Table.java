@@ -8,6 +8,9 @@ import java.util.HashMap;
 
 public class Table {
 
+    /**
+     * @author Someone
+     */
     protected static HashMap<String, Integer> determineColumnWidths(String[] keyOrder, ArrayList<HashMap<String, String>> data) {
         HashMap<String, Integer> columnWidths = new HashMap<>();
 
@@ -30,6 +33,9 @@ public class Table {
         return columnWidths;
     }
 
+    /**
+     * @author Someone
+     */
     protected static String makeDelimiter(HashMap<String, Integer> columnWidths) {
         int numChars = columnWidths.values().stream().mapToInt(i -> i).sum() + columnWidths.size() + 1;
 
@@ -41,6 +47,9 @@ public class Table {
         return sb.toString();
     }
 
+    /**
+     * @author Someone
+     */
     protected static String makeTitleRow(String[] keyOrder, HashMap<String, Integer> columnWidths) {
         StringBuilder sb = new StringBuilder();
         sb.append("|");
@@ -52,6 +61,9 @@ public class Table {
         return sb.toString();
     }
 
+    /**
+     * @author Someone
+     */
     protected static String makeRow(String[] keyOrder, HashMap<String, String> entry, HashMap<String, Integer> columnWidths) {
         StringBuilder sb = new StringBuilder();
         sb.append("|");
@@ -64,6 +76,9 @@ public class Table {
         return sb.toString();
     }
 
+    /**
+     * @author Someone
+     */
     protected static String padToWidth(String str, int width) {
         StringBuilder sb = new StringBuilder();
         sb.append(" ").append(str);
@@ -75,6 +90,9 @@ public class Table {
         return sb.toString();
     }
 
+    /**
+     * @author Someone
+     */
     public static String make(ExtractorFunction dataExtractor, String[] keyOrder) {
         String result = "No data found.";
 

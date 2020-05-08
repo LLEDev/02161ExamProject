@@ -8,37 +8,37 @@ public class CmdResponse {
     protected CommandException ce;
     protected String response;
 
+    /**
+     * @author Someone
+     */
     public CmdResponse(String response, CommandException ce) {
         this.ce = ce;
         this.response = response;
     }
 
-    public boolean isClean() {
-        return this.ce == null;
-    }
-
+    /**
+     * @author Someone
+     */
     public CommandException getCommandException() {
         return this.ce;
     }
 
+    /**
+     * @author Someone
+     */
     public String getResponse() {
         return this.response;
     }
 
+    /**
+     * @author Someone
+     */
     public boolean exceptionMessageIs(String message) {
         if (this.ce == null || this.ce.getMessage() == null) {
             return false;
         }
 
         return this.ce.getMessage().equals(message);
-    }
-
-    public boolean exceptionReasonIs(CommandExceptionReason cer) {
-        if (this.ce == null || this.ce.getReason() == null) {
-            return false;
-        }
-
-        return this.ce.getReason().equals(cer);
     }
 
 

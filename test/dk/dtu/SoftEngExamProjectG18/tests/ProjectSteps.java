@@ -25,10 +25,9 @@ import static org.junit.Assert.assertTrue;
 
 public class ProjectSteps extends StepsBase {
 
-    /*
-        Create project(s) methods
+    /**
+     * @author Someone
      */
-
     @Given("that there is a project with name {string}")
     public void thatThereIsAProjectWithName(String name) {
         TestHolder.getInstance().setProject(
@@ -36,6 +35,9 @@ public class ProjectSteps extends StepsBase {
         );
     }
 
+    /**
+     * @author Someone
+     */
     @Given("there are projects with names")
     public void thereAreProjectsWithNames(List<String> projects) {
         Application application = Application.getInstance();
@@ -45,6 +47,9 @@ public class ProjectSteps extends StepsBase {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @Given("the employee is the project manager for the project")
     public void theEmployeeIsTheProjectManagerForTheProject() {
         this.theEmployeeWithInitialsIsTheProjectManagerOfTheProject(
@@ -52,6 +57,9 @@ public class ProjectSteps extends StepsBase {
         );
     }
 
+    /**
+     * @author Someone
+     */
     @And("the project has the following activities")
     public void theProjectHasTheFollowingActivities(List<List<String>> activities) throws ParseException, AccessDeniedException {
         TestHolder th = TestHolder.getInstance();
@@ -87,44 +95,61 @@ public class ProjectSteps extends StepsBase {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee creates a project with name {string}")
     public void theEmployeeCreatesAProjectWithName(String name) {
         this.wrap(() -> Application.getInstance().createProject(name, true));
     }
 
-    /*
-        Other
+    /**
+     * @author Someone
      */
-
     @When("the employee adds an activity with name {string} to the project")
     public void theEmployeeAddsAnActivityWithNameToTheProject(String name) {
         String projectID = TestHolder.getInstance().getProject().getID();
         this.wrap(() -> Application.getInstance().createActivity(projectID, name));
     }
 
+    /**
+     * @author Someone
+     */
     @When("the actor assigns the employee with initials {string} as the project manager of the project")
     public void theActorAssignsTheEmployeeWithInitialsAsTheProjectManagerOfTheProject(String initials) {
         String projectID = TestHolder.getInstance().getProject().getID();
         this.wrap(() -> Application.getInstance().assignPM(projectID, initials));
     }
 
+    /**
+     * @author Someone
+     */
     @And("the employee with initials {string} is the project manager of the project")
     public void theEmployeeWithInitialsIsTheProjectManagerOfTheProject(String employeeID) {
         String projectID = TestHolder.getInstance().getProject().getID();
         this.wrap(() -> Application.getInstance().assignPM(projectID, employeeID));
     }
 
+    /**
+     * @author Someone
+     */
     @And("the project does not have a project manager")
     public void theProjectDoesNotHaveAProjectManager() {
         TestHolder.getInstance().getProject().setPM(null);
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee finishes the activity with ID {string} in the project")
     public void theEmployeeFinishesTheActivityWithIDInTheProject(String activityID) {
         String projectID = TestHolder.getInstance().getProject().getID();
         this.wrap(() -> Application.getInstance().finishActivity(projectID, Integer.parseInt(activityID)));
     }
 
+    /**
+     * @author Someone
+     */
     @Given("the activity with ID {string} has an estimated duration of {string} weeks and registered {string} hours spent on date {string}")
     public void theActivityWithIDHasAnEstimatedDurationOfWeeksAndRegisteredHoursSpentOnDate(String id, String weeks, String hours, String date) throws ParseException, AccessDeniedException {
         Application application = Application.getInstance();
@@ -147,28 +172,35 @@ public class ProjectSteps extends StepsBase {
         application.submitHours(project.getID(), activity.getID(), today, Integer.parseInt(hours));
     }
 
-
-    /*
-        Assert methods
+    /**
+     * @author Someone
      */
-
     @Then("the activity with ID {string} is marked as finished in the project")
     public void theActivityWithIDIsMarkedAsFinishedInTheProject(String id) {
         Project project = TestHolder.getInstance().getProject();
         assertTrue(project.getActivity(Integer.parseInt(id)).isDone());
     }
 
+    /**
+     * @author Someone
+     */
     @Then("there is a project with ID {string} and name {string}")
     public void thereIsAProjectWithIDAndName(String id, String name) {
         assertEquals(Application.getInstance().getProject(id).getName(), name);
     }
 
+    /**
+     * @author Someone
+     */
     @Then("the project contains an activity with ID {string}")
     public void theProjectContainsAnActivityWithID(String id) {
         Project project = TestHolder.getInstance().getProject();
         assertNotNull(project.getActivity(Integer.parseInt(id)));
     }
 
+    /**
+     * @author Someone
+     */
     @Then("the project has a project manager with initials {string}")
     public void theProjectHasAProjectManagerWithInitials(String initials) {
         Project project = TestHolder.getInstance().getProject();
@@ -176,6 +208,9 @@ public class ProjectSteps extends StepsBase {
         assertEquals(project.getPM().getID(), initials);
     }
 
+    /**
+     * @author Someone
+     */
     @Then("these activities with overall durations are found")
     public void theseActivitiesWithOverallDurationsAreFound(List<List<String>> durations) {
         Application application = Application.getInstance();
@@ -188,6 +223,9 @@ public class ProjectSteps extends StepsBase {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @Then("the activity with ID {string} has an estimated duration of {string} hours")
     public void theActivityWithIDHasAnEstimatedDurationOfHours(String activityID, String hours) {
         TestHolder th = TestHolder.getInstance();
@@ -202,6 +240,9 @@ public class ProjectSteps extends StepsBase {
 
     }
 
+    /**
+     * @author Someone
+     */
     @Then("the activity with ID {string} has the start date {string} and the end date {string}")
     public void theActivityWithIDHasTheStartDateAndTheEndDate(String activityID, String start, String end) throws ParseException {
         TestHolder th = TestHolder.getInstance();

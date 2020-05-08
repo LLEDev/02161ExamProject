@@ -8,6 +8,9 @@ public class TestExceptionWrapper extends ExceptionWrapper {
 
     protected CommandException ce = null;
 
+    /**
+     * @author Someone
+     */
     protected void onError(Exception e) {
         if (e instanceof CommandException) {
             this.ce = (CommandException) e;
@@ -17,11 +20,17 @@ public class TestExceptionWrapper extends ExceptionWrapper {
         throw new RuntimeException(e);
     }
 
+    /**
+     * @author Someone
+     */
     public TestExceptionWrapper(ThrowingFunctionWithoutArgs tf) {
         super(tf);
         this.exceptionHooks.add(this::onError);
     }
 
+    /**
+     * @author Someone
+     */
     public CommandException getCommandException() {
         return this.ce;
     }

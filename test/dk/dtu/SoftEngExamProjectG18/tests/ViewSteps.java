@@ -22,6 +22,9 @@ public class ViewSteps {
     protected String extractorOutput = null;
     protected Exception thrownByParse = null;
 
+    /**
+     * @author Someone
+     */
     protected void callCmd(InputContext context, ThrowingFunction<String[]> tf, String[] args) {
         context.setSandbox(true); // We're testing UI
 
@@ -59,12 +62,17 @@ public class ViewSteps {
         TestHolder.getInstance().setResponse(new CmdResponse(response, commandException));
     }
 
+    /**
+     * @author Someone
+     */
     protected void handleNonCommandException(Exception e) {
         e.printStackTrace();
         Assert.fail("A non-expected exception was thrown.");
     }
 
-    // Generic command request in employee context
+    /**
+     * @author Someone
+     */
     @When("the command {string} is run in employee context with the following arguments")
     public void theCommandIsRunInEmployeeContextWithTheFollowingArguments(String command, List<String> args) {
         EmployeeInputContext context = new EmployeeInputContext();
@@ -76,6 +84,9 @@ public class ViewSteps {
         this.callCmd(context, action.getFunction(), args.toArray(String[]::new));
     }
 
+    /**
+     * @author Someone
+     */
     @When("the command {string} is run in project manager context with the following arguments")
     public void theCommandIsRunInProjectManagerContextWithTheFollowingArguments(String command, List<String> args) {
         ProjectManagerInputContext context = new ProjectManagerInputContext();
@@ -87,6 +98,9 @@ public class ViewSteps {
         this.callCmd(context, action.getFunction(), args.toArray(String[]::new));
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee requests a view of the project")
     public void theEmployeeRequestsAViewOfTheProject() {
         String projectID = TestHolder.getInstance().getProject().getID();
@@ -95,6 +109,9 @@ public class ViewSteps {
 
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee requests a view of activity {string}")
     public void theEmployeeRequestsAViewOfActivity(String activityID) {
         String projectID = TestHolder.getInstance().getProject().getID();
@@ -102,12 +119,18 @@ public class ViewSteps {
         this.callCmd(ic, ic::cmdViewActivity, new String[]{projectID, activityID});
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee requests a view of available employees at the date {string}")
     public void theEmployeeRequestsAViewOfAvailableEmployeesAtTheDate(String date) {
         ProjectManagerInputContext ic = new ProjectManagerInputContext();
         this.callCmd(ic, ic::cmdViewAvailability, new String[]{date});
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee requests a view of available employees without a given date")
     public void theEmployeeRequestsAViewOfAvailableEmployeesWithoutAGivenDate() {
         this.extractorOutput = null;
@@ -122,18 +145,27 @@ public class ViewSteps {
         );
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee requests a view of the schedule of the employee with ID {string}")
     public void theEmployeeRequestsAViewOfTheScheduleOfTheEmployeeWithID(String employee) {
         ProjectManagerInputContext ic = new ProjectManagerInputContext();
         this.callCmd(ic, ic::cmdViewSchedule, new String[]{employee});
     }
 
+    /**
+     * @author Someone
+     */
     @When("the employee requests of the daily submissions")
     public void theEmployeeRequestsOfTheDailySubmissions() {
         EmployeeInputContext ic = new EmployeeInputContext();
         this.callCmd(ic, ic::cmdViewSubmissions, new String[]{});
     }
 
+    /**
+     * @author Someone
+     */
     @When("string {string} is asserted integer-parseable")
     public void stringIsAssertedIntegerParseable(String str) {
         this.thrownByParse = null;
@@ -146,6 +178,9 @@ public class ViewSteps {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @When("string {string} is asserted date-parseable")
     public void stringIsAssertedDateParseable(String str) {
         this.thrownByParse = null;
@@ -158,6 +193,9 @@ public class ViewSteps {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @When("string {string} is asserted week date-parseable")
     public void stringIsAssertedWeekDateParseable(String str) {
         this.thrownByParse = null;
@@ -170,6 +208,9 @@ public class ViewSteps {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @Then("the following table is presented")
     public void theFollowingTableIsPresented(List<List<String>> table) {
         Scanner s = new Scanner(TestHolder.getInstance().getResponse().getResponse());
@@ -220,26 +261,41 @@ public class ViewSteps {
         Assert.assertTrue(tableFound);
     }
 
+    /**
+     * @author Someone
+     */
     @Then("no exception is thrown")
     public void noExceptionIsThrown() {
         Assert.assertNull(TestHolder.getInstance().getResponse().getCommandException());
     }
 
+    /**
+     * @author Someone
+     */
     @Then("a CommandException is thrown")
     public void aCommandExceptionIsThrown() {
         Assert.assertNotNull(TestHolder.getInstance().getResponse().getCommandException());
     }
 
+    /**
+     * @author Someone
+     */
     @Then("no exception related to parsing is thrown")
     public void noExceptionRelatedToParsingIsThrown() {
         Assert.assertNull(this.thrownByParse);
     }
 
+    /**
+     * @author Someone
+     */
     @Then("an exception related to parsing is thrown")
     public void anExceptionRelatedToParsingIsThrown() {
         Assert.assertNotNull(this.thrownByParse);
     }
 
+    /**
+     * @author Someone
+     */
     @Then("the extractor output is {string}")
     public void theExtractorOutputIs(String output) {
         Assert.assertEquals(output, this.extractorOutput);

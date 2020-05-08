@@ -14,11 +14,17 @@ import java.util.HashMap;
 
 public class CSVReader {
 
+    /**
+     * @author Someone
+     */
     protected static boolean getBoolean(HashMap<String, String> entry, String property, boolean def) {
         String val = entry.get(property);
         return val != null ? Boolean.parseBoolean(val) : def;
     }
 
+    /**
+     * @author Someone
+     */
     protected static Date getDate(HashMap<String, String> entry, String property) {
         try {
             return Dates.parseDate(entry.get(property));
@@ -27,6 +33,9 @@ public class CSVReader {
         return null;
     }
 
+    /**
+     * @author Someone
+     */
     protected static int getInt(HashMap<String, String> entry, String property, int def) {
         try {
             return Integer.parseInt(entry.get(property));
@@ -35,6 +44,9 @@ public class CSVReader {
         return def;
     }
 
+    /**
+     * @author Someone
+     */
     protected static Date getDateFromYearWeek(HashMap<String, String> entry, String property) {
         try {
             return Dates.parseWeek(entry.getOrDefault(property, ""));
@@ -43,6 +55,9 @@ public class CSVReader {
         return null;
     }
 
+    /**
+     * @author Someone
+     */
     protected static OOOActivityType getOOOActivityType(String input) {
         try {
             return OOOActivityType.valueOf(input);
@@ -52,10 +67,16 @@ public class CSVReader {
         return null;
     }
 
+    /**
+     * @author Someone
+     */
     protected static String[] processLine(String str) {
         return Arrays.stream(str.split(",")).map(String::trim).toArray(String[]::new);
     }
 
+    /**
+     * @author Someone
+     */
     protected static ArrayList<HashMap<String, String>> readFile(Reader fileReader) {
         BufferedReader br = new BufferedReader(fileReader);
         ArrayList<HashMap<String, String>> lines = new ArrayList<>();
@@ -80,6 +101,9 @@ public class CSVReader {
         return lines;
     }
 
+    /**
+     * @author Someone
+     */
     public static void readEmployees(Reader fileReader) {
         Application application = Application.getInstance();
         ArrayList<HashMap<String, String>> employees = readFile(fileReader);
@@ -100,6 +124,9 @@ public class CSVReader {
         }
     }
 
+    /**
+     * @author Someone
+     */
     public static void readProjects(Reader fileReader) {
         Application application = Application.getInstance();
         ArrayList<HashMap<String, String>> projects = readFile(fileReader);
@@ -122,6 +149,9 @@ public class CSVReader {
         }
     }
 
+    /**
+     * @author Someone
+     */
     public static void readActivities(Reader fileReader) {
         Application application = Application.getInstance();
         ArrayList<HashMap<String, String>> activities = readFile(fileReader);
@@ -147,6 +177,9 @@ public class CSVReader {
         }
     }
 
+    /**
+     * @author Someone
+     */
     public static void readOOOActivities(Reader fileReader) {
         Application application = Application.getInstance();
         ArrayList<HashMap<String, String>> OOOActivities = readFile(fileReader);
@@ -166,6 +199,9 @@ public class CSVReader {
         }
     }
 
+    /**
+     * @author Someone
+     */
     public static void readWorkHours(Reader fileReader) {
         Application application = Application.getInstance();
         ArrayList<HashMap<String, String>> workHours = readFile(fileReader);

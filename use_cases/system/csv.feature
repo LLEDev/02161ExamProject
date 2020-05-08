@@ -1,5 +1,6 @@
 Feature: CSVReader tests
 
+    # Author: Someone
     Scenario: Run sample set of test data to test "edge" cases
         When a user boots the application with test data files and the following arguments
             | HH |

@@ -4,6 +4,9 @@ import java.util.HashMap;
 
 public class ActionMap extends HashMap<String, Action> {
 
+    /**
+     * @author Someone
+     */
     public static ActionMap build(Action[] actions) {
         ActionMap map = new ActionMap();
 
@@ -14,6 +17,9 @@ public class ActionMap extends HashMap<String, Action> {
         return map;
     }
 
+    /**
+     * @author Someone
+     */
     public static ActionMap build(ActionMap inheritedMap, Action[] actions) {
         ActionMap map = (ActionMap) inheritedMap.clone();
 

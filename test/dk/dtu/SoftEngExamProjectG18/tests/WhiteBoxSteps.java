@@ -16,6 +16,9 @@ public class WhiteBoxSteps {
 
     protected Exception exception = null;
 
+    /**
+     * @author Someone
+     */
     protected Activity getProjectActivity() {
         Project project = TestHolder.getInstance().getProject();
         Assert.assertNotNull(project);
@@ -26,6 +29,9 @@ public class WhiteBoxSteps {
         return activity;
     }
 
+    /**
+     * @author Someone
+     */
     @When("assignPM is called in the project instance with {string} as newPM")
     public void assignPMIsCalledInTheProjectInstanceWithAsNewPM(String newPMStr) {
         this.exception = null;
@@ -42,6 +48,9 @@ public class WhiteBoxSteps {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @When("the project activity start week is set to {string}")
     public void theProjectActivityStartWeekIsSetTo(String week) throws ParseException {
         this.exception = null;
@@ -55,6 +64,9 @@ public class WhiteBoxSteps {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @When("the project activity end week is set to {string}")
     public void theProjectActivityEndWeekIsSetTo(String week) throws ParseException {
         this.exception = null;
@@ -68,6 +80,9 @@ public class WhiteBoxSteps {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @Then("the white box error exception of type {string} with message {string} is given")
     public void theWhiteBoxErrorExceptionOfTypeWithMessageIsGiven(String type, String msg) {
         Assert.assertNotNull(this.exception);
@@ -75,10 +90,11 @@ public class WhiteBoxSteps {
         Assert.assertEquals(msg, this.exception.getMessage());
     }
 
+    /**
+     * @author Someone
+     */
     @When("request assistance is called in Application with arguments {string}, {string} And {string}")
     public void requestAssistanceIsCalledInApplicationWithArgumentsAnd(String projectID, String activitID, String employeeID) {
-
-
         Application application = Application.getInstance();
 
         try {
@@ -88,6 +104,9 @@ public class WhiteBoxSteps {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @Then("the project activity start week is {string}")
     public void theProjectActivityStartWeekIs(String weekStr) {
         weekStr = !weekStr.equals("null") ? weekStr : null;
@@ -99,6 +118,9 @@ public class WhiteBoxSteps {
         );
     }
 
+    /**
+     * @author Someone
+     */
     @And("the project activity end week is {string}")
     public void theProjectActivityEndWeekIs(String weekStr) {
         weekStr = !weekStr.equals("null") ? weekStr : null;
@@ -110,6 +132,9 @@ public class WhiteBoxSteps {
         );
     }
 
+    /**
+     * @author Someone
+     */
     @When("submit minutes is called with date {string} and minutes {string} on the relation between the activity and the employee")
     public void submitMinutesIsCalledWithDateAndMinutesOnTheRelationBetweenTheActivityAndTheEmployee(String dateStr, String minutes) throws ParseException {
         Project project = TestHolder.getInstance().getProject();
@@ -131,6 +156,9 @@ public class WhiteBoxSteps {
         }
     }
 
+    /**
+     * @author Someone
+     */
     @Then("the employee has spent {string} minutes on the activity on the day {string}")
     public void theEmployeeHasSpentMinutesOnTheActivityOnTheDay(String minutesStr, String dateStr) throws ParseException {
         Project project = TestHolder.getInstance().getProject();

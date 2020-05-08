@@ -36,6 +36,9 @@ public class MainSteps {
     // Output outputted through this outSource can later be retrieved using outputTo
     protected static PrintStream outSource = new PrintStream(outputTo);
 
+    /**
+     * @author Someone
+     */
     @When("a user boots the application with the following arguments")
     public void aUserBootsTheApplicationWithTheFollowingArguments(List<String> args) {
         Main.setInSource(inSource);
@@ -43,6 +46,9 @@ public class MainSteps {
         Main.main(args.toArray(String[]::new));
     }
 
+    /**
+     * @author Someone
+     */
     @When("a user boots the application with valid external data files and the following arguments")
     public void aUserBootsTheApplicationWithValidExternalDataFilesAndTheFollowingArguments(List<String> args) throws Exception {
         Main.setInSource(inSource);
@@ -55,6 +61,9 @@ public class MainSteps {
         Main.main(new String[]{args.get(0), args.get(1), path});
     }
 
+    /**
+     * @author Someone
+     */
     @When("a user boots the application with test data files and the following arguments")
     public void aUserBootsTheApplicationWithTestDataFilesAndTheFollowingArguments(List<String> args) throws Exception {
         Main.setInSource(inSource);
@@ -66,22 +75,34 @@ public class MainSteps {
         Main.main(new String[]{args.get(0), args.get(1), path});
     }
 
+    /**
+     * @author Someone
+     */
     @Then("{string} is a part of the output")
     public void isAPartOfTheOutput(String arg0) {
         assertNotEquals(outputTo.toString().indexOf(arg0), -1);
     }
 
+    /**
+     * @author Someone
+     */
     @Then("{string} is not a part of the output")
     public void isNotAPartOfTheOutput(String arg0) {
         assertEquals(outputTo.toString().indexOf(arg0), -1);
     }
 
+    /**
+     * @author Someone
+     */
     @Then("the output will be reset")
     public void theOutputWillBeReset() {
         outputTo.reset();
         inSource = new ByteArrayInputStream(input.getBytes());
     }
 
+    /**
+     * @author Someone
+     */
     @And("a user quits the application")
     public void aUserQuitsTheApplication() throws Exception {
         Main.redirectInput(new String[]{"quit"});

@@ -8,11 +8,17 @@ import java.util.HashMap;
 
 public class EmployeeActivityIntermediateOverviewExtractor implements Extractor<EmployeeActivityIntermediate> {
 
+    /**
+     * @author Someone
+     */
     @Override
     public ArrayList<HashMap<String, String>> extract(ArrayList<EmployeeActivityIntermediate> collection, HashMap<String, Object> metaData) {
         return this.extractOverview(collection);
     }
 
+    /**
+     * @author Someone
+     */
     public ArrayList<HashMap<String, String>> extractOverview(ArrayList<EmployeeActivityIntermediate> collection) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 
