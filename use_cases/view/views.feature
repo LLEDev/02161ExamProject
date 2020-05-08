@@ -1,6 +1,6 @@
 Feature: Test all "view X" commands
 
-    # Author: Someone
+    # Author: Johannes S. Busse (s194604)
     Scenario: An employee who is a project manager of a project requests an overview of the project
         Given that there is a project with name "Test Project"
         And there is an employee
@@ -12,7 +12,7 @@ Feature: Test all "view X" commands
             | Employee | Date       | Minutes |
             | AA       | 2020-04-25 | 300     |
 
-    # Author: Someone
+    # Author: Johannes S. Busse (s194604)
     Scenario: An employee who is not project manager of a project requests an overview of the project
         Given that there is a project with name "Test Project"
         And there is an employee

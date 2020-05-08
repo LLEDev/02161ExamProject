@@ -244,7 +244,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Johannes S. Busse (s194604)
      */
     @And("the employee with initials {string} has not reached the activity cap")
     public void theEmployeeWithInitialsHasNotReachedTheActivityCap(String arg0) {
