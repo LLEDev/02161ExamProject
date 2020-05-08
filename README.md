@@ -31,7 +31,7 @@ This can be achieved by running ```AcceptanceTest``` and then pressing ```Edit C
 Then select tab ```Code Coverage``` and press ```Add package```.
 
 # Application quickstart
-To help the understanding of how the application is shaped, we will now demonstrate a few the available commands.
+To help the understanding of how the application is shaped, we will now demonstrate a few of the available commands.
 
 ## In employee context
 We now sign in as employee ```HH``` in context ```Emp```.
