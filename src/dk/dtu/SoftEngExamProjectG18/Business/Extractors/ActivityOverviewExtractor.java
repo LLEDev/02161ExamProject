@@ -18,8 +18,8 @@ public class ActivityOverviewExtractor implements Extractor<Activity> {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 
         for (Activity activity : collection) {
-            String startWeek = Dates.formatWeek(activity.getStartWeek());
-            String endWeek = Dates.formatWeek(activity.getEndWeek());
+            String startWeek = activity.getStartWeek() != null ? Dates.formatWeek(activity.getStartWeek()) : "(not found)";
+            String endWeek = activity.getEndWeek() != null ? Dates.formatWeek(activity.getEndWeek()) : "(not found)";
 
             int trackedHours = (int) Math.ceil(activity.getTotalTrackedMinutes() / 60.0);
 
