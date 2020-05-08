@@ -91,7 +91,7 @@ public class EmployeeActivityIntermediate {
         int total = this.getMinutes(d) + minutes;
 
         Assertions.assertOrThrow(
-            () -> new IllegalArgumentException("The total amount of work minutes has is now too high. This action cannot be done."),
+            () -> new IllegalArgumentException("The total amount of work minutes is now too high. This action cannot be done."),
             total >= 0
         );
 
