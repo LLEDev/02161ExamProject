@@ -25,7 +25,7 @@ public class ProjectManagerInputContext extends InputContext {
         new Action("project activity assign", new String[]{"employeeID", "projectID", "activityID"}, this::cmdAssignEmployeeToActivity),
         new Action("project activity create", new String[]{"projectID", "activityName"}, this::cmdCreateActivity),
         new Action("project activity estimate", new String[]{"projectID", "activityID", "workHours"}, this::cmdSetActivityEstimatedDuration),
-        new Action("project activity finish", new String[]{"projectID", "activityName"}, this::cmdFinishActivity),
+        new Action("project activity finish", new String[]{"projectID", "activityID"}, this::cmdFinishActivity),
         new Action("project activity setweeks", new String[]{"projectID", "activityID", "startWeek", "endWeek"}, this::cmdSetActivityInterval),
         new Action("view activity", new String[]{"projectID", "activityID"}, this::cmdViewActivity),
         new Action("view availability", new String[]{"date"}, this::cmdViewAvailability),
