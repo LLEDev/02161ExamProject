@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class ActivityOverviewExtractor implements Extractor<Activity> {
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Override
     public ArrayList<HashMap<String, String>> extract(ArrayList<Activity> collection, HashMap<String, Object> metaData) {
@@ -18,7 +18,7 @@ public class ActivityOverviewExtractor implements Extractor<Activity> {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ArrayList<HashMap<String, String>> extractOverview(ArrayList<Activity> collection) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();

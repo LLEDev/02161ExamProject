@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class Table {
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static HashMap<String, Integer> determineColumnWidths(String[] keyOrder, ArrayList<HashMap<String, String>> data) {
         HashMap<String, Integer> columnWidths = new HashMap<>();
@@ -34,7 +34,7 @@ public class Table {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static String makeDelimiter(HashMap<String, Integer> columnWidths) {
         int numChars = columnWidths.values().stream().mapToInt(i -> i).sum() + columnWidths.size() + 1;
@@ -48,7 +48,7 @@ public class Table {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static String makeTitleRow(String[] keyOrder, HashMap<String, Integer> columnWidths) {
         StringBuilder sb = new StringBuilder();
@@ -62,7 +62,7 @@ public class Table {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static String makeRow(String[] keyOrder, HashMap<String, String> entry, HashMap<String, Integer> columnWidths) {
         StringBuilder sb = new StringBuilder();
@@ -77,7 +77,7 @@ public class Table {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static String padToWidth(String str, int width) {
         StringBuilder sb = new StringBuilder();
@@ -91,7 +91,7 @@ public class Table {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static String make(ExtractorFunction dataExtractor, String[] keyOrder) {
         String result = "No data found.";

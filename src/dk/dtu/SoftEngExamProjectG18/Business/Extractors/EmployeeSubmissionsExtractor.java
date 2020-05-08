@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class EmployeeSubmissionsExtractor implements Extractor<Employee> {
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Override
     public ArrayList<HashMap<String, String>> extract(ArrayList<Employee> collection, HashMap<String, Object> metaData) {
@@ -22,7 +22,7 @@ public class EmployeeSubmissionsExtractor implements Extractor<Employee> {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ArrayList<HashMap<String, String>> extractSubmissions(Employee employee) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();

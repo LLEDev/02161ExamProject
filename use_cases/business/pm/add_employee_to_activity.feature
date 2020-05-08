@@ -2,7 +2,7 @@ Feature: Add employee to project activity
     Description: An employee is added to a project
     Actors: Employee
 
-    # Author: Someone
+    # Author: Lasse Lund-Egmose (s194568)
     Scenario: Employee who is a project manager adds another employee to a project
         Given that there is a project with name "Test Project"
         And the following employees are given
@@ -14,7 +14,7 @@ Feature: Add employee to project activity
         When the actor adds the employee with initials "ABCD" to the activity with ID "1"
         Then the employee with initials "ABCD" has been assigned to the activity with ID "1"
 
-    # Author: Someone
+    # Author: Lasse Lund-Egmose (s194568)
     Scenario: Employee adds another employee to a project activity
         Given that there is a project with name "Test Project"
         And the following employees are given
@@ -26,7 +26,7 @@ Feature: Add employee to project activity
         When the actor adds the employee with initials "BS" to the activity with ID "1"
         Then the error message "Project manager role required." is given
 
-    # Author: Someone
+    # Author: Lasse Lund-Egmose (s194568)
     Scenario: Employee who is a project manager adds another employee to a non existing project activity
         Given that there is a project with name "Test Project"
         And the following employees are given

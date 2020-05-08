@@ -9,7 +9,7 @@ import java.util.*;
 public class EmployeeAvailabilityExtractor implements Extractor<Employee> {
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected boolean isEmployeeAvailable(Employee employee, Date date) {
         return employee.getOOOActivities().stream()
@@ -17,7 +17,7 @@ public class EmployeeAvailabilityExtractor implements Extractor<Employee> {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Override
     public ArrayList<HashMap<String, String>> extract(ArrayList<Employee> collection, HashMap<String, Object> metaData) throws IllegalArgumentException {
@@ -29,7 +29,7 @@ public class EmployeeAvailabilityExtractor implements Extractor<Employee> {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ArrayList<HashMap<String, String>> extractAvailability(Date date, ArrayList<Employee> collection) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();

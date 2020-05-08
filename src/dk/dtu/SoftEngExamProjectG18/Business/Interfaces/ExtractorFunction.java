@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * @author Someone
+ * @author Lasse Lund-Egmose (s194568)
  */
 @FunctionalInterface
 public interface ExtractorFunction {

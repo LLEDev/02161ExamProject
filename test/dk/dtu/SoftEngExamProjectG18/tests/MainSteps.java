@@ -37,7 +37,7 @@ public class MainSteps {
     protected static PrintStream outSource = new PrintStream(outputTo);
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("a user boots the application with the following arguments")
     public void aUserBootsTheApplicationWithTheFollowingArguments(List<String> args) {
@@ -47,7 +47,7 @@ public class MainSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("a user boots the application with valid external data files and the following arguments")
     public void aUserBootsTheApplicationWithValidExternalDataFilesAndTheFollowingArguments(List<String> args) throws Exception {
@@ -62,7 +62,7 @@ public class MainSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("a user boots the application with test data files and the following arguments")
     public void aUserBootsTheApplicationWithTestDataFilesAndTheFollowingArguments(List<String> args) throws Exception {
@@ -76,7 +76,7 @@ public class MainSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Then("{string} is a part of the output")
     public void isAPartOfTheOutput(String arg0) {
@@ -84,7 +84,7 @@ public class MainSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Then("{string} is not a part of the output")
     public void isNotAPartOfTheOutput(String arg0) {
@@ -92,7 +92,7 @@ public class MainSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Then("the output will be reset")
     public void theOutputWillBeReset() {
@@ -101,7 +101,7 @@ public class MainSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @And("a user quits the application")
     public void aUserQuitsTheApplication() throws Exception {

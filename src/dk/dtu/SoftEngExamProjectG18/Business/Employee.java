@@ -16,7 +16,7 @@ public class Employee {
     protected int weeklyActivityCap = 10;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Employee(String ID, String name) {
         this.ID = ID;
@@ -24,7 +24,7 @@ public class Employee {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Employee(String ID, String name, int weeklyActivityCap) {
         this.ID = ID;
@@ -33,7 +33,7 @@ public class Employee {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void addActivity(Activity activity) {
         String projectID = activity.getProject().getID();
@@ -51,14 +51,14 @@ public class Employee {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void addOOOActivity(OOOActivityType type, Date start, Date end) throws IllegalArgumentException {
         this.OOOActivities.add(new OutOfOfficeActivity(type, start, end));
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void assertOpenActivities() throws IllegalArgumentException {
         if (this.getNumOpenActivities() == 0) {
@@ -71,14 +71,14 @@ public class Employee {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public HashMap<String, HashMap<Integer, EmployeeActivityIntermediate>> getActivities() {
         return this.activities;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ArrayList<Activity> getAllActiveActivities() {
         HashMap<String, Activity> allActivities = new HashMap<>();
@@ -97,42 +97,42 @@ public class Employee {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public String getID() {
         return this.ID;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public int getNumOpenActivities() {
         return this.weeklyActivityCap - this.activities.size();
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ArrayList<OutOfOfficeActivity> getOOOActivities() {
         return this.OOOActivities;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public int getWeeklyActivityCap() {
         return this.weeklyActivityCap;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void setWeeklyActivityCap(int weeklyActivityCap) {
         this.weeklyActivityCap = weeklyActivityCap;

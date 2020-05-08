@@ -13,7 +13,7 @@ public class OutOfOfficeActivity {
     protected Date end;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public OutOfOfficeActivity(OOOActivityType type, Date start, Date end) throws IllegalArgumentException {
         this.type = type;
@@ -25,21 +25,21 @@ public class OutOfOfficeActivity {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Date getEnd() {
         return this.end;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public OOOActivityType getType() {
         return this.type;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Date getStart() {
         return this.start;

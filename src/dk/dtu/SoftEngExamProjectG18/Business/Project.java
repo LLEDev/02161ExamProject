@@ -18,14 +18,14 @@ public class Project {
     protected Employee PM = null;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected void setupActivity(String name) {
         new Activity(name == null ? "First Activity" : name, this);
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected void setupCreatedAt(Date createdAt) {
         Calendar cal = new GregorianCalendar();
@@ -38,7 +38,7 @@ public class Project {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected void setupName(String name) throws IllegalArgumentException {
         if (name.length() == 0) {
@@ -49,7 +49,7 @@ public class Project {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Project(int nextID, String name) throws IllegalArgumentException {
         this.ID = nextID;
@@ -58,7 +58,7 @@ public class Project {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Project(int nextID, String name, boolean isBillable) throws IllegalArgumentException {
         this(nextID, name);
@@ -66,7 +66,7 @@ public class Project {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Project(int nextID, String name, Date createdAt, boolean isBillable, Employee PM) {
         this.ID = nextID;
@@ -81,7 +81,7 @@ public class Project {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void assertPM(Employee employee) throws AccessDeniedException {
         if (this.getPM() == null || !this.getPM().equals(employee)) {
@@ -105,7 +105,7 @@ public class Project {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void clearActivities() {
         this.getActivities().clear();
@@ -113,7 +113,7 @@ public class Project {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public int incrementNextActivityID() {
         this.nextActivityID++;
@@ -121,7 +121,7 @@ public class Project {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Activity getActivity(int ID) {
         if (!this.activities.containsKey(ID)) {
@@ -137,14 +137,14 @@ public class Project {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public HashMap<Integer, Activity> getActivities() {
         return this.activities;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public int getEstimatedWorkHoursLeft() {
         double minutesLeft = this.getActivities().values().stream()
@@ -154,7 +154,7 @@ public class Project {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public String getID() {
         StringBuilder IDBuilder = new StringBuilder();
@@ -175,7 +175,7 @@ public class Project {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Employee getPM() {
         return this.PM;

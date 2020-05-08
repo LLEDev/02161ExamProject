@@ -25,14 +25,14 @@ public class ExceptionWrapper {
     protected ThrowingFunctionWithoutArgs tf;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ExceptionWrapper(ThrowingFunctionWithoutArgs tf) {
         this.tf = tf;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ExceptionWrapper(ThrowingFunctionWithoutArgs tf, ArrayList<Consumer<Exception>> exceptionHooks, boolean sandbox) {
         this(tf);
@@ -41,7 +41,7 @@ public class ExceptionWrapper {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ExceptionWrapper outputOnError(Function<CommandException, String> callable) {
         this.onErrorOutputs.add(callable);
@@ -50,7 +50,7 @@ public class ExceptionWrapper {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ExceptionWrapper outputOnSuccess(ZeroArgumentFunction<String> callable) {
         this.onSuccessOutputs.add(callable);
@@ -59,7 +59,7 @@ public class ExceptionWrapper {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void run() {
         // Do not run business logic if testing UI

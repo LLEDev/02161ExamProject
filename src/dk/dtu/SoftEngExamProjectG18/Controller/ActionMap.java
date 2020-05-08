@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class ActionMap extends HashMap<String, Action> {
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static ActionMap build(Action[] actions) {
         ActionMap map = new ActionMap();
@@ -18,7 +18,7 @@ public class ActionMap extends HashMap<String, Action> {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static ActionMap build(ActionMap inheritedMap, Action[] actions) {
         ActionMap map = (ActionMap) inheritedMap.clone();

@@ -14,35 +14,35 @@ public class CompanyDB {
     protected Employee signedInEmployee;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void addEmployee(Employee employee) {
         this.employees.put(employee.getID(), employee);
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void addProject(Project project) {
         this.projects.put(project.getID(), project);
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Employee getEmployee(String ID) {
         return this.employees.get(ID);
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public HashMap<String, Employee> getEmployees() {
         return this.employees;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public int incrementNextProjectID(int year) {
         if (!this.nextProjectID.containsKey(year)) {
@@ -56,14 +56,14 @@ public class CompanyDB {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Project getProject(String ID) {
         return this.projects.get(ID);
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Employee getSignedInEmployee() throws IllegalStateException {
         Assertions.assertOrThrow(
@@ -75,7 +75,7 @@ public class CompanyDB {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void setSignedInEmployee(String ID) {
         Assertions.assertOrThrow(

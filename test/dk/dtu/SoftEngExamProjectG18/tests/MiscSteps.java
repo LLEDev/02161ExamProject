@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 public class MiscSteps {
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Before // Reset Application before each scenario
     public void beforeScenario() {

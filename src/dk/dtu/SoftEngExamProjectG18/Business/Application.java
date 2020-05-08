@@ -18,7 +18,7 @@ public class Application {
     protected static Application instance;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static void init(String context) throws IllegalArgumentException {
         for (InputContextType ict : InputContextType.values()) {
@@ -37,7 +37,7 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static void init(InputContextType contextType) throws IllegalArgumentException {
         Assertions.assertOrThrow(
@@ -49,7 +49,7 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static Application getInstance() {
         Assertions.assertOrThrow(
@@ -68,21 +68,21 @@ public class Application {
      */
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected CompanyDB getDB() {
         return this.db;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected void setDB(CompanyDB db) {
         this.db = db;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Application(InputContextType ict) {
         this.context = InputContext.getContext(ict);
@@ -93,7 +93,7 @@ public class Application {
      */
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Activity createActivity(String projectID, String name) throws AccessDeniedException {
         Project project = this.getProject(projectID);
@@ -103,7 +103,7 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Employee createEmployee(String ID, String name) {
         Employee employee = new Employee(ID, name);
@@ -114,7 +114,7 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Employee createEmployee(String ID, String name, int weeklyActivityCap) {
         Employee employee = new Employee(ID, name, weeklyActivityCap);
@@ -125,7 +125,7 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Project createProject(String name, boolean isBillable) throws IllegalArgumentException {
         int year = (new GregorianCalendar()).get(Calendar.YEAR);
@@ -138,7 +138,7 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Project createProject(String name, Date createdAt, boolean isBillable, Employee PM) throws IllegalArgumentException {
         int year = (new GregorianCalendar()).get(Calendar.YEAR);
@@ -151,7 +151,7 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public <X> ArrayList<HashMap<String, String>> extractData(
         Class<? extends Extractor<X>> extractorClass,
@@ -161,7 +161,7 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public <X> ArrayList<HashMap<String, String>> extractData(
         Class<? extends Extractor<X>> extractorClass,
@@ -177,14 +177,14 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public InputContext getContext() {
         return this.context;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Employee getEmployee(String employeeID) throws IllegalArgumentException {
         Employee employee = db.getEmployee(employeeID);
@@ -197,14 +197,14 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public HashMap<String, Employee> getEmployees() {
         return this.db.getEmployees();
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Project getProject(String projectID) throws IllegalArgumentException {
         Project project = db.getProject(projectID);
@@ -216,21 +216,21 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Employee getSignedInEmployee() {
         return this.db.getSignedInEmployee();
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void setContext(InputContext ic) {
         this.context = ic;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void setSignedInEmployee(String employeeID) {
         this.db.setSignedInEmployee(employeeID);
@@ -241,7 +241,7 @@ public class Application {
      */
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected void helperSetSubmitHours(String projectID, int activityID, Date date, double hours, boolean shouldSet) throws AccessDeniedException, IllegalArgumentException {
         Project project = this.getProject(projectID);
@@ -263,7 +263,7 @@ public class Application {
      */
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void assignEmployeeToActivity(String employeeID, String projectID, int activityID) throws AccessDeniedException {
         Project project = this.getProject(projectID);
@@ -276,14 +276,14 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void assignPM(String projectID, String employeeID) throws AccessDeniedException, IllegalArgumentException {
         this.getProject(projectID).assignPM(this.getEmployee(employeeID), this.db.getSignedInEmployee());
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void estimateActivityDuration(String projectID, int activityID, int numHours) throws IllegalArgumentException {
         Project project = this.getProject(projectID);
@@ -291,7 +291,7 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void finishActivity(String projectID, int activityID) throws AccessDeniedException {
         Project project = this.db.getProject(projectID);
@@ -300,7 +300,7 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void requestAssistance(String projectID, int activityID, String employeeID) throws AccessDeniedException, IllegalArgumentException {
         Project project = this.getProject(projectID);
@@ -342,7 +342,7 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void requestOutOfOffice(OOOActivityType type, Date start, Date end) throws IllegalArgumentException {
         Employee signedInEmployee = this.db.getSignedInEmployee();
@@ -350,7 +350,7 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void setActivityInterval(String projectID, int activityID, Date start, Date end) throws IllegalArgumentException {
         Activity activity = this.getProject(projectID).getActivity(activityID);
@@ -363,21 +363,21 @@ public class Application {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void setHours(String projectID, int activityID, Date date, double setHours) throws AccessDeniedException, IllegalArgumentException {
         this.helperSetSubmitHours(projectID, activityID, date, setHours, true);
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void submitHours(String projectID, int activityID, Date date, double addedHours) throws AccessDeniedException, IllegalArgumentException {
         this.helperSetSubmitHours(projectID, activityID, date, addedHours, false);
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void switchContext(String newContext) throws IllegalArgumentException {
         CompanyDB db = this.getDB(); // Save earlier DB

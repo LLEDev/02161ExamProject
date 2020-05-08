@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class OutOfOfficeActivityOverviewExtractor implements Extractor<OutOfOfficeActivity> {
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Override
     public ArrayList<HashMap<String, String>> extract(ArrayList<OutOfOfficeActivity> collection, HashMap<String, Object> metaData) {
@@ -18,7 +18,7 @@ public class OutOfOfficeActivityOverviewExtractor implements Extractor<OutOfOffi
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ArrayList<HashMap<String, String>> extractOverview(ArrayList<OutOfOfficeActivity> collection) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

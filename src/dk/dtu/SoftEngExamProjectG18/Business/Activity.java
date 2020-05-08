@@ -21,7 +21,7 @@ public class Activity {
     protected HashMap<String, EmployeeActivityIntermediate> trackedTime = new HashMap<>();
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Activity(String name, Project project) {
         this.ID = project.incrementNextActivityID();
@@ -32,77 +32,77 @@ public class Activity {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public boolean isDone() {
         return this.isDone;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Date getEndWeek() {
         return this.endWeek;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public int getEstimatedHours() {
         return this.estimatedHours;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public int getID() {
         return this.ID;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Project getProject() {
         return this.project;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Date getStartWeek() {
         return this.startWeek;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public int getTotalTrackedMinutes() {
         return this.getTrackedTime().values().stream().mapToInt(EmployeeActivityIntermediate::getTotalMinutes).sum();
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public HashMap<String, EmployeeActivityIntermediate> getTrackedTime() {
         return this.trackedTime;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void setDone(boolean done) {
         this.isDone = done;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void setEndWeek(Date endWeek) throws IllegalArgumentException {
         Dates.assertStartEndValid(this.startWeek, endWeek);
@@ -111,7 +111,7 @@ public class Activity {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void setEstimatedHours(int estimatedHours) throws IllegalArgumentException {
         if (estimatedHours <= 0) {
@@ -123,7 +123,7 @@ public class Activity {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void setStartWeek(Date startWeek) throws IllegalArgumentException {
         Dates.assertStartEndValid(startWeek, this.endWeek);

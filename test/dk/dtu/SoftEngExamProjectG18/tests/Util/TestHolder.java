@@ -7,7 +7,7 @@ public class TestHolder {
     private static TestHolder instance;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static TestHolder getInstance() {
         if (instance == null) {
@@ -21,28 +21,28 @@ public class TestHolder {
     protected Project project;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Project getProject() {
         return this.project;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public CmdResponse getResponse() {
         return this.response;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void setProject(Project project) {
         this.project = project;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void setResponse(CmdResponse response) {
         this.response = response;

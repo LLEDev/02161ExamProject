@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class EmployeeActivityIntermediate {
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static EmployeeActivityIntermediate initAssociation(Employee employee, Activity activity) {
         employee.assertOpenActivities();
@@ -18,7 +18,7 @@ public class EmployeeActivityIntermediate {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static EmployeeActivityIntermediate getAssociation(Employee employee, Activity activity) throws AccessDeniedException {
         HashMap<String, EmployeeActivityIntermediate> trackedTime = activity.getTrackedTime();
@@ -38,7 +38,7 @@ public class EmployeeActivityIntermediate {
     protected Employee employee;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public EmployeeActivityIntermediate(Employee e, Activity a) {
         this.employee = e;
@@ -57,42 +57,42 @@ public class EmployeeActivityIntermediate {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Activity getActivity() {
         return this.activity;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Employee getEmployee() {
         return this.employee;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public int getMinutes(Date d) throws IllegalArgumentException {
         return this.minutesSpent.getOrDefault(Dates.formatDate(d), 0);
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public HashMap<String, Integer> getMinutesSpent() {
         return this.minutesSpent;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public int getTotalMinutes() {
         return this.minutesSpent.values().stream().mapToInt(i -> i).sum();
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void setMinutes(Date d, int minutes) throws IllegalArgumentException {
         Assertions.assertOrThrow(
@@ -108,7 +108,7 @@ public class EmployeeActivityIntermediate {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void submitMinutes(Date d, int minutes) throws IllegalArgumentException {
         Assertions.assertOrThrow(

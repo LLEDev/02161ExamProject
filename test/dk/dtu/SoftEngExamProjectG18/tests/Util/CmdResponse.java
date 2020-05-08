@@ -9,7 +9,7 @@ public class CmdResponse {
     protected String response;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public CmdResponse(String response, CommandException ce) {
         this.ce = ce;
@@ -17,14 +17,14 @@ public class CmdResponse {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public CommandException getCommandException() {
         return this.ce;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public String getResponse() {
         return this.response;

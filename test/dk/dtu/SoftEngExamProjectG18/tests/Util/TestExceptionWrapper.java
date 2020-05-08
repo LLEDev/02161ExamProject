@@ -9,7 +9,7 @@ public class TestExceptionWrapper extends ExceptionWrapper {
     protected CommandException ce = null;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected void onError(Exception e) {
         if (e instanceof CommandException) {
@@ -21,7 +21,7 @@ public class TestExceptionWrapper extends ExceptionWrapper {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public TestExceptionWrapper(ThrowingFunctionWithoutArgs tf) {
         super(tf);
@@ -29,7 +29,7 @@ public class TestExceptionWrapper extends ExceptionWrapper {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public CommandException getCommandException() {
         return this.ce;

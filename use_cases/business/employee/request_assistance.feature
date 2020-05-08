@@ -1,6 +1,6 @@
 Feature: Request assistance when working on a project activity
 
-    # Author: Someone
+    # Author: Lasse Lund-Egmose (s194568)
     Scenario: An employee requests assistance
         Given that there is a project with name "Test Project"
         And the following employees are given

@@ -30,14 +30,14 @@ public class EmployeeInputContext extends InputContext {
     });
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public String getSingularContextName() {
         return "an employee";
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ActionMap getTriggers() {
         return this.triggers;
@@ -167,7 +167,7 @@ public class EmployeeInputContext extends InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     // Command arguments: none
     public void cmdViewSubmissions(String[] args) throws CommandException {

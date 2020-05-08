@@ -21,7 +21,7 @@ abstract public class InputContext {
     abstract public String getSingularContextName();
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static InputContext getContext(InputContextType ict) {
         if (ict == InputContextType.PM) {
@@ -40,7 +40,7 @@ abstract public class InputContext {
     });
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void assertArgumentsValid(int argsLength, int requiredLength) throws CommandException {
         if (argsLength != requiredLength) {
@@ -49,7 +49,7 @@ abstract public class InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void assertStringParseDateDoable(String possibleDate) throws CommandException {
         try {
@@ -61,7 +61,7 @@ abstract public class InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void assertStringParseWeekDoable(String possibleDate) throws CommandException {
         try {
@@ -77,7 +77,7 @@ abstract public class InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void assertStringParseIntDoable(String possibleInt) throws CommandException {
         try {
@@ -89,63 +89,63 @@ abstract public class InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public String getOutput() {
         return this.output;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public boolean getSandbox() {
         return this.sandbox;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ActionMap getTriggers() {
         return this.triggers;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void addCommandExceptionHook(Consumer<Exception> hook) {
         this.onExceptionHooks.add(hook);
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void removeCommandExceptionHook(Consumer<Exception> hook) {
         this.onExceptionHooks.remove(hook);
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void resetOutput() {
         this.output = "";
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void setSandbox(boolean sandbox) {
         this.sandbox = sandbox;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ExceptionWrapper wrapExceptions(ThrowingFunctionWithoutArgs tf) {
         return new ExceptionWrapper(tf, this.onExceptionHooks, this.getSandbox());
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void writeOutput(String s) {
         this.output += s;
@@ -173,7 +173,7 @@ abstract public class InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     // String inputContext
     public void cmdSwitchContext(String[] args) throws CommandException {

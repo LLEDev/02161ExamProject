@@ -7,21 +7,21 @@ public class CommandException extends Exception {
     protected CommandExceptionReason reason;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public CommandException(CommandExceptionReason cer) {
         this(cer, "An error occurred.");
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public CommandException(String message) {
         this(CommandExceptionReason.EXECUTION_ERROR, message);
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public CommandException(CommandExceptionReason cer, String message) {
         super(message);
@@ -30,7 +30,7 @@ public class CommandException extends Exception {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public CommandExceptionReason getReason() {
         return reason;

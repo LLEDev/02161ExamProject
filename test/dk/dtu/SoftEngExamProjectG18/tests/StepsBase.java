@@ -10,7 +10,7 @@ import dk.dtu.SoftEngExamProjectG18.tests.Util.TestHolder;
 abstract public class StepsBase {
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void wrap(ThrowingFunctionWithoutArgs tf) {
         TestExceptionWrapper tew = new TestExceptionWrapper(tf);

@@ -34,14 +34,14 @@ public class ProjectManagerInputContext extends InputContext {
     });
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public String getSingularContextName() {
         return "a project manager";
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ActionMap getTriggers() {
         return this.triggers;
@@ -70,7 +70,7 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     // Command arguments: String projectID, String activityName
     public void cmdCreateActivity(String[] args) throws CommandException {
@@ -86,7 +86,7 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     // Command arguments: String projectID, String activityID
     public void cmdFinishActivity(String[] args) throws CommandException {
@@ -102,7 +102,7 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     // Command arguments: String projectID, int activityID, int numHours
     public void cmdSetActivityEstimatedDuration(String[] args) throws CommandException {
@@ -120,7 +120,7 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     // Command arguments: String projectID, int activityID, Date start, Date end
     public void cmdSetActivityInterval(String[] args) throws CommandException, ParseException {
@@ -141,7 +141,7 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     // Command arguments: String projectID, activityID
     public void cmdViewActivity(String[] args) throws CommandException {
@@ -188,7 +188,7 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     // Command arguments: String date
     public void cmdViewAvailability(String[] args) throws CommandException, ParseException {
@@ -210,7 +210,7 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     // Command arguments: String projectID
     public void cmdViewProject(String[] args) throws CommandException {
@@ -240,7 +240,7 @@ public class ProjectManagerInputContext extends InputContext {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     // Command arguments: String employeeID
     public void cmdViewSchedule(String[] args) throws CommandException {

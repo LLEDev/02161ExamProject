@@ -1,7 +1,7 @@
 package dk.dtu.SoftEngExamProjectG18.Controller.Enums;
 
 /**
- * @author Someone
+ * @author Lasse Lund-Egmose (s194568)
  */
 public enum CommandExceptionReason {
     INVALID_ARGUMENTS,

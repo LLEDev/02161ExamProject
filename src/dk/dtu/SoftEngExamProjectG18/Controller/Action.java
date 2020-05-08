@@ -9,7 +9,7 @@ public class Action {
     protected String signature;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public Action(String signature, String[] arguments, ThrowingFunction<String[]> tf) {
         this.signature = signature;
@@ -18,21 +18,21 @@ public class Action {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public String[] getArguments() {
         return this.arguments;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ThrowingFunction<String[]> getFunction() {
         return this.tf;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public String getFullSignature() {
         if (this.getArguments().length == 0) {
@@ -43,14 +43,14 @@ public class Action {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public String getSignature() {
         return this.signature;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public void run(String[] args) throws Exception {
         this.tf.apply(args);

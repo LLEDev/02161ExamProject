@@ -17,7 +17,7 @@ public class WhiteBoxSteps {
     protected Exception exception = null;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected Activity getProjectActivity() {
         Project project = TestHolder.getInstance().getProject();
@@ -30,7 +30,7 @@ public class WhiteBoxSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("assignPM is called in the project instance with {string} as newPM")
     public void assignPMIsCalledInTheProjectInstanceWithAsNewPM(String newPMStr) {
@@ -49,7 +49,7 @@ public class WhiteBoxSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the project activity start week is set to {string}")
     public void theProjectActivityStartWeekIsSetTo(String week) throws ParseException {
@@ -65,7 +65,7 @@ public class WhiteBoxSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the project activity end week is set to {string}")
     public void theProjectActivityEndWeekIsSetTo(String week) throws ParseException {
@@ -81,7 +81,7 @@ public class WhiteBoxSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Then("the white box error exception of type {string} with message {string} is given")
     public void theWhiteBoxErrorExceptionOfTypeWithMessageIsGiven(String type, String msg) {
@@ -105,7 +105,7 @@ public class WhiteBoxSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Then("the project activity start week is {string}")
     public void theProjectActivityStartWeekIs(String weekStr) {
@@ -119,7 +119,7 @@ public class WhiteBoxSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @And("the project activity end week is {string}")
     public void theProjectActivityEndWeekIs(String weekStr) {

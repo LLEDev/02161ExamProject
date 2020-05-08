@@ -23,7 +23,7 @@ public class ViewSteps {
     protected Exception thrownByParse = null;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected void callCmd(InputContext context, ThrowingFunction<String[]> tf, String[] args) {
         context.setSandbox(true); // We're testing UI
@@ -63,7 +63,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected void handleNonCommandException(Exception e) {
         e.printStackTrace();
@@ -71,7 +71,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the command {string} is run in employee context with the following arguments")
     public void theCommandIsRunInEmployeeContextWithTheFollowingArguments(String command, List<String> args) {
@@ -85,7 +85,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the command {string} is run in project manager context with the following arguments")
     public void theCommandIsRunInProjectManagerContextWithTheFollowingArguments(String command, List<String> args) {
@@ -99,7 +99,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the employee requests a view of the project")
     public void theEmployeeRequestsAViewOfTheProject() {
@@ -110,7 +110,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the employee requests a view of activity {string}")
     public void theEmployeeRequestsAViewOfActivity(String activityID) {
@@ -120,7 +120,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the employee requests a view of available employees at the date {string}")
     public void theEmployeeRequestsAViewOfAvailableEmployeesAtTheDate(String date) {
@@ -129,7 +129,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the employee requests a view of available employees without a given date")
     public void theEmployeeRequestsAViewOfAvailableEmployeesWithoutAGivenDate() {
@@ -146,7 +146,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the employee requests a view of the schedule of the employee with ID {string}")
     public void theEmployeeRequestsAViewOfTheScheduleOfTheEmployeeWithID(String employee) {
@@ -155,7 +155,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the employee requests of the daily submissions")
     public void theEmployeeRequestsOfTheDailySubmissions() {
@@ -164,7 +164,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("string {string} is asserted integer-parseable")
     public void stringIsAssertedIntegerParseable(String str) {
@@ -179,7 +179,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("string {string} is asserted date-parseable")
     public void stringIsAssertedDateParseable(String str) {
@@ -194,7 +194,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("string {string} is asserted week date-parseable")
     public void stringIsAssertedWeekDateParseable(String str) {
@@ -209,7 +209,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Then("the following table is presented")
     public void theFollowingTableIsPresented(List<List<String>> table) {
@@ -262,7 +262,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Then("no exception is thrown")
     public void noExceptionIsThrown() {
@@ -270,7 +270,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Then("a CommandException is thrown")
     public void aCommandExceptionIsThrown() {
@@ -278,7 +278,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Then("no exception related to parsing is thrown")
     public void noExceptionRelatedToParsingIsThrown() {
@@ -286,7 +286,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Then("an exception related to parsing is thrown")
     public void anExceptionRelatedToParsingIsThrown() {
@@ -294,7 +294,7 @@ public class ViewSteps {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Then("the extractor output is {string}")
     public void theExtractorOutputIs(String output) {

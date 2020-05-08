@@ -62,7 +62,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @And("the employee with initials {string} is the actor")
     public void theEmployeeWithInitialsIsTheActor(String employeeID) {
@@ -71,7 +71,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @And("the employee is attached to all activities in the projects")
     public void theEmployeeIsAttachedToAllActivitiesInTheProjects(List<String> projects) throws AccessDeniedException {
@@ -97,7 +97,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @And("the employee with initials {string} is assigned to the activity with ID {string}")
     public void theEmployeeWithInitialsIsAssignedToTheActivityWithID(String employeeID, String activityID) {
@@ -111,7 +111,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @And("the employee has the following work minutes")
     public void theEmployeeHasTheFollowingWorkMinutes(List<List<String>> workMinutes) throws ParseException, AccessDeniedException {
@@ -136,7 +136,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @And("the employee has the following work minutes today")
     public void theEmployeeHasTheFollowingWorkMinutesToday(List<List<String>> workMinutes) throws ParseException, AccessDeniedException {
@@ -146,7 +146,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the actor adds the employee with initials {string} to the activity with ID {string}")
     public void theActorAddsTheEmployeeWithInitialsToTheActivityWithID(String employeeID, String activityID) {
@@ -162,7 +162,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the employee requests assistance from {string} on activity with ID {string} in the project")
     public void theEmployeeRequestsAssistanceFromOnActivityWithIDInTheProject(String otherEmployeeID, String activityID) {
@@ -178,7 +178,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the employee submits the work minutes")
     public void theEmployeeSubmitsTheWorkMinutes(List<List<String>> minutes) throws AccessDeniedException, IllegalArgumentException {
@@ -201,7 +201,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the employee requests the following OOO activities")
     public void theEmployeeRequestsTheFollowingOOOActivities(List<List<String>> activities) throws Exception {
@@ -221,7 +221,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the employee switches to context {string}")
     public void theEmployeeSwitchesToContext(String context) {
@@ -229,7 +229,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Then("the employee with initials {string} has been assigned to the activity with ID {string}")
     public void theEmployeeWithInitialsHasBeenAssignedToTheActivityWithID(String employeeID, String activityIDString) {
@@ -265,7 +265,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Then("the current context is {string}")
     public void theCurrentContextIs(String context) {
@@ -273,7 +273,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the employee sets the work hours {string} in the activity with ID {string}.")
     public void theEmployeeSetsTheWorkHoursInTheActivityWithID(String workHours, String activityID) {
@@ -293,7 +293,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the employee estimates the duration to {string} hours for the activity with ID {string}")
     public void theEmployeeEstimatesTheDurationToHoursForTheActivityWithID(String hours, String activityID) {
@@ -313,7 +313,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @When("the employee sets the start date {string} and the end date {string} of the activity with ID {string}")
     public void theEmployeeSetsTheStartDateAndTheEndDateOfTheActivityWithID(String start, String end, String activityID) throws ParseException {

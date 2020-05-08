@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class EmployeeActivityIntermediateOverviewExtractor implements Extractor<EmployeeActivityIntermediate> {
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Override
     public ArrayList<HashMap<String, String>> extract(ArrayList<EmployeeActivityIntermediate> collection, HashMap<String, Object> metaData) {
@@ -17,7 +17,7 @@ public class EmployeeActivityIntermediateOverviewExtractor implements Extractor<
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public ArrayList<HashMap<String, String>> extractOverview(ArrayList<EmployeeActivityIntermediate> collection) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();

@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class CSVReader {
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static boolean getBoolean(HashMap<String, String> entry, String property, boolean def) {
         String val = entry.get(property);
@@ -23,7 +23,7 @@ public class CSVReader {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static Date getDate(HashMap<String, String> entry, String property) {
         try {
@@ -34,7 +34,7 @@ public class CSVReader {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static int getInt(HashMap<String, String> entry, String property, int def) {
         try {
@@ -45,7 +45,7 @@ public class CSVReader {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static Date getDateFromYearWeek(HashMap<String, String> entry, String property) {
         try {
@@ -56,7 +56,7 @@ public class CSVReader {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static OOOActivityType getOOOActivityType(String input) {
         try {
@@ -68,14 +68,14 @@ public class CSVReader {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static String[] processLine(String str) {
         return Arrays.stream(str.split(",")).map(String::trim).toArray(String[]::new);
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static ArrayList<HashMap<String, String>> readFile(Reader fileReader) {
         BufferedReader br = new BufferedReader(fileReader);
@@ -102,7 +102,7 @@ public class CSVReader {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static void readEmployees(Reader fileReader) {
         Application application = Application.getInstance();
@@ -125,7 +125,7 @@ public class CSVReader {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static void readProjects(Reader fileReader) {
         Application application = Application.getInstance();
@@ -150,7 +150,7 @@ public class CSVReader {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static void readActivities(Reader fileReader) {
         Application application = Application.getInstance();
@@ -178,7 +178,7 @@ public class CSVReader {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static void readOOOActivities(Reader fileReader) {
         Application application = Application.getInstance();
@@ -200,7 +200,7 @@ public class CSVReader {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static void readWorkHours(Reader fileReader) {
         Application application = Application.getInstance();

@@ -241,7 +241,7 @@ public class ProjectSteps extends StepsBase {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     @Then("the activity with ID {string} has the start date {string} and the end date {string}")
     public void theActivityWithIDHasTheStartDateAndTheEndDate(String activityID, String start, String end) throws ParseException {

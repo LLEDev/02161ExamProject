@@ -22,7 +22,7 @@ public class Main {
     protected static Scanner inputScanner;
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static void handleCommandException(Throwable t, String usage) {
         if (t instanceof CommandException) {
@@ -38,7 +38,7 @@ public class Main {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static boolean loadData(String dir) {
         if (dir.equals("")) {
@@ -67,7 +67,7 @@ public class Main {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static boolean loadDataInternal() {
         ClassLoader cl = Main.class.getClassLoader();
@@ -96,7 +96,7 @@ public class Main {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static boolean redirectBasicInput(String[] input) {
         if (input[0].equals("help")) {
@@ -113,7 +113,7 @@ public class Main {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static void runAction(Action action, ArrayList<String> args) {
         InputContext inputContext = Application.getInstance().getContext();
@@ -129,7 +129,7 @@ public class Main {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static boolean setupContext(String context) {
         for (InputContextType type : InputContextType.values()) {
@@ -144,7 +144,7 @@ public class Main {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static boolean signIn(String ID) {
         try {
@@ -157,7 +157,7 @@ public class Main {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static String[] splitInput(String input) {
         boolean splitAllowed = true;
@@ -189,7 +189,7 @@ public class Main {
      */
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static void help() {
         ArrayList<String> usages = new ArrayList<>();
@@ -206,7 +206,7 @@ public class Main {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     protected static void quit() {
         outSource.println("Bye!");
@@ -221,7 +221,7 @@ public class Main {
      */
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static void main(String[] args) {
         if (args.length < 2) {
@@ -249,7 +249,7 @@ public class Main {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static void redirectInput(String[] input) {
         if (input.length == 0 || redirectBasicInput(input)) {
@@ -284,14 +284,14 @@ public class Main {
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static void setInSource(InputStream is) {
         inputSource = is;
     }
 
     /**
-     * @author Someone
+     * @author Lasse Lund-Egmose (s194568)
      */
     public static void setOutSource(PrintStream ps) {
         outSource = ps;

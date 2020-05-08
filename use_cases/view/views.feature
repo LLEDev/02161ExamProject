@@ -19,7 +19,7 @@ Feature: Test all "view X" commands
         When the employee requests a view of activity "1"
         Then the error message "Project manager role required." is given
 
-    # Author: Someone
+    # Author: Lasse Lund-Egmose (s194568)
     Scenario: A project manager requests a view of available employees
         Given that there is a project with name "Test project"
         And the project has the following activities
@@ -59,13 +59,13 @@ Feature: Test all "view X" commands
             | CC | CC   | 5                        |
             | AA | AA   | 10                       |
 
-    # Author: Someone
+    # Author: Lasse Lund-Egmose (s194568)
     Scenario: Employee availability is extracted without date metadata
         Given there is an employee
         When the employee requests a view of available employees without a given date
         Then the extractor output is "An error occurred: Date metadata has to be provided."
 
-    # Author: Someone
+    # Author: Lasse Lund-Egmose (s194568)
     Scenario: An employee who is a project manager of a project requests an overview of the project
         Given that there is a project with name "Test Project"
         And there is an employee
@@ -77,14 +77,14 @@ Feature: Test all "view X" commands
             | ID | Name           | Start week | End week | Estimated work hours (in total) | Tracked work hours (in total) |
             | 1  | First Activity | 2020-17    | 2020-27  | 0                               | 5                             |
 
-    # Author: Someone
+    # Author: Lasse Lund-Egmose (s194568)
     Scenario: An employee who is not project manager of a project requests an overview of the project
         Given that there is a project with name "Test Project"
         And there is an employee
         When the employee requests a view of the project
         Then the error message "Project manager role required." is given
 
-    # Author: Someone
+    # Author: Lasse Lund-Egmose (s194568)
     Scenario: A project manager views a schedule
         Given that there is a project with name "Test project"
         And the project has the following activities
@@ -119,13 +119,13 @@ Feature: Test all "view X" commands
             | Illness   | 2020-04-15 | 2020-04-18 |
             | Education | 2020-04-10 | 2020-04-14 |
 
-    # Author: Someone
+    # Author: Lasse Lund-Egmose (s194568)
     Scenario: A project manager views a schedule of a non-existing employee
         Given there is an employee
         When the employee requests a view of the schedule of the employee with ID "CC"
         Then a CommandException is thrown
 
-    # Author: Someone
+    # Author: Lasse Lund-Egmose (s194568)
     Scenario: An employee request a view of daily submissions
         Given that there is a project with name "Test project"
         And the project has the following activities

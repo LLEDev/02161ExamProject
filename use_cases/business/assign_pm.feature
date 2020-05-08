@@ -24,7 +24,7 @@ Feature: Assign project manager
         When the actor assigns the employee with initials "MTW" as the project manager of the project
         Then the error message "Project manager role required." is given
 
-    # Author: Someone
+    # Author: Lasse Lund-Egmose (s194568)
     Scenario: Employee who is a project manager assigns project manager to their project
         Given that there is a project with name "Test Project"
         And the following employees are given
