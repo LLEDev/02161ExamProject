@@ -270,6 +270,10 @@ public class Application {
 
     public void setActivityInterval(String projectID, int activityID, Date start, Date end) throws IllegalArgumentException {
         Activity activity = this.getProject(projectID).getActivity(activityID);
+
+        activity.setStartWeek(null);
+        activity.setEndWeek(null);
+
         activity.setStartWeek(start);
         activity.setEndWeek(end);
     }
