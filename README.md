@@ -11,7 +11,7 @@ In IntelliJ, folders can be "marked" by right-clicking a folder and selecting ``
 # Running application and application tests
 ## Running the application
 The application can be booted by running ```Main.main(String[] args)``` where ```args``` refer to the arguments given to the application.
-The application needs two arguments to run: The initials of the employee signing in and the context.
+The application needs two arguments to run: Initially, the initials of the employee signing in and secondly the context.
 In the provided set of data, the employees ```HH```, ```JJ```, and ```SS``` are defined.
 Currently, the application supports two contexts, ```Emp``` (employee context) and ```PM``` (project manager context).
 
@@ -55,7 +55,7 @@ We will now submit a couple hours of work using ```hours submit 2020-000001 1 20
 Hours submitted.
 ```
 
-However, it seems we still need some help from a colleague, so request assistance from our colleague Jens Jensen (JJ), ```request assistance 2020-000001 1 JJ```:
+However, it seems we still need some help from a colleague, so we decide to request assistance from our colleague Jens Jensen (JJ), ```request assistance 2020-000001 1 JJ```:
 ```
 Assistance requested.
 ```
