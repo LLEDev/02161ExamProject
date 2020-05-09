@@ -62,7 +62,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Lasse Lund-Egmose (s194568)
+     * @author Johannes s. Busse (s194604)
      */
     @And("the employee with initials {string} is the actor")
     public void theEmployeeWithInitialsIsTheActor(String employeeID) {
@@ -71,7 +71,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Lasse Lund-Egmose (s194568)
+     * @author Johannes S. Busse (s194604)
      */
     @And("the employee is attached to all activities in the projects")
     public void theEmployeeIsAttachedToAllActivitiesInTheProjects(List<String> projects) throws AccessDeniedException {
@@ -97,7 +97,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Lasse Lund-Egmose (s194568)
+     * @author Johannes S. Busse (s194604)
      */
     @And("the employee with initials {string} is assigned to the activity with ID {string}")
     public void theEmployeeWithInitialsIsAssignedToTheActivityWithID(String employeeID, String activityID) {
@@ -146,7 +146,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Lasse Lund-Egmose (s194568)
+     * @author Johannes S. Busse (s194604)
      */
     @When("the actor adds the employee with initials {string} to the activity with ID {string}")
     public void theActorAddsTheEmployeeWithInitialsToTheActivityWithID(String employeeID, String activityID) {
@@ -162,7 +162,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Lasse Lund-Egmose (s194568)
+     * @author Johannes S. Busse (s194604)
      */
     @When("the employee requests assistance from {string} on activity with ID {string} in the project")
     public void theEmployeeRequestsAssistanceFromOnActivityWithIDInTheProject(String otherEmployeeID, String activityID) {
@@ -178,7 +178,7 @@ public class EmployeeSteps extends StepsBase {
     }
 
     /**
-     * @author Lasse Lund-Egmose (s194568)
+     * @author Johannes S. Busse (s194604)
      */
     @When("the employee submits the work minutes")
     public void theEmployeeSubmitsTheWorkMinutes(List<List<String>> minutes) throws AccessDeniedException, IllegalArgumentException {
