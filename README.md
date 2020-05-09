@@ -11,7 +11,7 @@ In IntelliJ, folders can be "marked" by right-clicking a folder and selecting ``
 # Running application and application tests
 ## Running the application
 The application can be booted by running ```Main.main(String[] args)``` where ```args``` refer to the arguments given to the application.
-The application needs two arguments to run: Initially, the initials of the employee signing in and secondly the context.
+The application needs two arguments to run: The first argument being the initials of the employee signing in, and the second being the context (abbreviated).
 In the provided set of data, the employees ```HH```, ```JJ```, and ```SS``` are defined.
 Currently, the application supports two contexts, ```Emp``` (employee context) and ```PM``` (project manager context).
 
