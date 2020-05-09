@@ -283,7 +283,7 @@ public class Application {
     }
 
     /**
-     * @author Lasse Lund-Egmose (s194568)
+     * @author Mikkel Theiss Westermann (s194601)
      */
     public void estimateActivityDuration(String projectID, int activityID, int numHours) throws IllegalArgumentException {
         Project project = this.getProject(projectID);
@@ -291,7 +291,7 @@ public class Application {
     }
 
     /**
-     * @author Lasse Lund-Egmose (s194568)
+     * @author Mikkel Theiss Westermann (s194601)
      */
     public void finishActivity(String projectID, int activityID) throws AccessDeniedException {
         Project project = this.db.getProject(projectID);

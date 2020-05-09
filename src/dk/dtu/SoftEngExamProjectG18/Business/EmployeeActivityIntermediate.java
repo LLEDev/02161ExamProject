@@ -85,7 +85,7 @@ public class EmployeeActivityIntermediate {
     }
 
     /**
-     * @author Lasse Lund-Egmose (s194568)
+     * @author Mikkel Theiss Westermann (s194601)
      */
     public int getTotalMinutes() {
         return this.minutesSpent.values().stream().mapToInt(i -> i).sum();

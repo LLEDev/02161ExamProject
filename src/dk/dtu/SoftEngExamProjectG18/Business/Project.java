@@ -81,7 +81,7 @@ public class Project {
     }
 
     /**
-     * @author Lasse Lund-Egmose (s194568)
+     * @author Mikkel Theiss Westermann (s194601)
      */
     public void assertPM(Employee employee) throws AccessDeniedException {
         if (this.getPM() == null || !this.getPM().equals(employee)) {
