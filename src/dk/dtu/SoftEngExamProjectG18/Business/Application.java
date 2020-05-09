@@ -263,7 +263,7 @@ public class Application {
      */
 
     /**
-     * @author Lasse Lund-Egmose (s194568)
+     * @author Thor Dueholm (s194589)
      */
     public void assignEmployeeToActivity(String employeeID, String projectID, int activityID) throws AccessDeniedException {
         Project project = this.getProject(projectID);
@@ -276,7 +276,7 @@ public class Application {
     }
 
     /**
-     * @author Lasse Lund-Egmose (s194568)
+     * @author Thor Dueholm (s194589)
      */
     public void assignPM(String projectID, String employeeID) throws AccessDeniedException, IllegalArgumentException {
         this.getProject(projectID).assignPM(this.getEmployee(employeeID), this.db.getSignedInEmployee());
@@ -300,7 +300,7 @@ public class Application {
     }
 
     /**
-     * @author Lasse Lund-Egmose (s194568)
+     * @author Thor Dueholm (s194589)
      */
     public void requestAssistance(String projectID, int activityID, String employeeID) throws AccessDeniedException, IllegalArgumentException {
         Project project = this.getProject(projectID);

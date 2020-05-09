@@ -108,7 +108,7 @@ public class EmployeeActivityIntermediate {
     }
 
     /**
-     * @author Lasse Lund-Egmose (s194568)
+     * @author Thor Dueholm (s194589)
      */
     public void submitMinutes(Date d, int minutes) throws IllegalArgumentException {
         Assertions.assertOrThrow(
