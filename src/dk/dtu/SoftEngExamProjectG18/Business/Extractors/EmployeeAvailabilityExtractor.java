@@ -39,13 +39,16 @@ public class EmployeeAvailabilityExtractor implements Extractor<Employee> {
                 int activeActivities = 0;
                 for (Activity activity : employee.getAllActiveActivities()) {
                     Date start = activity.getStartWeek();
+                    Date end = null;
 
-                    Calendar endCal = new GregorianCalendar();
-                    endCal.add(Calendar.WEEK_OF_YEAR, 1);
-                    endCal.add(Calendar.SECOND, -1);
-                    Date end = endCal.getTime();
+                    if(start != null) {
+                        Calendar endCal = new GregorianCalendar();
+                        endCal.add(Calendar.WEEK_OF_YEAR, 1);
+                        endCal.add(Calendar.SECOND, -1);
+                        end = endCal.getTime();
+                    }
 
-                    if (start.compareTo(date) <= 0 && end.compareTo(date) >= 0) {
+                    if (start == null || start.compareTo(date) <= 0 && end.compareTo(date) >= 0) {
                         activeActivities++;
                     }
                 }
