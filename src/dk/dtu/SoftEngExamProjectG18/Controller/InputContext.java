@@ -91,6 +91,18 @@ abstract public class InputContext {
     /**
      * @author Lasse Lund-Egmose (s194568)
      */
+    public void assertStringParseDoubleDoable(String possibleDouble) throws CommandException {
+        try {
+            Double.parseDouble(possibleDouble);
+        } catch (NumberFormatException nfe) {
+            String output = String.format("The given number could not be parsed. Received %s.", possibleDouble);
+            throw new CommandException(output);
+        }
+    }
+
+    /**
+     * @author Lasse Lund-Egmose (s194568)
+     */
     public String getOutput() {
         return this.output;
     }

@@ -53,12 +53,12 @@ public class EmployeeInputContext extends InputContext {
     public void cmdSetSubmitHours(String[] args, boolean shouldSet) throws CommandException, ParseException {
         this.assertArgumentsValid(args.length, 4);
         this.assertStringParseDateDoable(args[2]);
-        this.assertStringParseIntDoable(args[3]);
+        this.assertStringParseDoubleDoable(args[3]);
 
         String projectID = args[0];
         int activityID = Integer.parseInt(args[1]);
         Date date = Dates.parseDate(args[2]);
-        int hours = Integer.parseInt(args[3]);
+        double hours = Double.parseDouble(args[3]);
 
         ThrowingFunctionWithoutArgs tf = shouldSet ?
             () -> Application.getInstance().setHours(projectID, activityID, date, hours) :

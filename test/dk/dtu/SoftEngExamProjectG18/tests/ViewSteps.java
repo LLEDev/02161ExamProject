@@ -181,6 +181,21 @@ public class ViewSteps {
     /**
      * @author Lasse Lund-Egmose (s194568)
      */
+    @When("string {string} is asserted double-parseable")
+    public void stringIsAssertedDoubleParseable(String str) {
+        this.thrownByParse = null;
+
+        InputContext ic = new EmployeeInputContext();
+        try {
+            ic.assertStringParseDoubleDoable(str);
+        } catch (CommandException e) {
+            this.thrownByParse = e;
+        }
+    }
+
+    /**
+     * @author Lasse Lund-Egmose (s194568)
+     */
     @When("string {string} is asserted date-parseable")
     public void stringIsAssertedDateParseable(String str) {
         this.thrownByParse = null;
